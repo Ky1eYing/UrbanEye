@@ -1,6 +1,7 @@
 # CS546-group17
 
 ## Floder Structure
+```
 UrbanEye/
 ├── client/                    
 │   ├── index.html             
@@ -20,5 +21,6 @@ UrbanEye/
 │   ├── data/                  
 │   │   └── events.js 
 │   ├── routes/                  
-│   │   └── api.js                        
-└── README.md                    
+│   │   └── api.js                   
+└── README.md       
+```             
