@@ -1,0 +1,24 @@
+{
+  "name": "urbaneye",
+  "version": "1.0.0",
+  "description": "A Website for urban activities report",
+  "homepage": "https://github.com/sunxy488/UrbanEye#readme",
+  "bugs": {
+    "url": "https://github.com/sunxy488/UrbanEye/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sunxy488/UrbanEye.git"
+  },
+  "license": "MIT",
+  "author": "",
+  "type": "module",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node app.js"
+  },
+  "dependencies": {
+    "mongodb": "^6.15.0"
+  }
+}
