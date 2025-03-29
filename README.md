@@ -1,6 +1,6 @@
 # CS546-group17
 
-## Floder Structure
+## Folder Structure
 ```
 UrbanEye/
 ├── client/                    
@@ -15,12 +15,19 @@ UrbanEye/
 │   ├── package.json            
 │   ├── config/                
 │   │   └── mongoCollections.js      
-|   |   └── mongoConnection.js       
-|   |   └── seeds.js    
-|   |   └── settings.js  
-│   ├── data/                  
-│   │   └── events.js 
+│   │   └── mongoConnection.js       
+│   │   └── settings.js  
+│   ├── data/   
+│	│	└── index.js               
+│	│	└── events.js               
+│   │   └── users.js
 │   ├── routes/                  
-│   │   └── api.js                   
+│   │   └── index.js
+│   │   └── events.js
+│   │   └── users.js
+│	├── scripts/                  
+│   │   └── seeds.js
+│	└── utils/                  
+│      	└── helpers.js
 └── README.md       
 ```             
