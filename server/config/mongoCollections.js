@@ -15,3 +15,4 @@ const getCollectionFn = collection => {
 
 
 export const events = getCollectionFn("events");
+export const users = getCollectionFn("users");
