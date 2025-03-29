@@ -18,16 +18,16 @@ UrbanEye/
 │   │   └── mongoConnection.js       
 │   │   └── settings.js  
 │   ├── data/   
-│	│	└── index.js               
-│	│	└── events.js               
+│   │   └── index.js               
+│   │   └── events.js               
 │   │   └── users.js
 │   ├── routes/                  
 │   │   └── index.js
 │   │   └── events.js
 │   │   └── users.js
-│	├── scripts/                  
+│   ├── scripts/                  
 │   │   └── seeds.js
-│	└── utils/                  
-│      	└── helpers.js
+│   └── utils/                  
+│       └── helpers.js
 └── README.md       
 ```             
