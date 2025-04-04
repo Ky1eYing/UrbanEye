@@ -1,6 +1,6 @@
 // seed.js
 import { dbConnection, closeConnection } from "../config/mongoConnection.js";
-import { eventsData } from "../data/index.js";
+import { events } from "../config/mongoCollections.js";
 import { ObjectId } from "mongodb";
 
 const db = await dbConnection();
@@ -509,24 +509,8 @@ const eventsToCreate = [
 	}
 ];
 
-for (const eventData of eventsToCreate) {
-	try {
-		const event = await eventsData.createEvent(
-			eventData.user_id,
-			eventData.tilte,
-			eventData.content,
-			eventData.created_at,
-			eventData.location,
-			eventData.category,
-			eventData.click_time,
-			eventData.likes,
-			eventData.comments
-		);
-		console.log(`Created event: ${event.tilte}`);
-	} catch (e) {
-		console.error(`Error creating event "${eventData.tilte}": ${e}`);
-	}
-}
+const eventsCollection = await events();
+const insertResult = await eventsCollection.insertMany(eventsToCreate);
+console.log(`Inserted ${insertResult.insertedCount} events`);
 
-console.log("Done seeding events database");
 await closeConnection();
