@@ -1,30 +1,50 @@
 import { ObjectId } from "mongodb";
 import { events } from "../config/mongoCollections.js";
 
-const createEvent = async (
-  user_id,
-  content,
-  created_at,
-  location,
-  category,
-  likes = [],
-  comments = []
-) => {
-  if (!user_id) throw new Error("Must provide user_id");
-  if (!content) throw new Error("Must provide content");
-  if (!created_at) throw new Error("Must provide created_at");
-  if (!location) throw new Error("Must provide location");
-  if (!category) throw new Error("Must provide category");
+const allowedCategories = [
+	"gun shot",
+	"fight",
+	"stealing",
+	"assaulting",
+	"traffic jam",
+	"road closed",
+	"accident",
+	"performance",
+	"food truck",
+	"parade"
+];
 
-  const newEvent = {
-    user_id: typeof user_id === "object" ? user_id : new ObjectId(user_id),
-    content: content,
-    created_at: new Date(created_at),
-    location: location,
-    category: category,
-    likes: likes,      
-    comments: comments 
-  };
+const createEvent = async (
+	user_id,
+	tilte,
+	content,
+	created_at,
+	location,
+	category,
+	click_time = 0,
+	likes = [],
+	comments = []
+) => {
+	if (!user_id) throw new Error("Must provide user_id");
+	if (!tilte) throw new Error("Must provide tilte");
+	if (!content) throw new Error("Must provide content");
+	if (!created_at) throw new Error("Must provide created_at");
+	if (!location || !Array.isArray(location) || location.length === 0)
+		throw new Error("Must provide location as a non-empty array");
+	if (!category) throw new Error("Must provide category");
+	if (!allowedCategories.includes(category)) throw new Error("Invalid category provided");
+
+	const newEvent = {
+		user_id: typeof user_id === "object" ? user_id : new ObjectId(user_id),
+		tilte: tilte,
+		content: content,
+		created_at: new Date(created_at),
+		location: location,
+		category: category,
+		click_time: click_time,
+		likes: likes,
+		comments: comments
+	};
 
 	const eventsCollection = await events();
 	const insertInfo = await eventsCollection.insertOne(newEvent);
@@ -53,6 +73,6 @@ const getEventById = async eventId => {
 };
 
 export default {
-  createEvent,
-  getEventById
+	createEvent,
+	getEventById
 };
