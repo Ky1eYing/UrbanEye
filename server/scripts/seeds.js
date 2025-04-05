@@ -4,7 +4,7 @@ import { events } from "../config/mongoCollections.js";
 import { ObjectId } from "mongodb";
 
 const db = await dbConnection();
-await db.dropDatabase();
+// await db.dropDatabase();
 
 const eventsToCreate = [
 	{
@@ -510,6 +510,9 @@ const eventsToCreate = [
 ];
 
 const eventsCollection = await events();
+
+await eventsCollection.drop();
+
 const insertResult = await eventsCollection.insertMany(eventsToCreate);
 console.log(`Inserted ${insertResult.insertedCount} events`);
 
