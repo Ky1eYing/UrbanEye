@@ -17,7 +17,7 @@
 	"scripts": {
 		"start": "node app.js",
 		"dev": "nodemon app.js",
-		"seed": "node ./scripts/seeds_events.js && node ./scripts/seeds_comments.js"
+		"seed": "node ./scripts/seeds_events.js && node ./scripts/seeds_users.js && node ./scripts/seeds_likes.js && node ./scripts/seeds_comments.js "
 	},
 	"dependencies": {
 		"bcrypt": "^5.1.1",
