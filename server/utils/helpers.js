@@ -18,6 +18,25 @@ export const checkVaildString = (param, param_name) => {
 	return param;
 };
 
+// check input 'string' type but allow null
+export const checkStringAllowNull = (str, name) => {
+
+    if (str === null || str === undefined) {
+        return null;
+    } 
+    else if (typeof str !== "string") {
+        throw new Error(`${name} is not a string`);
+    }
+
+    str = str.trim();
+    if (str.length === 0) {
+        return null;
+    }
+    else {
+        return str;
+    }
+};
+
 // check input 'ObjectId' type
 export const checkObjectId = id => {
 	const check_id = checkVaildString(id, "ID");
@@ -25,7 +44,7 @@ export const checkObjectId = id => {
 		throw new Error("ID is not a valid ObjectId");
 	}
 
-	return id;
+	return check_id;
 };
 
 // check location validation
@@ -102,3 +121,63 @@ export const checkCategory = category => {
 
 	return checked_category;
 };
+
+// check introduction
+export const validateIntroduction = introduction => {
+
+    introduction = checkStringAllowNull(introduction, "Introduction");
+    if (introduction === null) {
+        return null;
+    }
+
+    if (typeof introduction !== 'string' || introduction.length > 200) {
+      throw new Error('Introduction must be a string with at most 200 characters.');
+    }
+    return introduction;
+};
+
+// check sex
+export const validateSex = sex => {
+
+    sex = checkStringAllowNull(sex, "Sex");
+    if (sex === null) {
+        return null;
+    } 
+
+    if (typeof sex !== 'string' || sex.length > 20) {
+        throw new Error('Sex must be a string with at most 20 characters.');
+    }
+    return sex;
+};
+
+// check email
+export const validateEmail = email => {
+
+    email = checkStringAllowNull(email, "Email");
+    if (email === null) {
+        return null;
+    } 
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (typeof email !== 'string' || !emailRegex.test(email)) {
+      throw new Error('Invalid email format.');
+    }
+    return email;
+};
+
+// check phone
+export const validatePhone = phone => {
+
+    phone = checkStringAllowNull(phone, "Phone");
+    if (phone === null) {
+        return null;
+    } 
+
+    const phoneRegex = /^\+?\d{7,15}$/;
+    if (typeof phone !== 'string' || !phoneRegex.test(phone)) {
+      throw new Error('Phone number must contain only digits and an optional leading "+", and be 7 to 15 characters long.');
+    }
+    return phone;
+};
+  
+  

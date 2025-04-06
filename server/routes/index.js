@@ -1,10 +1,12 @@
 import eventsRoutes from "./events.js";
 import usersRoutes from "./users.js";
+import commentsRoutes from "./comments.js";
 import likesRoutes from "./likes.js";
 
 const constructorMethod = app => {
 	app.use("/events", eventsRoutes);
 	app.use("/users", usersRoutes);
+	app.use("/comments", commentsRoutes);
 	app.use("/likes", likesRoutes);
 
 	app.use("*", (req, res) => {

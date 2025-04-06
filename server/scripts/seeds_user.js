@@ -42,7 +42,7 @@ const usersToCreate = [
 
         createdAt: new Date(),
         updatedAt: new Date(),
-        lastLogin: new Date(),
+        lastLogin: null,
         token: null,
         expiresAt: null,
     },
@@ -52,6 +52,7 @@ const usersToCreate = [
 const usersCollection = await users();
 
 await usersCollection.drop();
+await usersCollection.createIndex({ userName: 1 }, { unique: true });;
 
 const insertResult = await usersCollection.insertMany(usersToCreate);
 console.log(`Inserted ${insertResult.insertedCount} users`);
