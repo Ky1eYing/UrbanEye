@@ -17,16 +17,10 @@ const usersToCreate = [
         sex: "Male",                                                                // Less than 20 characters
         email: "user1@gmail.com",                                                   // email format                        
         phone: "+16667778888",                                                      // only number & "+"
-
-        //  Hidden
-        password: "$2a$10$512l1O/5S8DTXRfYNuOvGOd1y7x0ikZOlXU/C6bzYwIZT92zazoI6",   // "admin123", Bcrypt Rounds: 10, not null
         avatar: "USER1avatar.jpg",                                                  // filename.jpg, png,...
 
-        createdAt: new Date(),                                                      // auto_created
-        updatedAt: new Date(),                                                      // auto_created
-        lastLogin: null,                                                            // auto_created
-        token: null,                                                                // auto_created
-        expiresAt: null,                                                            // auto_created
+        //  Hidden
+        password: "$2b$10$U/UvR7mvvChS/Vzxx8pvs.PonsNPYRENpHvXj3y/oCwp1pNmcFzS6"    // "admin123", Bcrypt Rounds: 10, not null
     },
     {
         _id: new ObjectId(),
@@ -36,15 +30,9 @@ const usersToCreate = [
         sex: "CustomXXXXXX",
         email: null,
         phone: null,
-
-        password: "$2a$10$512l1O/5S8DTXRfYNuOvGOd1y7x0ikZOlXU/C6bzYwIZT92zazoI6",    // "admin123",
         avatar: null,
 
-        createdAt: new Date(),
-        updatedAt: new Date(),
-        lastLogin: null,
-        token: null,
-        expiresAt: null,
+        password: "$2b$10$U/UvR7mvvChS/Vzxx8pvs.PonsNPYRENpHvXj3y/oCwp1pNmcFzS6"
     },
 
 ];
