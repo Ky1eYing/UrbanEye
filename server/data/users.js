@@ -1,7 +1,8 @@
 import { ObjectId } from "mongodb";
 import { users } from "../config/mongoCollections.js";
 import * as check from "../utils/helpers.js";
-import bcrypt from 'bcrypt';
+// import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 
 const makeHashedPassword = async (plainPassword) => {
 
@@ -51,6 +52,7 @@ const userCheckWithPwdUserName = async (userName, plainPassword) => {
 
     try {
         userName = check.checkVaildString(userName, "UserName");
+        userName = userName.toLowerCase();
         plainPassword = check.checkVaildString(plainPassword, "Password");
     }
     catch (e) {
@@ -72,6 +74,7 @@ const updateUserName = async (userId, userName) => {
 
     userId = check.checkObjectId(userId);
     userName = check.checkVaildString(userName, "UserName");
+    userName = userName.toLowerCase();
 
     const usersCollection = await users();
     
@@ -180,13 +183,13 @@ const createUser = async (userName, name, password, introduction, sex, email, ph
         password: null
     }
 
-    newUser.userName = userName;
+    newUser.userName = userName.toLowerCase();
     newUser.name = name;
     newUser.password = password;
 
     newUser.introduction = introduction;
     newUser.sex = sex;
-    newUser.email = email;
+    newUser.email = email.toLowerCase();
     newUser.phone = phone;
 
     const usersCollection = await users();
@@ -270,7 +273,7 @@ const updateUser = async (userId, name, introduction, sex, email, phone) => {
 
     newUser.introduction = introduction;
     newUser.sex = sex;
-    newUser.email = email;
+    newUser.email = email.toLowerCase();
     newUser.phone = phone;
 
     const usersCollection = await users();
