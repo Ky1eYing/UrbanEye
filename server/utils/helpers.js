@@ -21,20 +21,20 @@ export const checkVaildString = (param, param_name) => {
 // check input 'string' type but allow null
 export const checkStringAllowNull = (str, name) => {
 
-    if (str === null || str === undefined) {
-        return null;
-    } 
-    else if (typeof str !== "string") {
-        throw new Error(`${name} is not a string`);
-    }
+	if (str === null || str === undefined) {
+		return null;
+	}
+	else if (typeof str !== "string") {
+		throw new Error(`${name} is not a string`);
+	}
 
-    str = str.trim();
-    if (str.length === 0) {
-        return null;
-    }
-    else {
-        return str;
-    }
+	str = str.trim();
+	if (str.length === 0) {
+		return null;
+	}
+	else {
+		return str;
+	}
 };
 
 // check input 'ObjectId' type
@@ -52,30 +52,23 @@ export const checkLocation = location => {
 	if (location === undefined) {
 		throw new Error("location is missing");
 	}
-	if (!Array.isArray(location)) {
-		throw new Error("location must be an array");
-	}
-	if (location.length === 0) {
-		throw new Error("location is empty");
+	if (typeof location !== "object" || location === null) {
+		throw new Error("location must be an object");
 	}
 
 	// check latitude and longtitude
-	const loc = location[0];
-	if (typeof loc !== "object" || loc === null) {
-		throw new Error("location is not a valid object");
-	}
-	if (!("latitude" in loc)) {
+	if (!("latitude" in location)) {
 		throw new Error("location is missing latitude");
 	}
-	if (!("longitude" in loc)) {
+	if (!("longitude" in location)) {
 		throw new Error("location is missing longitude");
 	}
-	if (!("address" in loc)) {
+	if (!("address" in location)) {
 		throw new Error("location is missing address");
 	}
 
-	// Check that latitude is a valid string and within valid range
-	const checked_latitude = checkVaildString(loc.latitude, "location.latitude");
+	// Check latitude is a valid string and within valid range
+	const checked_latitude = checkVaildString(location.latitude, "location.latitude");
 	const latitude_num = parseFloat(checked_latitude);
 	if (isNaN(latitude_num)) {
 		throw new Error("location.latitude is not a valid number");
@@ -84,8 +77,8 @@ export const checkLocation = location => {
 		throw new Error("location.latitude must be between -90 and 90");
 	}
 
-	// Check that longitude is a valid string and within valid range
-	const checked_longitude = checkVaildString(loc.longitude, "location.longitude");
+	// Check longitude is a valid string and within valid range
+	const checked_longitude = checkVaildString(location.longitude, "location.longitude");
 	const longitude_num = parseFloat(checked_longitude);
 	if (isNaN(longitude_num)) {
 		throw new Error("location.longitude is not a valid number");
@@ -94,11 +87,12 @@ export const checkLocation = location => {
 		throw new Error("location.longitude must be between -180 and 180");
 	}
 
-	// Check that address is a valid string
-	checkVaildString(loc.address, "location.address");
+	// Check address is a valid string
+	checkVaildString(location.address, "location.address");
 
 	return location;
 };
+
 
 // check category
 export const checkCategory = category => {
@@ -125,59 +119,58 @@ export const checkCategory = category => {
 // check introduction
 export const validateIntroduction = introduction => {
 
-    introduction = checkStringAllowNull(introduction, "Introduction");
-    if (introduction === null) {
-        return null;
-    }
+	introduction = checkStringAllowNull(introduction, "Introduction");
+	if (introduction === null) {
+		return null;
+	}
 
-    if (typeof introduction !== 'string' || introduction.length > 200) {
-      throw new Error('Introduction must be a string with at most 200 characters.');
-    }
-    return introduction;
+	if (typeof introduction !== 'string' || introduction.length > 200) {
+		throw new Error('Introduction must be a string with at most 200 characters.');
+	}
+	return introduction;
 };
 
 // check sex
 export const validateSex = sex => {
 
-    sex = checkStringAllowNull(sex, "Sex");
-    if (sex === null) {
-        return null;
-    } 
+	sex = checkStringAllowNull(sex, "Sex");
+	if (sex === null) {
+		return null;
+	}
 
-    if (typeof sex !== 'string' || sex.length > 20) {
-        throw new Error('Sex must be a string with at most 20 characters.');
-    }
-    return sex;
+	if (typeof sex !== 'string' || sex.length > 20) {
+		throw new Error('Sex must be a string with at most 20 characters.');
+	}
+	return sex;
 };
 
 // check email
 export const validateEmail = email => {
 
-    email = checkStringAllowNull(email, "Email");
-    if (email === null) {
-        return null;
-    } 
+	email = checkStringAllowNull(email, "Email");
+	if (email === null) {
+		return null;
+	}
 
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (typeof email !== 'string' || !emailRegex.test(email)) {
-      throw new Error('Invalid email format.');
-    }
-    return email;
+	const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+	if (typeof email !== 'string' || !emailRegex.test(email)) {
+		throw new Error('Invalid email format.');
+	}
+	return email;
 };
 
 // check phone
 export const validatePhone = phone => {
 
-    phone = checkStringAllowNull(phone, "Phone");
-    if (phone === null) {
-        return null;
-    } 
+	phone = checkStringAllowNull(phone, "Phone");
+	if (phone === null) {
+		return null;
+	}
 
-    const phoneRegex = /^\+?\d{7,15}$/;
-    if (typeof phone !== 'string' || !phoneRegex.test(phone)) {
-      throw new Error('Phone number must contain only digits and an optional leading "+", and be 7 to 15 characters long.');
-    }
-    return phone;
+	const phoneRegex = /^\+?\d{7,15}$/;
+	if (typeof phone !== 'string' || !phoneRegex.test(phone)) {
+		throw new Error('Phone number must contain only digits and an optional leading "+", and be 7 to 15 characters long.');
+	}
+	return phone;
 };
-  
-  
+

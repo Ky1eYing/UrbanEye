@@ -25,7 +25,7 @@ router
 
 		const { user_id, title, content, location, category, photoUrl } = eventInfo;
 		if ([user_id, title, content, location, category, photoUrl].some(arg => arg === undefined)) {
-			return res.status(400).json({ error: "All fields need to have valid values" });
+			return res.status(400).json({ error: "All fields need to have valid values during create event." });
 		}
 
 		let checked_user_id, checked_title, checked_content, checked_location, checked_category, checked_photoUrl;
