@@ -32,7 +32,7 @@ const createEvent = async (user_id, title, content, location, category, photoUrl
 		click_time: click_time,
 		likes: likes,
 		comments: comments,
-		photo: checked_photoUrl
+		photoUrl: checked_photoUrl
 	};
 
 	const eventsCollection = await events();
@@ -135,7 +135,7 @@ const updateEvent = async (event_id, title, content, location, category, photoUr
 		click_time: event.click_time,
 		likes: event.likes,
 		comments: event.comments,
-		photo: checked_photoUrl
+		photoUrl: checked_photoUrl
 	};
 
 	const updateInfo = await eventsCollection.findOneAndReplace(
