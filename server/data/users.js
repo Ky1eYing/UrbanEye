@@ -56,18 +56,21 @@ const userCheckWithPwdUserName = async (userName, plainPassword) => {
         plainPassword = check.checkVaildString(plainPassword, "Password");
     }
     catch (e) {
-        return false;
+        return null;
     }
     
     const usersCollection = await users();
     const user = await usersCollection.findOne({ userName: userName });
     if (!user) {
-        return false;
+        return null;
     }
     const hashedPassword = user.password;
     const isMatch = await checkPassword(plainPassword, hashedPassword);
 
-    return isMatch;
+    if (isMatch) {
+        return user._id.toString();
+    }
+    return null;
 }
 
 const updateUserName = async (userId, userName) => {

@@ -2,6 +2,8 @@ import {Router} from 'express';
 import {usersData} from '../data/index.js';
 import * as check from "../utils/helpers.js";
 import { ObjectId } from "mongodb";
+import { SESSION_COOKIE_NAME } from '../config/env.js';
+
 
 const router = Router();
 
@@ -11,7 +13,6 @@ router
     // .get(async (req, res) => {
 
     //     try {
-    //     //   TODO
     //     return res.json({data: "data"});
     //     } catch (e) {
     //     return res.status(500).json({error: e});
@@ -71,15 +72,14 @@ router
         }
 
         try {
-            const checkStatus = await usersData.userCheckWithPwdUserName(userName, password);
-            if (!checkStatus) {
+            const returnId = await usersData.userCheckWithPwdUserName(userName, password);
+            if (!returnId) {
                 return res.status(404).json({ error: "Wrong username or password!" });
             }
             else {
+                req.session.userId = returnId;
+
                 return res.status(200).json({ message: "Login successfully!" });
-
-                // TODO middleware login
-
             }
         } catch (e) {
             return res.status(500).json({ error: "Sorry, system authentication failed." });
@@ -91,9 +91,11 @@ router
 
     .post(async (req, res) => {
 
-        // TODO middleware logout
-        return res.status(200).json({ message: "Logout successfully!" });
-
+        req.session.destroy(err => {
+            if (err) return res.status(500).send('Logout failed');
+            res.clearCookie(SESSION_COOKIE_NAME || 'connect.sid');
+            return res.status(200).json({ message: "Logout successfully!" });
+        });
     });
 
 router
@@ -150,9 +152,12 @@ router
 
         try {
             const deleteInfo = await usersData.removeUser(userId);
-            return res.status(200).json({ message: deleteInfo + "You will be logged out." });
 
-            // TODO middleware logout
+            req.session.destroy(err => {
+                if (err) return res.status(500).send('Logout failed');
+                res.clearCookie(SESSION_COOKIE_NAME || 'connect.sid');
+                return res.status(200).json({ message: deleteInfo + "You will be logged out." });
+            });
 
         } catch (e) {
             return res.status(404).json({ error: e.message });
@@ -204,7 +209,12 @@ router
         if (userName !== null) {
             try {
                 await usersData.updateUserName(userId, userName);
-                return res.status(200).json({ message: "Update successfully! You will be logged out." });
+
+                req.session.destroy(err => {
+                    if (err) return res.status(500).send('Logout failed');
+                    res.clearCookie(SESSION_COOKIE_NAME || 'connect.sid');
+                    return res.status(200).json({ message: "Update successfully! You will be logged out." });
+                });
             } catch (e) {
                 return res.status(404).json({ error: e.message });
             }
@@ -213,14 +223,16 @@ router
         if (password !== null) {
             try {
                 await usersData.updatePassword(userId, password);
-                return res.status(200).json({ message: "Update successfully! You will be logged out." });
+
+                req.session.destroy(err => {
+                    if (err) return res.status(500).send('Logout failed');
+                    res.clearCookie(SESSION_COOKIE_NAME || 'connect.sid');
+                    return res.status(200).json({ message: "Update successfully! You will be logged out." });
+                });
             } catch (e) {
                 return res.status(404).json({ error: e.message });
             }
         }
-
-        // TODO middleware logout
-        
     })
     
     // updateUser general information
