@@ -23,18 +23,19 @@ router
 			return res.status(400).json({ error: "There are no fields in the request body" });
 		}
 
-		const { user_id, title, content, location, category } = eventInfo;
-		if ([user_id, title, content, location, category].some(arg => arg === undefined)) {
+		const { user_id, title, content, location, category, photoUrl } = eventInfo;
+		if ([user_id, title, content, location, category, photoUrl].some(arg => arg === undefined)) {
 			return res.status(400).json({ error: "All fields need to have valid values" });
 		}
 
-		let checked_user_id, checked_title, checked_content, checked_location, checked_category;
+		let checked_user_id, checked_title, checked_content, checked_location, checked_category, checked_photoUrl;
 		try {
 			checked_user_id = check.checkObjectId(user_id);
 			checked_title = check.checkVaildString(title, "Title");
 			checked_content = check.checkVaildString(content, "Content");
 			checked_location = check.checkLocation(location);
 			checked_category = check.checkCategory(category);
+			checked_photoUrl = check.checkVaildString(photoUrl, "PhotoUrl");
 		} catch (e) {
 			return res.status(400).json({ error: e.message });
 		}
@@ -45,7 +46,8 @@ router
 				checked_title,
 				checked_content,
 				checked_location,
-				checked_category
+				checked_category,
+				checked_photoUrl
 			);
 			return res.status(200).json(newEvent);
 		} catch (e) {
@@ -110,17 +112,18 @@ router
 			return res.status(400).json({ error: "There are no fields in the request body" });
 		}
 
-		const { title, content, location, category } = eventInfo;
-		if ([title, content, location, category].some(arg => arg === undefined)) {
+		const { title, content, location, category, photoUrl } = eventInfo;
+		if ([title, content, location, category, photoUrl].some(arg => arg === undefined)) {
 			return res.status(400).json({ error: "All fields need to have valid values" });
 		}
 
-		let checked_title, checked_content, checked_location, checked_category;
+		let checked_title, checked_content, checked_location, checked_category, checked_photoUrl;
 		try {
 			checked_title = check.checkVaildString(title, "Title");
 			checked_content = check.checkVaildString(content, "Content");
 			checked_location = check.checkLocation(location);
 			checked_category = check.checkCategory(category);
+			checked_photoUrl = check.checkVaildString(photoUrl, "PhotoUrl");
 		} catch (e) {
 			return res.status(400).json({ error: e.message });
 		}
@@ -131,7 +134,8 @@ router
 				checked_title,
 				checked_content,
 				checked_location,
-				checked_category
+				checked_category,
+				checked_photoUrl
 			);
 			return res.status(200).json(updatedEvent);
 		} catch (e) {

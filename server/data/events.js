@@ -3,9 +3,9 @@ import { events } from "../config/mongoCollections.js";
 import * as check from "../utils/helpers.js";
 
 // create event func
-const createEvent = async (user_id, title, content, location, category) => {
+const createEvent = async (user_id, title, content, location, category, photoUrl) => {
 	// check all fields
-	if ([user_id, title, content, location, category].some(arg => arg === undefined)) {
+	if ([user_id, title, content, location, category, photoUrl].some(arg => arg === undefined)) {
 		throw new Error("All fields need to have valid values during create event.");
 	}
 
@@ -15,6 +15,7 @@ const createEvent = async (user_id, title, content, location, category) => {
 	const checked_content = check.checkVaildString(content, "Content");
 	const checked_location = check.checkLocation(location);
 	const checked_category = check.checkCategory(category);
+	const checked_photoUrl = check.checkVaildString(photoUrl, "PhotoUrl");
 
 	// create empty element
 	const click_time = 0;
@@ -30,7 +31,8 @@ const createEvent = async (user_id, title, content, location, category) => {
 		category: checked_category,
 		click_time: click_time,
 		likes: likes,
-		comments: comments
+		comments: comments,
+		photo: checked_photoUrl
 	};
 
 	const eventsCollection = await events();
@@ -105,9 +107,9 @@ const removeEvent = async eventId => {
 };
 
 // update event
-const updateEvent = async (event_id, title, content, location, category) => {
+const updateEvent = async (event_id, title, content, location, category, photoUrl) => {
 	// check all fields
-	if ([event_id, title, content, location, category].some(arg => arg === undefined)) {
+	if ([event_id, title, content, location, category, photoUrl].some(arg => arg === undefined)) {
 		throw new Error("All fields need to have valid values during update event.");
 	}
 
@@ -117,6 +119,7 @@ const updateEvent = async (event_id, title, content, location, category) => {
 	const checked_content = check.checkVaildString(content, "Content");
 	const checked_location = check.checkLocation(location);
 	const checked_category = check.checkCategory(category);
+	const checked_photoUrl = check.checkVaildString(photoUrl, "PhotoUrl");
 
 	// get old event
 	const eventsCollection = await events();
@@ -131,7 +134,8 @@ const updateEvent = async (event_id, title, content, location, category) => {
 		category: checked_category,
 		click_time: event.click_time,
 		likes: event.likes,
-		comments: event.comments
+		comments: event.comments,
+		photo: checked_photoUrl
 	};
 
 	const updateInfo = await eventsCollection.findOneAndReplace(
