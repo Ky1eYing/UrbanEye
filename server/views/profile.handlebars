@@ -1,0 +1,112 @@
+<div class="profile-content">
+    <div class="profile-sidebar">
+        <div class="profile-view" id="profileView">
+            <div class="profile-card">
+                <div class="user-info-card">
+                    <div class="avatar-circle-large"></div>
+                    <h3 class="user-name" id="usernameDisplay">{{user.username}}</h3>
+                    <button class="edit-profile-btn" id="editProfileBtn">Edit profile</button>
+                </div>
+
+                <div class="user-details">
+                    <div class="user-detail">
+                        <span class="detail-label">sex: </span>
+                        <span class="detail-value" id="sexDisplay">{{user.sex}}</span>
+                    </div>
+                    <div class="user-detail">
+                        <span class="detail-label">email:</span>
+                        <span class="detail-value" id="emailDisplay">{{user.email}}</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dashboard-card">
+                <h3 class="dashboard-title">Dashboard</h3>
+                <div class="visibility-note">
+                    <span class="eye-icon">👁️</span>
+                    <span>only visible to you</span>
+                </div>
+
+                <div class="dashboard-items">
+                    <div class="dashboard-item">
+                        <span class="item-icon">□</span>
+                        <span class="item-text">events</span>
+                    </div>
+                    <div class="dashboard-item">
+                        <span class="item-icon">💬</span>
+                        <span class="item-text">comments</span>
+                    </div>
+                    <div class="dashboard-item">
+                        <span class="item-icon">♥</span>
+                        <span class="item-text">likes</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="edit-profile-container" id="editProfileContainer" style="display: none;">
+            <h2>Change Profile</h2>
+            <div class="avatar-edit-section">
+                <div class="avatar-circle-large" id="avatarPreview"></div>
+                <label for="avatarUpload" class="upload-avatar-btn">Upload</label>
+                <input type="file" id="avatarUpload" accept="image/*" style="display: none;">
+            </div>
+
+            <div class="edit-field">
+                <label>Name: </label>
+                <input type="text" id="editName" value="{{user.username}}">
+                <button class="cancel-btn" data-field="name">cancel</button>
+                <button class="save-btn" data-field="name">save</button>
+            </div>
+            <div class="edit-field">
+                <label>Sex: </label>
+                <select id="editSex">
+                    <option value="male">male</option>
+                    <option value="female">female</option>
+                </select>
+                <button class="cancel-btn" data-field="sex">cancel</button>
+                <button class="save-btn" data-field="sex">save</button>
+            </div>
+            <div class="edit-field">
+                <label>Email: </label>
+                <input type="text" id="editEmail" value="{{user.email}}">
+                <button class="cancel-btn" data-field="email">cancel</button>
+                <button class="save-btn" data-field="email">save</button>
+            </div>
+
+            <hr />
+
+            <h2>Change Password</h2>
+            <div class="edit-field">
+                <label>Old password: </label>
+                <input type="password" id="oldPassword">
+            </div>
+            <div class="edit-field">
+                <label>New password: </label>
+                <input type="password" id="newPassword">
+            </div>
+            <div class="edit-field">
+                <label>Confirm password: </label>
+                <input type="password" id="confirmPassword">
+            </div>
+            <div class="edit-field">
+                <button class="cancel-btn" data-field="password">cancel</button>
+                <button class="save-btn" data-field="password">save</button>
+            </div>
+
+        </div>
+    </div>
+
+    {{!-- <div class="user-actions">
+        <div class="user-menu">
+            <div class="avatar-circle-small"></div>
+            <div class="user-name-small">{{user.username}}</div>
+            <div class="menu-actions">
+                <button class="view-profile-btn">View profile</button>
+                <button class="sign-out-btn">Sign out</button>
+            </div>
+        </div>
+    </div> --}}
+</div>
+
+<script src="/js/profile.js"></script>

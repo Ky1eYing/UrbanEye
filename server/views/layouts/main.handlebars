@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>UrbanEye - {{title}}</title>
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="logo-container">
+                <a href="/" class="logo-link">
+                    <img src="/images/eyelogo.png" alt="UrbanEye Logo" class="logo-image">
+                    <h1 class="logo-text">UrbanEye</h1>
+                </a>
+            </div>
+            <div class="header-right">
+                <nav class="main-nav">
+                    <ul>
+                        <li><a href="/" class="nav-link {{#if isHome}}active{{/if}}">HOME</a></li>
+                        <li><a href="/event" class="nav-link {{#if isEvent}}active{{/if}}">EVENT</a></li>
+                        <li><a href="/about" class="nav-link {{#if isAbout}}active{{/if}}">ABOUT</a></li>
+                    </ul>
+                </nav>
+
+                {{#if user}}
+                <div class="user-profile-icon">
+                    <a href="/profile">
+                        <div class="avatar-container">
+                            <div class="avatar-circle"></div>
+                        </div>
+                    </a>
+                </div>
+                {{else}}
+                <div class="login-button">
+                    <a href="/login"><button {{#if isLogin}}class="active" {{/if}}>Log in</button></a>
+                </div>
+                {{/if}}
+            </div>
+        </header>
+
+        <main class="main-content {{#if centeredContent}}centered-content{{/if}}">
+            {{{body}}}
+        </main>
+
+        <footer class="footer">
+            <p class="footer-text">&copy; 2025 UrbanEye. All rights reserved.</p>
+            <div class="footer-links">
+                <a href="/about">About</a>
+                <a href="/privacy">Privacy Policy</a>
+                <a href="/terms">Terms of Service</a>
+            </div>
+        </footer>
+    </div>
+</body>
+
+</html>

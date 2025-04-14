@@ -1,0 +1,195 @@
+<div class="left-sidebar">
+    <!-- 事件列表容器（默认显示） -->
+    <div id="event-list-container">
+        <div class="create-event-button">
+            <button id="openCreateEventModal">CREATE EVENT</button>
+        </div>
+        <div class="search-filter">
+            <div class="search-bar">
+                <input type="text" placeholder="Search">
+            </div>
+            <div class="category-filter">
+                <select>
+                    <option value="">All Categories</option>
+                    <option value="gun shot">Gun Shot</option>
+                    <option value="fight">Fight</option>
+                    <option value="stealing">Stealing</option>
+                    <option value="assaulting">Assaulting</option>
+                    <option value="traffic jam">Traffic Jam</option>
+                    <option value="road closed">Road Closed</option>
+                    <option value="accident">Accident</option>
+                    <option value="performance">Performance</option>
+                    <option value="food truck">Food Truck</option>
+                    <option value="parade">Parade</option>
+                </select>
+            </div>
+        </div>
+        <div class="event-list">
+            {{#if events.length}}
+            {{#each events}}
+            <div class="event-item" data-event-id="{{this._id}}">
+                <div class="event-image">
+                    <img src="{{this.imageUrl}}" alt="{{this.title}}">
+                </div>
+                <div class="event-details">
+                    <h3>{{this.title}}</h3>
+                    <div class="event-meta">
+                        <span>{{this.location}}</span>
+                        <span>{{this.time}}</span>
+                        <span>{{this.day}}</span>
+                        <span>{{this.timeAgo}}</span>
+                    </div>
+                </div>
+            </div>
+            {{/each}}
+            {{else}}
+            <!-- fallback 示例 -->
+            <div class="event-item" data-event-id="fake-id-1">
+                <div class="event-image">
+                    <img src="https://urban-eye.oss-us-east-1.aliyuncs.com/events-pic/23be41e3-7246-4ca5-b837-a801cae0f4f0-IMG_7863.JPG"
+                        alt="Helicopter incident">
+                </div>
+                <div class="event-details">
+                    <h3>Six killed after Helicopter Crashes</h3>
+                    <div class="event-meta">
+                        <span>Manhattan</span>
+                        <span>8:45</span>
+                        <span>Mon</span>
+                        <span>6 mi</span>
+                    </div>
+                </div>
+            </div>
+            <div class="event-item" data-event-id="fake-id-2">
+                <div class="event-image">
+                    <img src="https://urban-eye.oss-us-east-1.aliyuncs.com/events-pic/23be41e3-7246-4ca5-b837-a801cae0f4f0-IMG_7863.JPG"
+                        alt="Helicopter incident">
+                </div>
+                <div class="event-details">
+                    <h3>Six killed after Helicopter Crashes</h3>
+                    <div class="event-meta">
+                        <span>Manhattan</span>
+                        <span>8:45</span>
+                        <span>Mon</span>
+                        <span>6 mi</span>
+                    </div>
+                </div>
+            </div>
+            {{/if}}
+        </div>
+    </div>
+
+    <!-- 事件详情容器（默认隐藏） -->
+    <div id="event-detail-container" style="display: none;">
+        <!-- 用于返回事件列表的按钮 -->
+        <div class="detail-header">
+            <button id="backToListBtn">&larr; Back</button>
+            <h2 id="detail-title">Event</h2>
+        </div>
+        <div class="detail-body">
+            <!-- 这里放事件标题/图片/地址/时间/内容/评论等 -->
+            <h3 id="detail-event-title"></h3>
+            <p><strong>Address:</strong> <span id="detail-event-address"></span></p>
+            <p><strong>Distance:</strong> <span id="detail-event-distance"></span> miles near you</p>
+            <div class="detail-event-image">
+                <img id="detail-event-img" src="" alt="Event Image">
+            </div>
+            <div class="detail-event-content" id="detail-event-content"></div>
+            <!-- 显示评论 -->
+            <div class="detail-event-comments">
+                <div class="comment-form">
+                    <input type="text" id="newCommentInput" placeholder="Add your comment..." />
+                    <button id="postCommentBtn">POST</button>
+                </div>
+                <div id="commentsList"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="map-container">
+    <div id="map" class="map">
+    </div>
+</div>
+
+<!-- ================= 模态窗结构 ================= -->
+<div class="modal-overlay" id="createEventModal">
+    <div class="modal-content">
+        <span class="modal-close" id="closeCreateEventModal">&times;</span>
+        <h2>Create Event</h2>
+
+        <!-- 上传图片 -->
+        <div class="form-group">
+            <label for="imageUpload">Add a Photo:</label>
+            <input type="file" id="imageUpload" accept="image/*" />
+        </div>
+
+        <!-- 选择分类，使用纯文本按钮样式 -->
+        <div class="form-group category-group">
+            <label>Category:</label>
+            <div class="category-chips">
+                <label>
+                    <input type="radio" name="category" value="gun shot">
+                    <span>Gun Shot</span>
+                </label>
+                <label>
+                    <input type="radio" name="category" value="fight">
+                    <span>Fight</span>
+                </label>
+                <label>
+                    <input type="radio" name="category" value="stealing">
+                    <span>Stealing</span>
+                </label>
+                <label>
+                    <input type="radio" name="category" value="assaulting">
+                    <span>Assaulting</span>
+                </label>
+                <label>
+                    <input type="radio" name="category" value="traffic jam">
+                    <span>Traffic Jam</span>
+                </label>
+                <label>
+                    <input type="radio" name="category" value="road closed">
+                    <span>Road Closed</span>
+                </label>
+                <label>
+                    <input type="radio" name="category" value="accident">
+                    <span>Accident</span>
+                </label>
+                <label>
+                    <input type="radio" name="category" value="performance">
+                    <span>Performance</span>
+                </label>
+                <label>
+                    <input type="radio" name="category" value="food truck">
+                    <span>Food Truck</span>
+                </label>
+                <label>
+                    <input type="radio" name="category" value="parade">
+                    <span>Parade</span>
+                </label>
+            </div>
+        </div>
+
+        <!-- 标题、内容 -->
+        <div class="form-group">
+            <label for="eventTitle">Title</label>
+            <input type="text" id="eventTitle" />
+        </div>
+        <div class="form-group">
+            <label for="eventContent">Content</label>
+            <textarea id="eventContent" rows="4"></textarea>
+        </div>
+
+        <!-- 地理位置：调用 Google Map 显示当前使用者位置 -->
+        <div class="form-group">
+            <label>Location</label>
+            <div id="createEventMap" class="map-small"></div>
+        </div>
+
+        <button id="submitCreateEvent" class="submit-button">SUBMIT</button>
+    </div>
+</div>
+
+<script src="/js/map.js"></script>
+<script src="/js/event-modal.js"></script>
+<script src="/js/event-detail.js"></script>
