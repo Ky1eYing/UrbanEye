@@ -279,7 +279,7 @@ header .container {
 }
 
 .event-item:hover {
-    background-color: var(--background-light);
+    background-color: var(--border-color);
     border-color: var(--primary-blue-light);
 }
 
@@ -370,6 +370,7 @@ header .container {
 .map-container {
     flex: 1;
     display: flex;
+    /* padding: 15px; */
     /* min-height: 400px; */
 }
 
@@ -377,6 +378,7 @@ header .container {
 .map {
     flex: 1;
     overflow: hidden;
+    height: 100%;
 }
 
 
