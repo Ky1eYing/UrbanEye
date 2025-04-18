@@ -7,15 +7,22 @@
     <title>UrbanEye - {{title}}</title>
     <link rel="stylesheet" href="/css/styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap"
+        rel="stylesheet">
+    <link href="https://api.fontshare.com/v2/css?f[]=erode@400,700&display=swap" rel="stylesheet">
+
 </head>
 
 <body>
-    <div class="container">
-        <header class="header">
-            <div class="logo-container">
+
+    <header class="header">
+        <div class="container">
+            <div class="logo">
                 <a href="/" class="logo-link">
                     <img src="/images/eyelogo.png" alt="UrbanEye Logo" class="logo-image">
-                    <h1 class="logo-text">UrbanEye</h1>
+                    <span class="logo-text">UrbanEye</span>
                 </a>
             </div>
             <div class="header-right">
@@ -37,25 +44,27 @@
                 </div>
                 {{else}}
                 <div class="login-button">
-                    <a href="/login"><button {{#if isLogin}}class="active" {{/if}}>Log in</button></a>
+                    <a href="/login"><button>LOG IN</button></a>
                 </div>
                 {{/if}}
             </div>
-        </header>
+        </div>
+    </header>
 
-        <main class="main-content {{#if centeredContent}}centered-content{{/if}}">
-            {{{body}}}
-        </main>
+    <main class="main-content">
+        {{{body}}}
+    </main>
 
-        <footer class="footer">
-            <p class="footer-text">&copy; 2025 UrbanEye. All rights reserved.</p>
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 UrbanEye. All rights reserved.</p>
             <div class="footer-links">
-                <a href="/about">About</a>
-                <a href="/privacy">Privacy Policy</a>
-                <a href="/terms">Terms of Service</a>
+                <a href="about.html">About</a>
+                <a href="#privacy">Privacy Policy</a>
+                <a href="#terms">Terms of Service</a>
             </div>
-        </footer>
-    </div>
+        </div>
+    </footer>
 </body>
 
 </html>
