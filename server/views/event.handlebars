@@ -2,14 +2,11 @@
     <!-- 事件列表容器（默认显示） -->
     <div id="event-list-container">
         <div class="create-event-button">
-            <button id="openCreateEventModal">CREATE EVENT</button>
+            <button id="openCreateEventModal">C R E A T E&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;E V E N T</button>
         </div>
         <div class="search-filter">
-            <div class="search-bar">
-                <input type="text" placeholder="Search">
-            </div>
-            <div class="category-filter">
-                <select>
+                <input type="text" placeholder="Search" class="search-bar">
+                <select class="category-filter">
                     <option value="">All Categories</option>
                     <option value="gun shot">Gun Shot</option>
                     <option value="fight">Fight</option>
@@ -22,7 +19,6 @@
                     <option value="food truck">Food Truck</option>
                     <option value="parade">Parade</option>
                 </select>
-            </div>
         </div>
         <div class="event-list">
             {{#if events.length}}
@@ -106,10 +102,7 @@
     </div>
 </div>
 
-<div class="map-container">
-    <div id="map" class="map">
-    </div>
-</div>
+<div class="map-container"><div id="map" class="map"></div></div>
 
 <!-- ================= 模态窗结构 ================= -->
 <div class="modal-overlay" id="createEventModal">
@@ -193,3 +186,18 @@
 <script src="/js/map.js"></script>
 <script src="/js/event-modal.js"></script>
 <script src="/js/event-detail.js"></script>
+<script src="/js/event-list-mock.js"></script>
+
+<!-- CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css" />
+<!-- JS -->
+<script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    new Choices('.category-filter', {
+      searchEnabled: false,
+      itemSelectText: '',
+      shouldSort: false,
+    });
+  });
+</script>
