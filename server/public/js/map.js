@@ -1,13 +1,13 @@
 let map;
 // 纽约的坐标
-const nyPosition = { lat: 40.768712448459844, lng: -73.98179241229592 };
+const nyPosition = { lat: 40.751712448459844, lng: -73.98179241229592 };
 
 // 初始化地图
 function initMap() {
     // 创建地图并指定容器元素
     map = new google.maps.Map(document.getElementById("map"), {
         center: nyPosition,
-        zoom: 12,
+        zoom: 12.8,
         styles: [
             {
                 featureType: "poi",
@@ -17,7 +17,8 @@ function initMap() {
         ],
         mapTypeControl: false,
         streetViewControl: false,
-        fullscreenControl: false
+        fullscreenControl: false,
+        gestureHandling: 'greedy' // 允许鼠标滚轮直接缩放，不需要按住任何键
     });
 
     // 添加一些示例事件标记
