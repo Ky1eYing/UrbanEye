@@ -292,9 +292,30 @@ header .container {
     padding-top: 10px;
     max-height: calc(100vh - 200px);  /* 设置最大高度，减去顶部按钮和搜索栏的高度 */
     overflow-y: auto; /* 启用垂直滚动 */
-    scrollbar-width: thin;
     /* padding-right: 15px; */
 }
+
+
+/* 自定义滚动条样式 */
+/* .event-list::-webkit-scrollbar {
+    width: 6px;
+}
+
+.event-list::-webkit-scrollbar-track {
+    background: var(--gray-light);
+    border-radius: 10px;
+}
+
+.event-list::-webkit-scrollbar-thumb {
+    background: var(--primary-blue-light);
+    border-radius: 10px;
+}
+
+.event-list::-webkit-scrollbar-thumb:hover {
+    background: var(--primary-blue-dark);
+}  */
+
+
 
 .event-item {
     display: flex;
@@ -1140,6 +1161,8 @@ section {
     width: 100vw;
     height: 100vh;
     background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
     z-index: 9999;
     justify-content: center;
     align-items: center;
@@ -1147,58 +1170,143 @@ section {
 
 /* 模态窗主体 */
 .modal-content {
-    background: #fff;
-    width: 500px;
-    /* 可根据需求调整 */
-    max-width: 90%;
-    border-radius: 8px;
-    padding: 20px;
+    background: var(--white);
+    width: 600px;
+    min-width: 500px;
+    max-height: 70vh;
+    border-radius: var(--radius);
+    padding: var(--spacing-sm) 0 var(--spacing-sm) 0;
     position: relative;
+    box-shadow: 0 4px 15px var(--shadow-color);
+    display: flex;
+    flex-direction: column;
 }
+
+.modal-content h2 {
+    color: var(--primary-blue-dark);
+    /* margin-bottom: var(--spacing-md); */
+    text-align: center;
+    font-size: 2rem;
+}
+
+/* 新增可滚动区域 */
+.modal-scrollable {
+    overflow-y: auto;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+
 
 /* 关闭按钮（右上角的X） */
 .modal-close {
     position: absolute;
-    top: 10px;
-    right: 15px;
+    top: 16px;
+    right: 10px;
+    width: 40px;
+    height: 40px;
+    text-align: center;
     font-size: 24px;
     cursor: pointer;
-    color: #999;
+    color: var(--gray-light);
+    transition: color 0.2s;
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
 }
 
 .modal-close:hover {
-    color: #333;
+    color: var(--accent-red);
+    transform: scale(1.2);
 }
 
 /* 表单组通用样式 */
 .form-group {
-    margin-bottom: 15px;
+    margin-bottom: 20px;
 }
 
 .form-group label {
     display: block;
-    margin-bottom: 6px;
+    margin-bottom: 8px;
     font-weight: bold;
+    color: var(--primary-blue-dark);
+}
+
+/* 表单输入字段样式 */
+.form-input {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid var(--gray-light);
+    border-radius: var(--radius);
+    transition: border-color 0.3s, box-shadow 0.3s;
+    font-size: 1rem;
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: var(--primary-blue-light);
+    box-shadow: 0 0 0 2px rgba(88, 107, 164, 0.2);
+}
+
+/* 文件上传容器 */
+.upload-container {
+    position: relative;
+    border: 2px dashed var(--gray-light);
+    border-radius: var(--radius);
+    padding: 20px;
+    text-align: center;
+    transition: border-color 0.3s;
+    cursor: pointer;
+}
+
+.upload-container:hover {
+    border-color: var(--primary-blue-light);
+}
+
+.upload-container input[type="file"] {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.upload-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    color: var(--gray-dark);
+}
+
+.upload-placeholder i {
+    font-size: 2rem;
+    color: var(--primary-blue-light);
 }
 
 /* 分类chips，隐藏单选框，实现纯文本按钮效果 */
 .category-chips {
     display: flex;
     flex-wrap: wrap;
-    gap: 8px;
+    gap: 10px;
     margin-top: 10px;
 }
 
 .category-chips label {
     display: inline-block;
-    background: #f0f0f0;
+    background: var(--background-light);
     border-radius: 20px;
     padding: 8px 15px;
-    margin: 2px;
+    margin: 0;
     cursor: pointer;
     transition: all 0.2s ease;
-    border: 1px solid #e0e0e0;
+    border: 1px solid var(--gray-light);
     font-size: 14px;
+    font-weight: normal;
+    color: var(--black);
 }
 
 .category-chips input[type="radio"] {
@@ -1214,14 +1322,23 @@ section {
     background-color: var(--primary-blue-light);
     color: white;
     border-color: var(--primary-blue-dark);
+    transform: scale(1.05);
 }
 
 .category-chips label:hover {
-    background-color: #e0e0e0;
+    background-color: var(--gray-light);
+    transform: translateY(-2px);
 }
 
 .category-chips label:has(input[type="radio"]:checked):hover {
     background-color: var(--primary-blue-dark);
+}
+
+/* 表单底部按钮区域 */
+.form-actions {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
 }
 
 /* 提交按钮样式 */
@@ -1229,25 +1346,36 @@ section {
     display: inline-block;
     background-color: var(--primary-blue-light);
     color: var(--white);
-    padding: 10px 20px;
+    padding: 12px 30px;
     border-radius: 25px;
     cursor: pointer;
     border: none;
     font-weight: bold;
-    transition: background-color 0.3s;
+    transition: all 0.3s;
+    letter-spacing: 1px;
+    position: relative;
+    overflow: hidden;
 }
 
 .submit-button:hover {
     background-color: var(--primary-blue-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.submit-button:active {
+    transform: translateY(0);
 }
 
 /* 用于在弹窗内显示一个较小的地图 */
 .map-small {
     width: 100%;
     height: 200px;
-    background-color: #ddd;
+    background-color: var(--gray-light);
     /* 方便可视化，没有地图时看到灰底 */
-    border-radius: 4px;
+    border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.1);
 }
 
 /* Error Page Styles */

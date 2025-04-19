@@ -107,82 +107,92 @@
 
 </div>
 
-<!-- ================= 模态窗结构 ================= -->
+<!-- ================= Creat Event Modal ================= -->
 <div class="modal-overlay" id="createEventModal">
     <div class="modal-content">
         <span class="modal-close" id="closeCreateEventModal">&times;</span>
         <h2>Create Event</h2>
 
-        <!-- 上传图片 -->
-        <div class="form-group">
-            <label for="imageUpload">Add a Photo:</label>
-            <input type="file" id="imageUpload" accept="image/*" />
-        </div>
+        <div class="modal-scrollable">
+            <!-- 上传图片 -->
+            <div class="form-group">
+                <label for="imageUpload">Add a Photo:</label>
+                <div class="upload-container">
+                    <input type="file" id="imageUpload" accept="image/*" />
+                    <div class="upload-placeholder">
+                        <i class="fas fa-image"></i>
+                        <span>Choose an image</span>
+                    </div>
+                </div>
+            </div>
 
-        <!-- 选择分类，使用纯文本按钮样式 -->
-        <div class="form-group category-group">
-            <label>Category:</label>
-            <div class="category-chips">
-                <label>
-                    <input type="radio" name="category" value="gun shot">
-                    <span>Gun Shot</span>
-                </label>
-                <label>
-                    <input type="radio" name="category" value="fight">
-                    <span>Fight</span>
-                </label>
-                <label>
-                    <input type="radio" name="category" value="stealing">
-                    <span>Stealing</span>
-                </label>
-                <label>
-                    <input type="radio" name="category" value="assaulting">
-                    <span>Assaulting</span>
-                </label>
-                <label>
-                    <input type="radio" name="category" value="traffic jam">
-                    <span>Traffic Jam</span>
-                </label>
-                <label>
-                    <input type="radio" name="category" value="road closed">
-                    <span>Road Closed</span>
-                </label>
-                <label>
-                    <input type="radio" name="category" value="accident">
-                    <span>Accident</span>
-                </label>
-                <label>
-                    <input type="radio" name="category" value="performance">
-                    <span>Performance</span>
-                </label>
-                <label>
-                    <input type="radio" name="category" value="food truck">
-                    <span>Food Truck</span>
-                </label>
-                <label>
-                    <input type="radio" name="category" value="parade">
-                    <span>Parade</span>
-                </label>
+            <!-- 选择分类，使用纯文本按钮样式 -->
+            <div class="form-group category-group">
+                <label>Category:</label>
+                <div class="category-chips">
+                    <label>
+                        <input type="radio" name="category" value="gun shot">
+                        <span>Gun Shot</span>
+                    </label>
+                    <label>
+                        <input type="radio" name="category" value="fight">
+                        <span>Fight</span>
+                    </label>
+                    <label>
+                        <input type="radio" name="category" value="stealing">
+                        <span>Stealing</span>
+                    </label>
+                    <label>
+                        <input type="radio" name="category" value="assaulting">
+                        <span>Assaulting</span>
+                    </label>
+                    <label>
+                        <input type="radio" name="category" value="traffic jam">
+                        <span>Traffic Jam</span>
+                    </label>
+                    <label>
+                        <input type="radio" name="category" value="road closed">
+                        <span>Road Closed</span>
+                    </label>
+                    <label>
+                        <input type="radio" name="category" value="accident">
+                        <span>Accident</span>
+                    </label>
+                    <label>
+                        <input type="radio" name="category" value="performance">
+                        <span>Performance</span>
+                    </label>
+                    <label>
+                        <input type="radio" name="category" value="food truck">
+                        <span>Food Truck</span>
+                    </label>
+                    <label>
+                        <input type="radio" name="category" value="parade">
+                        <span>Parade</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- 标题、内容 -->
+            <div class="form-group">
+                <label for="eventTitle">Title</label>
+                <input type="text" id="eventTitle" class="form-input" placeholder="Enter event title" />
+            </div>
+            <div class="form-group">
+                <label for="eventContent">Content</label>
+                <textarea id="eventContent" rows="4" class="form-input" placeholder="Describe the event..."></textarea>
+            </div>
+
+            <!-- 地理位置：调用 Google Map 显示当前使用者位置 -->
+            <div class="form-group">
+                <label>Location</label>
+                <div id="createEventMap" class="map-small"></div>
             </div>
         </div>
 
-        <!-- 标题、内容 -->
-        <div class="form-group">
-            <label for="eventTitle">Title</label>
-            <input type="text" id="eventTitle" />
+        <div class="form-actions">
+            <button id="submitCreateEvent" class="submit-button">SUBMIT</button>
         </div>
-        <div class="form-group">
-            <label for="eventContent">Content</label>
-            <textarea id="eventContent" rows="4"></textarea>
-        </div>
-
-        <!-- 地理位置：调用 Google Map 显示当前使用者位置 -->
-        <div class="form-group">
-            <label>Location</label>
-            <div id="createEventMap" class="map-small"></div>
-        </div>
-
-        <button id="submitCreateEvent" class="submit-button">SUBMIT</button>
     </div>
 </div>
 
