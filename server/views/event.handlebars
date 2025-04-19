@@ -1,11 +1,11 @@
 <div class="event-container">
-<div class="left-sidebar">
-    <!-- 事件列表容器（默认显示） -->
-    <div id="event-list-container">
-        <div class="create-event-button">
-            <button id="openCreateEventModal">C R E A T E&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;E V E N T</button>
-        </div>
-        <div class="search-filter">
+    <div class="left-sidebar">
+        <!-- 事件列表容器（默认显示） -->
+        <div id="event-list-container">
+            <div class="create-event-button">
+                <button id="openCreateEventModal">C R E A T E&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;E V E N T</button>
+            </div>
+            <div class="search-filter">
                 <input type="text" placeholder="Search" class="search-bar">
                 <select class="category-filter">
                     <option value="">All Categories</option>
@@ -20,90 +20,93 @@
                     <option value="food truck">Food Truck</option>
                     <option value="parade">Parade</option>
                 </select>
+            </div>
+            <div class="event-list">
+                {{#if events.length}}
+                {{#each events}}
+                <div class="event-item" data-event-id="{{this._id}}">
+                    <div class="event-image">
+                        <img src="{{this.imageUrl}}" alt="{{this.title}}">
+                    </div>
+                    <div class="event-details">
+                        <h3>{{this.title}}</h3>
+                        <div class="event-meta">
+                            <span>{{this.location}}</span>
+                            <span>{{this.time}}</span>
+                            <span>{{this.day}}</span>
+                            <span>{{this.timeAgo}}</span>
+                        </div>
+                    </div>
+                </div>
+                {{/each}}
+                {{else}}
+                <!-- fallback 示例 -->
+                <div class="event-item" data-event-id="fake-id-1">
+                    <div class="event-image">
+                        <img src="https://urban-eye.oss-us-east-1.aliyuncs.com/events-pic/23be41e3-7246-4ca5-b837-a801cae0f4f0-IMG_7863.JPG"
+                            alt="Helicopter incident">
+                    </div>
+                    <div class="event-details">
+                        <h3>Six killed after Helicopter Crashes</h3>
+                        <div class="event-meta">
+                            <span>Manhattan</span>
+                            <span>8:45</span>
+                            <span>Mon</span>
+                            <span>6 mi</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="event-item" data-event-id="fake-id-2">
+                    <div class="event-image">
+                        <img src="https://urban-eye.oss-us-east-1.aliyuncs.com/events-pic/23be41e3-7246-4ca5-b837-a801cae0f4f0-IMG_7863.JPG"
+                            alt="Helicopter incident">
+                    </div>
+                    <div class="event-details">
+                        <h3>Six killed after Helicopter Crashes</h3>
+                        <div class="event-meta">
+                            <span>Manhattan</span>
+                            <span>8:45</span>
+                            <span>Mon</span>
+                            <span>6 mi</span>
+                        </div>
+                    </div>
+                </div>
+                {{/if}}
+            </div>
         </div>
-        <div class="event-list">
-            {{#if events.length}}
-            {{#each events}}
-            <div class="event-item" data-event-id="{{this._id}}">
-                <div class="event-image">
-                    <img src="{{this.imageUrl}}" alt="{{this.title}}">
+
+        <!-- 事件详情容器（默认隐藏） -->
+        <div id="event-detail-container" style="display: none;">
+            <!-- 用于返回事件列表的按钮 -->
+            <div class="detail-header">
+                <button id="backToListBtn">
+                    < </button>
+                        <h2 id="detail-title">Event</h2>
+            </div>
+            <div class="detail-body">
+                <!-- 这里放事件标题/图片/地址/时间/内容/评论等 -->
+                <h3 id="detail-event-title"></h3>
+                <p><strong>Address:</strong> <span id="detail-event-address"></span></p>
+                <p><strong>Distance:</strong> <span id="detail-event-distance"></span> miles near you</p>
+                <div class="detail-event-image">
+                    <img id="detail-event-img" src="" alt="Event Image">
                 </div>
-                <div class="event-details">
-                    <h3>{{this.title}}</h3>
-                    <div class="event-meta">
-                        <span>{{this.location}}</span>
-                        <span>{{this.time}}</span>
-                        <span>{{this.day}}</span>
-                        <span>{{this.timeAgo}}</span>
+                <div class="detail-event-content" id="detail-event-content"></div>
+                <!-- 显示评论 -->
+                <div class="detail-event-comments">
+                    <div class="comment-form">
+                        <input type="text" id="newCommentInput" placeholder="Add your comment..." />
+                        <button id="postCommentBtn">POST</button>
                     </div>
+                    <div id="commentsList"></div>
                 </div>
             </div>
-            {{/each}}
-            {{else}}
-            <!-- fallback 示例 -->
-            <div class="event-item" data-event-id="fake-id-1">
-                <div class="event-image">
-                    <img src="https://urban-eye.oss-us-east-1.aliyuncs.com/events-pic/23be41e3-7246-4ca5-b837-a801cae0f4f0-IMG_7863.JPG"
-                        alt="Helicopter incident">
-                </div>
-                <div class="event-details">
-                    <h3>Six killed after Helicopter Crashes</h3>
-                    <div class="event-meta">
-                        <span>Manhattan</span>
-                        <span>8:45</span>
-                        <span>Mon</span>
-                        <span>6 mi</span>
-                    </div>
-                </div>
-            </div>
-            <div class="event-item" data-event-id="fake-id-2">
-                <div class="event-image">
-                    <img src="https://urban-eye.oss-us-east-1.aliyuncs.com/events-pic/23be41e3-7246-4ca5-b837-a801cae0f4f0-IMG_7863.JPG"
-                        alt="Helicopter incident">
-                </div>
-                <div class="event-details">
-                    <h3>Six killed after Helicopter Crashes</h3>
-                    <div class="event-meta">
-                        <span>Manhattan</span>
-                        <span>8:45</span>
-                        <span>Mon</span>
-                        <span>6 mi</span>
-                    </div>
-                </div>
-            </div>
-            {{/if}}
         </div>
     </div>
 
-    <!-- 事件详情容器（默认隐藏） -->
-    <div id="event-detail-container" style="display: none;">
-        <!-- 用于返回事件列表的按钮 -->
-        <div class="detail-header">
-            <button id="backToListBtn"> < </button>
-            <h2 id="detail-title">Event</h2>
-        </div>
-        <div class="detail-body">
-            <!-- 这里放事件标题/图片/地址/时间/内容/评论等 -->
-            <h3 id="detail-event-title"></h3>
-            <p><strong>Address:</strong> <span id="detail-event-address"></span></p>
-            <p><strong>Distance:</strong> <span id="detail-event-distance"></span> miles near you</p>
-            <div class="detail-event-image">
-                <img id="detail-event-img" src="" alt="Event Image">
-            </div>
-            <div class="detail-event-content" id="detail-event-content"></div>
-            <!-- 显示评论 -->
-            <div class="detail-event-comments">
-                <div class="comment-form">
-                    <input type="text" id="newCommentInput" placeholder="Add your comment..." />
-                    <button id="postCommentBtn">POST</button>
-                </div>
-                <div id="commentsList"></div>
-            </div>
-        </div>
+    <div class="map-container">
+        <div id="map" class="map"></div>
     </div>
-</div>
-
-<div class="map-container"><div id="map" class="map"></div></div>
 
 </div>
 
@@ -116,7 +119,7 @@
         <div class="modal-scrollable">
             <!-- 上传图片 -->
             <div class="form-group">
-                <label for="imageUpload">Add a Photo:</label>
+                <label for="imageUpload">Image</label>
                 <div class="upload-container">
                     <input type="file" id="imageUpload" accept="image/*" />
                     <div class="upload-placeholder">
@@ -127,8 +130,8 @@
             </div>
 
             <!-- 选择分类，使用纯文本按钮样式 -->
-            <div class="form-group category-group">
-                <label>Category:</label>
+            <div class="form-group">
+                <label>Category</label>
                 <div class="category-chips">
                     <label>
                         <input type="radio" name="category" value="gun shot">
@@ -176,7 +179,7 @@
             <!-- 标题、内容 -->
             <div class="form-group">
                 <label for="eventTitle">Title</label>
-                <input type="text" id="eventTitle" class="form-input" placeholder="Enter event title" />
+                <input type="text" id="eventTitle" class="form-input" placeholder="Enter event title..." />
             </div>
             <div class="form-group">
                 <label for="eventContent">Content</label>
@@ -186,7 +189,12 @@
             <!-- 地理位置：调用 Google Map 显示当前使用者位置 -->
             <div class="form-group">
                 <label>Location</label>
+                <div class="address-container">
+                    <span id="addressOfMap"><i class="fas fa-map-marker-alt"></i>1535 Broadway, New York, NY 10036</span>
+                    <button id="myLocation">My Location</button>
+                </div>
                 <div id="createEventMap" class="map-small"></div>
+                
             </div>
         </div>
 
@@ -206,11 +214,11 @@
 <!-- JS -->
 <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
 <script>
-  document.addEventListener('DOMContentLoaded', function () {
-    new Choices('.category-filter', {
-      searchEnabled: false,
-      itemSelectText: '',
-      shouldSort: false,
+    document.addEventListener('DOMContentLoaded', function () {
+        new Choices('.category-filter', {
+            searchEnabled: false,
+            itemSelectText: '',
+            shouldSort: false,
+        });
     });
-  });
 </script>

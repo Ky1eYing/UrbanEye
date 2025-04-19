@@ -1229,24 +1229,26 @@ section {
 .form-group label {
     display: block;
     margin-bottom: 8px;
-    font-weight: bold;
-    color: var(--primary-blue-dark);
+    font-weight: 500;
+    font-size: 1.2rem;
+    padding-left: 5px;
+    color: var(--primary-blue-light);
 }
 
 /* 表单输入字段样式 */
 .form-input {
     width: 100%;
-    padding: 12px 15px;
+    padding: var(--spacing-sm) var(--spacing-md);
     border: 1px solid var(--gray-light);
     border-radius: var(--radius);
     transition: border-color 0.3s, box-shadow 0.3s;
-    font-size: 1rem;
+    resize: none;
 }
 
 .form-input:focus {
     outline: none;
     border-color: var(--primary-blue-light);
-    box-shadow: 0 0 0 2px rgba(88, 107, 164, 0.2);
+    box-shadow: 0 0 0 1px var(--primary-blue-light);
 }
 
 /* 文件上传容器 */
@@ -1297,9 +1299,8 @@ section {
 
 .category-chips label {
     display: inline-block;
-    background: var(--background-light);
-    border-radius: 20px;
-    padding: 8px 15px;
+    border-radius: var(--radius);
+    padding: 4px 12px;
     margin: 0;
     cursor: pointer;
     transition: all 0.2s ease;
@@ -1307,6 +1308,13 @@ section {
     font-size: 14px;
     font-weight: normal;
     color: var(--black);
+    width: calc(25% - 10px); /* 每行显示5个，考虑到间隙 */
+    min-width: 100px; /* 设置最小宽度 */
+    text-align: center; /* 文本居中 */
+    white-space: nowrap; /* 防止文本换行 */
+    overflow: hidden; /* 防止内容溢出 */
+    text-overflow: ellipsis; /* 溢出时显示省略号 */
+    transition: all 0.3s;
 }
 
 .category-chips input[type="radio"] {
@@ -1314,24 +1322,24 @@ section {
     /* 隐藏单选框 */
 }
 
-.category-chips input[type="radio"]:checked+span {
-    font-weight: bold;
-}
-
 .category-chips label:has(input[type="radio"]:checked) {
     background-color: var(--primary-blue-light);
+    border-color: var(--primary-blue-light);
     color: white;
-    border-color: var(--primary-blue-dark);
-    transform: scale(1.05);
+    transition: all 0.3s;
 }
 
 .category-chips label:hover {
-    background-color: var(--gray-light);
-    transform: translateY(-2px);
+    background-color: var(--primary-blue-light);
+    border-color: var(--primary-blue-light);
+    color: white;
+    transition: all 0.3s;
 }
 
 .category-chips label:has(input[type="radio"]:checked):hover {
+    border-color: var(--primary-blue-dark);
     background-color: var(--primary-blue-dark);
+    transition: all 0.3s;
 }
 
 /* 表单底部按钮区域 */
@@ -1589,4 +1597,40 @@ section {
 
 .logo-link:hover {
     opacity: 0.9;
+}
+
+/* 地址容器样式 */
+.address-container {
+    margin-bottom: var(--spacing-md);
+}
+
+#addressOfMap {
+    background-color: var(--background-light);
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-radius: var(--radius);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+#addressOfMap i {
+    font-size: 0.8rem;
+    margin-right: 8px;
+}
+
+#myLocation {
+    background: none;
+    border: none;
+    color: var(--primary-blue-light);
+    cursor: pointer;
+    margin-left: 10px;
+    border-radius: var(--radius);
+    transition: color 0.3s ease;
+    text-align: center;
+}
+
+#myLocation:hover {
+    color: var(--primary-blue-dark);
+    font-weight: 600;
+    text-decoration: underline;
 }
