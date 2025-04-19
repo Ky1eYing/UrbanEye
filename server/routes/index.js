@@ -14,73 +14,73 @@ import likesRoutes from "./likes.js";
 // 	});
 // };
 
-const constructorMethod = app => {
-	// API路由
-	app.use("/api/events", eventsRoutes);
-	app.use("/api/users", usersRoutes);
-	app.use("/api/comments", commentsRoutes);
-	app.use("/api/likes", likesRoutes);
+const constructorMethod = (app) => {
+  // API路由
+  app.use("/api/events", eventsRoutes);
+  app.use("/api/users", usersRoutes);
+  app.use("/api/comments", commentsRoutes);
+  app.use("/api/likes", likesRoutes);
 
-	// 页面路由
-	app.get("/", (req, res) => {
-		res.render("home", {
-			title: "Home",
-			isHome: true,
-			centeredContent: true,
-			user: req.session.user
-		});
-	});
+  // 页面路由
+  app.get("/", (req, res) => {
+    res.render("home", {
+      title: "Home",
+      isHome: true,
+      centeredContent: true,
+      user: req.session.user,
+    });
+  });
 
-	app.get("/event", (req, res) => {
-		res.render("event", {
-			title: "Events",
-			isEvent: true,
-			user: req.session.user
-		});
-	});
+  app.get("/event", (req, res) => {
+    res.render("event", {
+      title: "Events",
+      isEvent: true,
+      user: req.session.user,
+    });
+  });
 
-	app.get("/about", (req, res) => {
-		res.render("about", {
-			title: "About",
-			isAbout: true,
-			centeredContent: true,
-			user: req.session.user
-		});
-	});
+  app.get("/about", (req, res) => {
+    res.render("about", {
+      title: "About",
+      isAbout: true,
+      centeredContent: true,
+      user: req.session.user,
+    });
+  });
 
-	app.get("/login", (req, res) => {
-		res.render("login", {
-			title: "Login",
-			isLogin: true,
-			centeredContent: true
-		});
-	});
+  app.get("/login", (req, res) => {
+    res.render("login", {
+      title: "Login",
+      isLogin: true,
+      centeredContent: true,
+    });
+  });
 
-	app.get("/signup", (req, res) => {
-		res.render("signup", {
-			title: "Sign Up",
-			isLogin: true,
-			centeredContent: true
-		});
-	});
+  app.get("/signup", (req, res) => {
+    res.render("signup", {
+      title: "Sign Up",
+      isLogin: true,
+      centeredContent: true,
+    });
+  });
 
-	app.get("/profile", (req, res) => {
-		// if (!req.session.user) {
-		// 	return res.redirect("/login");
-		// }
-		res.render("profile", {
-			title: "Profile",
-			user: req.session.user
-		});
-	});
+  app.get("/profile", (req, res) => {
+    // if (!req.session.user) {
+    // 	return res.redirect("/login");
+    // }
+    res.render("profile", {
+      title: "Profile",
+      user: req.session.user,
+    });
+  });
 
-	app.use("*", (req, res) => {
-		return res.status(404).render("error", {
-			title: "Not Found",
-			error: "Page Not Found",
-			centeredContent: true
-		});
-	});
+  app.use("*", (req, res) => {
+    return res.status(404).render("error", {
+      title: "Not Found",
+      error: "Page Not Found",
+      centeredContent: true,
+    });
+  });
 };
 
 export default constructorMethod;
