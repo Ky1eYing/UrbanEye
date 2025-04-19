@@ -56,7 +56,10 @@ function initCreateEventMap() {
         streetViewControl: false,
         fullscreenControl: false,
         keyboardShortcuts: false,
-        reportError: false
+        reportError: false,
+        styles: isDarkMode() ? darkModeStyles : defaultStyles,
+        gestureHandling: 'greedy',
+
     });
 
     // create marker
