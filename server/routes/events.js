@@ -18,7 +18,11 @@ router
   .get(async (req, res) => {
     try {
       const events = await eventsData.getAllEvents();
-      return res.status(200).json(events);
+      return res.status(200).json({
+        code: 200,
+        message: "success",
+        data: events,
+      });
     } catch (e) {
       return res.status(500).json({ error: e.message });
     }
@@ -77,7 +81,11 @@ router
         checked_category,
         checked_photoUrl
       );
-      return res.status(200).json(newEvent);
+      return res.status(200).json({
+        code: 200,
+        message: "success",
+        data: newEvent,
+      });
     } catch (e) {
       return res.status(400).json({ error: e.message });
     }
@@ -99,7 +107,11 @@ router
 
     try {
       const event = await eventsData.getEventByEventId(checked_eventId);
-      return res.status(200).json(event);
+      return res.status(200).json({
+        code: 200,
+        message: "success",
+        data: event,
+      });
     } catch (e) {
       return res.status(404).json({ error: e.message });
     }
@@ -134,7 +146,10 @@ router
 
     try {
       const deleteInfo = await eventsData.removeEvent(checked_eventId);
-      return res.status(200).json({ message: deleteInfo });
+      return res.status(200).json({
+        code: 200,
+        message: deleteInfo,
+      });
     } catch (e) {
       return res.status(404).json({ error: e.message });
     }
@@ -209,7 +224,11 @@ router
         checked_category,
         checked_photoUrl
       );
-      return res.status(200).json(updatedEvent);
+      return res.status(200).json({
+        code: 200,
+        message: "success",
+        data: updatedEvent,
+      });
     } catch (e) {
       return res.status(404).json({ error: e.message });
     }
@@ -237,7 +256,11 @@ router.route("/user/:userId").get(requireLogin, async (req, res) => {
 
   try {
     const userEvents = await eventsData.getEventByUserId(checked_userId);
-    return res.status(200).json(userEvents);
+    return res.status(200).json({
+      code: 200,
+      message: "success",
+      data: userEvents,
+    });
   } catch (e) {
     return res.status(404).json({ error: e.message });
   }

@@ -20,9 +20,10 @@ router
   .post(async (req, res) => {
     const reqBody = req.body;
     if (!reqBody || Object.keys(reqBody).length === 0) {
-      return res
-        .status(400)
-        .json({ error: "There are no fields in the request body" });
+      return res.status(400).json({
+        code: 400,
+        message: "There are no fields in the request body",
+      });
     }
 
     let { userName, name, password, introduction, sex, email, phone } = reqBody;
@@ -36,7 +37,7 @@ router
       email = check.validateEmail(email);
       phone = check.validatePhone(phone);
     } catch (e) {
-      return res.status(400).json({ error: e.message });
+      return res.status(400).json({ code: 400, message: e.message });
     }
 
     try {
@@ -49,9 +50,15 @@ router
         email,
         phone
       );
-      return res.status(200).json(usersData.filterUser(user));
+      return res
+        .status(200)
+        .json({
+          code: 200,
+          message: "success",
+          data: usersData.filterUser(user),
+        });
     } catch (e) {
-      return res.status(400).json({ error: e.message });
+      return res.status(400).json({ code: 400, message: e.message });
     }
   });
 
@@ -61,9 +68,10 @@ router
   .post(requireNotLogin, async (req, res) => {
     const reqBody = req.body;
     if (!reqBody || Object.keys(reqBody).length === 0) {
-      return res
-        .status(400)
-        .json({ error: "There are no fields in the request body" });
+      return res.status(400).json({
+        code: 400,
+        message: "There are no fields in the request body",
+      });
     }
 
     let { userName, password } = reqBody;
@@ -72,7 +80,7 @@ router
       userName = check.checkVaildString(userName, "UserName");
       password = check.checkVaildString(password, "Password");
     } catch (e) {
-      return res.status(400).json({ error: e.message });
+      return res.status(400).json({ code: 400, message: e.message });
     }
 
     try {
@@ -81,16 +89,20 @@ router
         password
       );
       if (!returnId) {
-        return res.status(404).json({ error: "Wrong username or password!" });
+        return res
+          .status(404)
+          .json({ code: 404, message: "Wrong username or password!" });
       } else {
         req.session.userId = returnId;
 
-        return res.status(200).json({ message: "Login successfully!" });
+        return res
+          .status(200)
+          .json({ code: 200, message: "Login successfully!" });
       }
     } catch (e) {
       return res
         .status(500)
-        .json({ error: "Sorry, system authentication failed." });
+        .json({ code: 500, message: "Sorry, system authentication failed." });
     }
   });
 
@@ -101,7 +113,9 @@ router
     req.session.destroy((err) => {
       if (err) return res.status(500).send("Logout failed");
       res.clearCookie(SESSION_COOKIE_NAME || "connect.sid");
-      return res.status(200).json({ message: "Logout successfully!" });
+      return res
+        .status(200)
+        .json({ code: 200, message: "Logout successfully!" });
     });
   });
 
@@ -114,13 +128,19 @@ router
     try {
       userId = check.checkObjectId(req.params.userId);
     } catch (e) {
-      return res.status(400).json({ error: e.message });
+      return res.status(400).json({ code: 400, message: e.message });
     }
     try {
       const user = await usersData.getUserByUserId(userId);
-      return res.status(200).json(usersData.filterUser(user));
+      return res
+        .status(200)
+        .json({
+          code: 200,
+          message: "success",
+          data: usersData.filterUser(user),
+        });
     } catch (e) {
-      return res.status(404).json({ error: e.message });
+      return res.status(404).json({ code: 404, message: e.message });
     }
   })
 
@@ -130,22 +150,23 @@ router
     try {
       userId = check.checkObjectId(req.params.userId);
     } catch (e) {
-      return res.status(400).json({ error: e.message });
+      return res.status(400).json({ code: 400, message: e.message });
     }
 
     if (ENABLE_AUTH_CHECK) {
       if (req.session.userId !== userId) {
         return res
           .status(403)
-          .json({ error: "Forbidden! You are not authorized" });
+          .json({ code: 403, message: "Forbidden! You are not authorized" });
       }
     }
 
     const reqBody = req.body;
     if (!reqBody || Object.keys(reqBody).length === 0) {
-      return res
-        .status(400)
-        .json({ error: "There are no fields in the request body" });
+      return res.status(400).json({
+        code: 400,
+        message: "There are no fields in the request body",
+      });
     }
 
     let { password } = reqBody;
@@ -153,7 +174,7 @@ router
     try {
       password = check.checkVaildString(password, "Password");
     } catch (e) {
-      return res.status(400).json({ error: e.message });
+      return res.status(400).json({ code: 400, message: e.message });
     }
 
     try {
@@ -162,12 +183,12 @@ router
         password
       );
       if (!checkStatus) {
-        return res.status(404).json({ error: "Wrong password!" });
+        return res.status(404).json({ code: 404, message: "Wrong password!" });
       }
     } catch (e) {
       return res
         .status(500)
-        .json({ error: "Sorry, system authentication failed." });
+        .json({ code: 500, message: "Sorry, system authentication failed." });
     }
 
     try {
@@ -178,10 +199,10 @@ router
         res.clearCookie(SESSION_COOKIE_NAME || "connect.sid");
         return res
           .status(200)
-          .json({ message: deleteInfo + "You will be logged out." });
+          .json({ code: 200, message: deleteInfo + "You will be logged out." });
       });
     } catch (e) {
-      return res.status(404).json({ error: e.message });
+      return res.status(404).json({ code: 404, message: e.message });
     }
   })
 
@@ -191,22 +212,23 @@ router
     try {
       userId = check.checkObjectId(req.params.userId);
     } catch (e) {
-      return res.status(400).json({ error: e.message });
+      return res.status(400).json({ code: 400, message: e.message });
     }
 
     if (ENABLE_AUTH_CHECK) {
       if (req.session.userId !== userId) {
         return res
           .status(403)
-          .json({ error: "Forbidden! You are not authorized" });
+          .json({ code: 403, message: "Forbidden! You are not authorized" });
       }
     }
 
     const reqBody = req.body;
     if (!reqBody || Object.keys(reqBody).length === 0) {
-      return res
-        .status(400)
-        .json({ error: "There are no fields in the request body" });
+      return res.status(400).json({
+        code: 400,
+        message: "There are no fields in the request body",
+      });
     }
 
     let { userName, password, originalPassword } = reqBody;
@@ -219,17 +241,22 @@ router
         "Original Password"
       );
     } catch (e) {
-      return res.status(400).json({ error: e.message });
+      return res.status(400).json({ code: 400, message: e.message });
     }
 
     if (userName !== null && password !== null) {
       return res
         .status(400)
-        .json({ error: "Cannot update two fields at the same time" });
+        .json({
+          code: 400,
+          message: "Cannot update two fields at the same time",
+        });
     }
 
     if (userName === null && password === null) {
-      return res.status(400).json({ error: "There are no fields to update" });
+      return res
+        .status(400)
+        .json({ code: 400, message: "There are no fields to update" });
     }
 
     try {
@@ -238,12 +265,12 @@ router
         originalPassword
       );
       if (!checkStatus) {
-        return res.status(404).json({ error: "Wrong password!" });
+        return res.status(404).json({ code: 404, message: "Wrong password!" });
       }
     } catch (e) {
       return res
         .status(500)
-        .json({ error: "Sorry, system authentication failed." });
+        .json({ code: 500, message: "Sorry, system authentication failed." });
     }
 
     if (userName !== null) {
@@ -255,10 +282,13 @@ router
           res.clearCookie(SESSION_COOKIE_NAME || "connect.sid");
           return res
             .status(200)
-            .json({ message: "Update successfully! You will be logged out." });
+            .json({
+              code: 200,
+              message: "Update successfully! You will be logged out.",
+            });
         });
       } catch (e) {
-        return res.status(404).json({ error: e.message });
+        return res.status(404).json({ code: 404, message: e.message });
       }
     }
 
@@ -271,10 +301,13 @@ router
           res.clearCookie(SESSION_COOKIE_NAME || "connect.sid");
           return res
             .status(200)
-            .json({ message: "Update successfully! You will be logged out." });
+            .json({
+              code: 200,
+              message: "Update successfully! You will be logged out.",
+            });
         });
       } catch (e) {
-        return res.status(404).json({ error: e.message });
+        return res.status(404).json({ code: 404, message: e.message });
       }
     }
   })
@@ -285,22 +318,23 @@ router
     try {
       userId = check.checkObjectId(req.params.userId);
     } catch (e) {
-      return res.status(400).json({ error: e.message });
+      return res.status(400).json({ code: 400, message: e.message });
     }
 
     if (ENABLE_AUTH_CHECK) {
       if (req.session.userId !== userId) {
         return res
           .status(403)
-          .json({ error: "Forbidden! You are not authorized" });
+          .json({ code: 403, message: "Forbidden! You are not authorized" });
       }
     }
 
     const reqBody = req.body;
     if (!reqBody || Object.keys(reqBody).length === 0) {
-      return res
-        .status(400)
-        .json({ error: "There are no fields in the request body" });
+      return res.status(400).json({
+        code: 400,
+        message: "There are no fields in the request body",
+      });
     }
 
     let { name, introduction, sex, email, phone } = reqBody;
@@ -314,7 +348,7 @@ router
       email = check.validateEmail(email);
       phone = check.validatePhone(phone);
     } catch (e) {
-      return res.status(400).json({ error: e.message });
+      return res.status(400).json({ code: 400, message: e.message });
     }
 
     try {
@@ -326,9 +360,15 @@ router
         email,
         phone
       );
-      return res.status(200).json(usersData.filterUser(user));
+      return res
+        .status(200)
+        .json({
+          code: 200,
+          message: "success",
+          data: usersData.filterUser(user),
+        });
     } catch (e) {
-      return res.status(404).json({ error: e.message });
+      return res.status(404).json({ code: 404, message: e.message });
     }
   });
 

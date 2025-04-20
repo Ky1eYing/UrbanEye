@@ -25,7 +25,11 @@ router
 
     try {
       const comments = await commentsData.getAllCommentsByEventId(event_id);
-      return res.status(200).json(comments);
+      return res.status(200).json({
+        code: 200,
+        message: "success",
+        data: comments,
+      });
     } catch (e) {
       return res.status(404).json({ error: e.message });
     }
@@ -66,7 +70,11 @@ router
         user_id,
         content
       );
-      return res.status(200).json(newComment);
+      return res.status(200).json({
+        code: 200,
+        message: "success",
+        data: newComment,
+      });
     } catch (e) {
       return res.status(404).json({ error: e.message });
     }
@@ -93,7 +101,11 @@ router
 
     try {
       const comments = await commentsData.getAllCommentsByUserId(user_id);
-      return res.status(200).json(comments);
+      return res.status(200).json({
+        code: 200,
+        message: "success",
+        data: comments,
+      });
     } catch (e) {
       return res.status(404).json({ error: e.message });
     }
@@ -112,7 +124,11 @@ router
 
     try {
       const comment = await commentsData.getCommentById(comment_id);
-      return res.status(200).json(comment);
+      return res.status(200).json({
+        code: 200,
+        message: "success",
+        data: comment,
+      });
     } catch (e) {
       return res.status(404).json({ error: e.message });
     }
@@ -144,7 +160,11 @@ router
 
     try {
       const updatedEvent = await commentsData.removeComment(comment_id);
-      return res.status(200).json(updatedEvent);
+      return res.status(200).json({
+        code: 200,
+        message: "success",
+        data: updatedEvent,
+      });
     } catch (e) {
       return res.status(404).json({ error: e.message });
     }
@@ -190,7 +210,11 @@ router
         comment_id,
         content
       );
-      return res.status(200).json(updatedComment);
+      return res.status(200).json({
+        code: 200,
+        message: "success",
+        data: updatedComment,
+      });
     } catch (e) {
       return res.status(404).json({ error: e.message });
     }

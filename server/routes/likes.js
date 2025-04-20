@@ -49,7 +49,11 @@ router.route("/").post(requireLogin, async (req, res) => {
       checked_user_id,
       checked_event_id
     );
-    return res.status(200).json(newLike);
+    return res.status(200).json({
+      code: 200,
+      message: "success",
+      data: newLike,
+    });
   } catch (e) {
     return res.status(400).json({ error: e.message });
   }
@@ -85,7 +89,11 @@ router.route("/:userId/:eventId").delete(requireLogin, async (req, res) => {
       checked_user_id,
       checked_event_id
     );
-    return res.status(200).json(result);
+    return res.status(200).json({
+      code: 200,
+      message: "success",
+      data: result,
+    });
   } catch (e) {
     return res.status(404).json({ error: e.message });
   }
@@ -113,7 +121,11 @@ router.route("/user/:userId").get(requireLogin, async (req, res) => {
 
   try {
     const likes = await likesData.getLikeByUserId(checked_user_id);
-    return res.status(200).json(likes);
+    return res.status(200).json({
+      code: 200,
+      message: "success",
+      data: likes,
+    });
   } catch (e) {
     return res.status(404).json({ error: e.message });
   }
@@ -149,7 +161,11 @@ router.route("/:userId/:eventId").get(requireLogin, async (req, res) => {
       checked_user_id,
       checked_event_id
     );
-    return res.status(200).json(likeStatus);
+    return res.status(200).json({
+      code: 200,
+      message: "success",
+      data: likeStatus,
+    });
   } catch (e) {
     return res.status(404).json({ error: e.message });
   }
