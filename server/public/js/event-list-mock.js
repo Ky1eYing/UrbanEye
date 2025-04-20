@@ -4,11 +4,11 @@ document.addEventListener('DOMContentLoaded', function () {
         {
             _id: '1',
             user_id: '1',
-            title: "Gun Shot Incident",
-            content: "Gun shot reported near Central Park. Police are investigating the scene.",
-            created_at: new Date("2025-03-21T12:00:00Z"),
-            location: { latitude: "40.785091", longitude: "-73.968285", address: "Central Park, NY" },
-            category: "gun shot",
+            title: "Six Died After Helicopter Crashes Into Hudson River",
+            content: "Three adults and three children were on board the helicopter, which left from the downtown skyport, Mayor Eric Adams said in a press conference. The pilot and the family on board were visiting from Spain. All six victims have been pronounced dead.\n\nFour were pronounced dead at the scene, and two others were pronounced dead at the hospital. An executive from Spain, his wife and three children died in the crash, along with the helicopter’s pilot, officials said.",
+            created_at: new Date("2025-04-10T12:00:00Z"),
+            location: { latitude: "40.7261636", longitude: "-74.0108719", address: "Spring St & NY-9A, New York, NY" },
+            category: "accident",
             click_time: 10,
             likes: [
                 {
@@ -25,6 +25,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     created_at: new Date("2025-03-21T13:05:00Z")
                 }
             ],
+            // photoUrl: 'https://images.unsplash.com/photo-1579118559062-39e94a22dbb8?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTB8fEhlbGljb3B0ZXJ8ZW58MHx8MHx8fDA%3D'
             photoUrl: 'https://images.unsplash.com/photo-1503179008861-d1e2b41f8bec?q=80&w=3869&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
         },
         {
@@ -229,6 +230,21 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
             ],
             photoUrl: 'https://plus.unsplash.com/premium_photo-1682834983265-27a10ba5232c?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8VHJhZmZpYyUyMExpZ2h0fGVufDB8fDB8fHww'
+        },
+        {
+            _id: '11',
+            user_id: '',
+            title: "Traffic Light Outage",
+            content: "Power outage affecting traffic lights at Main & 1st intersection.",
+            created_at: new Date("2025-03-21T03:00:00Z"),
+            location: { latitude: "40.7032", longitude: "-74.0170", address: "Main & 1st, NY" },
+            category: "traffic",
+            click_time: 0,
+            likes: [],
+            comments: [
+                
+            ],
+            photoUrl: ''
         }
     ];
 
