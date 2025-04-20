@@ -2,6 +2,13 @@ import express from "express";
 import { eventsData } from "../data/index.js";
 import * as check from "../utils/helpers.js";
 import { ObjectId } from "mongodb";
+import {
+  requireLogin,
+  requireNotLogin,
+  redirectLogin,
+  attachUser,
+} from "../middleware/auth.js";
+import { ENABLE_AUTH_CHECK } from "../config/env.js";
 
 const router = express.Router();
 
@@ -17,7 +24,7 @@ router
     }
   })
   // createEvent
-  .post(async (req, res) => {
+  .post(requireLogin, async (req, res) => {
     const eventInfo = req.body;
     if (!eventInfo || Object.keys(eventInfo).length === 0) {
       return res
@@ -31,11 +38,9 @@ router
         (arg) => arg === undefined
       )
     ) {
-      return res
-        .status(400)
-        .json({
-          error: "All fields need to have valid values during create event.",
-        });
+      return res.status(400).json({
+        error: "All fields need to have valid values during create event.",
+      });
     }
 
     let checked_user_id,
@@ -53,6 +58,14 @@ router
       checked_photoUrl = check.checkVaildString(photoUrl, "PhotoUrl");
     } catch (e) {
       return res.status(400).json({ error: e.message });
+    }
+
+    if (ENABLE_AUTH_CHECK) {
+      if (req.session.userId !== checked_user_id) {
+        return res
+          .status(403)
+          .json({ error: "Forbidden! You are not authorized" });
+      }
     }
 
     try {
@@ -92,7 +105,7 @@ router
     }
   })
   // removeEvent
-  .delete(async (req, res) => {
+  .delete(requireLogin, async (req, res) => {
     let checked_eventId;
     try {
       checked_eventId = check.checkVaildString(req.params.eventId, "eventId");
@@ -103,6 +116,22 @@ router
       return res.status(400).json({ error: e.message });
     }
 
+    if (ENABLE_AUTH_CHECK) {
+      let authUserId;
+      try {
+        const event = await eventsData.getEventByEventId(checked_eventId);
+        authUserId = event.user_id.toString();
+      } catch (e) {
+        return res.status(404).json({ error: e.message });
+      }
+
+      if (req.session.userId !== authUserId) {
+        return res
+          .status(403)
+          .json({ error: "Forbidden! You are not authorized" });
+      }
+    }
+
     try {
       const deleteInfo = await eventsData.removeEvent(checked_eventId);
       return res.status(200).json({ message: deleteInfo });
@@ -111,7 +140,7 @@ router
     }
   })
   // updateEvent
-  .put(async (req, res) => {
+  .put(requireLogin, async (req, res) => {
     let checked_eventId;
     try {
       checked_eventId = check.checkVaildString(req.params.eventId, "eventId");
@@ -155,6 +184,22 @@ router
       return res.status(400).json({ error: e.message });
     }
 
+    if (ENABLE_AUTH_CHECK) {
+      let authUserId;
+      try {
+        const event = await eventsData.getEventByEventId(checked_eventId);
+        authUserId = event.user_id.toString();
+      } catch (e) {
+        return res.status(404).json({ error: e.message });
+      }
+
+      if (req.session.userId !== authUserId) {
+        return res
+          .status(403)
+          .json({ error: "Forbidden! You are not authorized" });
+      }
+    }
+
     try {
       const updatedEvent = await eventsData.updateEvent(
         checked_eventId,
@@ -171,7 +216,7 @@ router
   });
 
 // GET events by user id
-router.route("/user/:userId").get(async (req, res) => {
+router.route("/user/:userId").get(requireLogin, async (req, res) => {
   let checked_userId;
   try {
     checked_userId = check.checkVaildString(req.params.userId, "userId");
@@ -180,6 +225,14 @@ router.route("/user/:userId").get(async (req, res) => {
     }
   } catch (e) {
     return res.status(400).json({ error: e.message });
+  }
+
+  if (ENABLE_AUTH_CHECK) {
+    if (req.session.userId !== checked_userId) {
+      return res
+        .status(403)
+        .json({ error: "Forbidden! You are not authorized" });
+    }
   }
 
   try {

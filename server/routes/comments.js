@@ -2,6 +2,13 @@ import express from "express";
 import { commentsData } from "../data/index.js";
 import * as check from "../utils/helpers.js";
 import { ObjectId } from "mongodb";
+import {
+  requireLogin,
+  requireNotLogin,
+  redirectLogin,
+  attachUser,
+} from "../middleware/auth.js";
+import { ENABLE_AUTH_CHECK } from "../config/env.js";
 
 const router = express.Router();
 
@@ -25,7 +32,7 @@ router
   })
 
   // createComment
-  .post(async (req, res) => {
+  .post(requireLogin, async (req, res) => {
     let event_id = req.params.eventId;
     const commentInfo = req.body;
 
@@ -45,6 +52,14 @@ router
       return res.status(400).json({ error: e.message });
     }
 
+    if (ENABLE_AUTH_CHECK) {
+      if (req.session.userId !== user_id) {
+        return res
+          .status(403)
+          .json({ error: "Forbidden! You are not authorized" });
+      }
+    }
+
     try {
       const newComment = await commentsData.createComment(
         event_id,
@@ -60,12 +75,20 @@ router
 router
   .route("/user/:userId")
   // getAllCommentsByUserId
-  .get(async (req, res) => {
+  .get(requireLogin, async (req, res) => {
     let user_id = req.params.userId;
     try {
       user_id = check.checkObjectId(user_id);
     } catch (e) {
       return res.status(400).json({ error: e.message });
+    }
+
+    if (ENABLE_AUTH_CHECK) {
+      if (req.session.userId !== user_id) {
+        return res
+          .status(403)
+          .json({ error: "Forbidden! You are not authorized" });
+      }
     }
 
     try {
@@ -95,12 +118,28 @@ router
     }
   })
   // removeComment
-  .delete(async (req, res) => {
+  .delete(requireLogin, async (req, res) => {
     let comment_id = req.params.commentId;
     try {
       comment_id = check.checkObjectId(comment_id);
     } catch (e) {
       return res.status(400).json({ error: e.message });
+    }
+
+    if (ENABLE_AUTH_CHECK) {
+      let authUserId;
+      try {
+        const comment = await commentsData.getCommentById(comment_id);
+        authUserId = comment.user_id.toString();
+      } catch (e) {
+        return res.status(404).json({ error: e.message });
+      }
+
+      if (req.session.userId !== authUserId) {
+        return res
+          .status(403)
+          .json({ error: "Forbidden! You are not authorized" });
+      }
     }
 
     try {
@@ -111,7 +150,7 @@ router
     }
   })
   // updateComment
-  .put(async (req, res) => {
+  .put(requireLogin, async (req, res) => {
     let comment_id = req.params.commentId;
     const commentInfo = req.body;
 
@@ -128,6 +167,22 @@ router
       content = check.checkVaildString(content, "Content");
     } catch (e) {
       return res.status(400).json({ error: e.message });
+    }
+
+    if (ENABLE_AUTH_CHECK) {
+      let authUserId;
+      try {
+        const comment = await commentsData.getCommentById(comment_id);
+        authUserId = comment.user_id.toString();
+      } catch (e) {
+        return res.status(404).json({ error: e.message });
+      }
+
+      if (req.session.userId !== authUserId) {
+        return res
+          .status(403)
+          .json({ error: "Forbidden! You are not authorized" });
+      }
     }
 
     try {

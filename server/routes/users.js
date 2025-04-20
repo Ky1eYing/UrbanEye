@@ -3,21 +3,18 @@ import { usersData } from "../data/index.js";
 import * as check from "../utils/helpers.js";
 import { ObjectId } from "mongodb";
 import { SESSION_COOKIE_NAME } from "../config/env.js";
+import {
+  requireLogin,
+  requireNotLogin,
+  redirectLogin,
+  attachUser,
+} from "../middleware/auth.js";
+import { ENABLE_AUTH_CHECK } from "../config/env.js";
 
 const router = Router();
 
 router
   .route("/")
-
-  // .get(async (req, res) => {
-
-  //     try {
-  //     return res.json({data: "data"});
-  //     } catch (e) {
-  //     return res.status(500).json({error: e});
-  //     }
-
-  // })
 
   // createUser
   .post(async (req, res) => {
@@ -61,7 +58,7 @@ router
 router
   .route("/login")
 
-  .post(async (req, res) => {
+  .post(requireNotLogin, async (req, res) => {
     const reqBody = req.body;
     if (!reqBody || Object.keys(reqBody).length === 0) {
       return res
@@ -100,7 +97,7 @@ router
 router
   .route("/logout")
 
-  .post(async (req, res) => {
+  .post(requireLogin, async (req, res) => {
     req.session.destroy((err) => {
       if (err) return res.status(500).send("Logout failed");
       res.clearCookie(SESSION_COOKIE_NAME || "connect.sid");
@@ -128,12 +125,20 @@ router
   })
 
   // removeUser (need password)
-  .delete(async (req, res) => {
+  .delete(requireLogin, async (req, res) => {
     let userId;
     try {
       userId = check.checkObjectId(req.params.userId);
     } catch (e) {
       return res.status(400).json({ error: e.message });
+    }
+
+    if (ENABLE_AUTH_CHECK) {
+      if (req.session.userId !== userId) {
+        return res
+          .status(403)
+          .json({ error: "Forbidden! You are not authorized" });
+      }
     }
 
     const reqBody = req.body;
@@ -181,12 +186,20 @@ router
   })
 
   // updateUser userName or password (need originalPassword)
-  .post(async (req, res) => {
+  .post(requireLogin, async (req, res) => {
     let userId;
     try {
       userId = check.checkObjectId(req.params.userId);
     } catch (e) {
       return res.status(400).json({ error: e.message });
+    }
+
+    if (ENABLE_AUTH_CHECK) {
+      if (req.session.userId !== userId) {
+        return res
+          .status(403)
+          .json({ error: "Forbidden! You are not authorized" });
+      }
     }
 
     const reqBody = req.body;
@@ -267,12 +280,20 @@ router
   })
 
   // updateUser general information
-  .put(async (req, res) => {
+  .put(requireLogin, async (req, res) => {
     let userId;
     try {
       userId = check.checkObjectId(req.params.userId);
     } catch (e) {
       return res.status(400).json({ error: e.message });
+    }
+
+    if (ENABLE_AUTH_CHECK) {
+      if (req.session.userId !== userId) {
+        return res
+          .status(403)
+          .json({ error: "Forbidden! You are not authorized" });
+      }
     }
 
     const reqBody = req.body;

@@ -2,11 +2,18 @@ import express from "express";
 import { likesData } from "../data/index.js";
 import * as check from "../utils/helpers.js";
 import { ObjectId } from "mongodb";
+import {
+  requireLogin,
+  requireNotLogin,
+  redirectLogin,
+  attachUser,
+} from "../middleware/auth.js";
+import { ENABLE_AUTH_CHECK } from "../config/env.js";
 
 const router = express.Router();
 
 // Create a like
-router.route("/").post(async (req, res) => {
+router.route("/").post(requireLogin, async (req, res) => {
   const likeInfo = req.body;
   if (!likeInfo || Object.keys(likeInfo).length === 0) {
     return res
@@ -29,6 +36,14 @@ router.route("/").post(async (req, res) => {
     return res.status(400).json({ error: e.message });
   }
 
+  if (ENABLE_AUTH_CHECK) {
+    if (req.session.userId !== checked_user_id) {
+      return res
+        .status(403)
+        .json({ error: "Forbidden! You are not authorized" });
+    }
+  }
+
   try {
     const newLike = await likesData.createLike(
       checked_user_id,
@@ -41,7 +56,7 @@ router.route("/").post(async (req, res) => {
 });
 
 // Remove a like
-router.route("/:userId/:eventId").delete(async (req, res) => {
+router.route("/:userId/:eventId").delete(requireLogin, async (req, res) => {
   let checked_user_id, checked_event_id;
   try {
     checked_user_id = check.checkVaildString(req.params.userId, "userId");
@@ -55,6 +70,14 @@ router.route("/:userId/:eventId").delete(async (req, res) => {
     }
   } catch (e) {
     return res.status(400).json({ error: e.message });
+  }
+
+  if (ENABLE_AUTH_CHECK) {
+    if (req.session.userId !== checked_user_id) {
+      return res
+        .status(403)
+        .json({ error: "Forbidden! You are not authorized" });
+    }
   }
 
   try {
@@ -69,7 +92,7 @@ router.route("/:userId/:eventId").delete(async (req, res) => {
 });
 
 // Get all likes by user ID
-router.route("/user/:userId").get(async (req, res) => {
+router.route("/user/:userId").get(requireLogin, async (req, res) => {
   let checked_user_id;
   try {
     checked_user_id = check.checkVaildString(req.params.userId, "userId");
@@ -78,6 +101,14 @@ router.route("/user/:userId").get(async (req, res) => {
     }
   } catch (e) {
     return res.status(400).json({ error: e.message });
+  }
+
+  if (ENABLE_AUTH_CHECK) {
+    if (req.session.userId !== checked_user_id) {
+      return res
+        .status(403)
+        .json({ error: "Forbidden! You are not authorized" });
+    }
   }
 
   try {
@@ -89,7 +120,7 @@ router.route("/user/:userId").get(async (req, res) => {
 });
 
 // Get like status for an event by a user
-router.route("/:userId/:eventId").get(async (req, res) => {
+router.route("/:userId/:eventId").get(requireLogin, async (req, res) => {
   let checked_user_id, checked_event_id;
   try {
     checked_user_id = check.checkVaildString(req.params.userId, "userId");
@@ -103,6 +134,14 @@ router.route("/:userId/:eventId").get(async (req, res) => {
     }
   } catch (e) {
     return res.status(400).json({ error: e.message });
+  }
+
+  if (ENABLE_AUTH_CHECK) {
+    if (req.session.userId !== checked_user_id) {
+      return res
+        .status(403)
+        .json({ error: "Forbidden! You are not authorized" });
+    }
   }
 
   try {

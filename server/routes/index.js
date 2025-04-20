@@ -2,6 +2,12 @@ import eventsRoutes from "./events.js";
 import usersRoutes from "./users.js";
 import commentsRoutes from "./comments.js";
 import likesRoutes from "./likes.js";
+import {
+  requireLogin,
+  requireNotLogin,
+  redirectLogin,
+  attachUser,
+} from "../middleware/auth.js";
 
 // const constructorMethod = app => {
 // 	app.use("/events", eventsRoutes);
@@ -22,29 +28,29 @@ const constructorMethod = (app) => {
   app.use("/api/likes", likesRoutes);
 
   // 页面路由
-  app.get("/", (req, res) => {
+  app.get("/", attachUser, (req, res) => {
     res.render("home", {
       title: "Home",
       isHome: true,
       centeredContent: true,
-      user: req.session.user,
+      user: req.user,
     });
   });
 
-  app.get("/event", (req, res) => {
+  app.get("/event", attachUser, (req, res) => {
     res.render("event", {
       title: "Events",
       isEvent: true,
-      user: req.session.user,
+      user: req.user,
     });
   });
 
-  app.get("/about", (req, res) => {
+  app.get("/about", attachUser, (req, res) => {
     res.render("about", {
       title: "About",
       isAbout: true,
       centeredContent: true,
-      user: req.session.user,
+      user: req.user,
     });
   });
 
@@ -64,13 +70,10 @@ const constructorMethod = (app) => {
     });
   });
 
-  app.get("/profile", (req, res) => {
-    // if (!req.session.user) {
-    // 	return res.redirect("/login");
-    // }
+  app.get("/profile", redirectLogin, attachUser, (req, res) => {
     res.render("profile", {
       title: "Profile",
-      user: req.session.user,
+      user: req.user,
     });
   });
 
