@@ -293,6 +293,14 @@
 <!-- JS -->
 <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
 <script>
+
+    const isLoggedIn = {{#if user}}true{{else}}false{{/if}};
+    console.log('isLoggedIn: ', isLoggedIn);
+    {{#if user}}
+    const userInfo = {{{json user}}};
+    console.log('userInfo: {_id: '', userName: '', name: ''}: ', userInfo);
+    {{/if}}
+
     document.addEventListener('DOMContentLoaded', function () {
         new Choices('.category-filter', {
             searchEnabled: false,

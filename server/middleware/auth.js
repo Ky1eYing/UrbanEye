@@ -41,11 +41,10 @@ const redirectLogin = (req, res, next) => {
   next();
 };
 
-const attachUser = (req, res, next) => {
+const attachUser = async (req, res, next) => {
   if (req.session && req.session.userId) {
     try {
-      const user = usersData.getUserByUserId(req.session.userId);
-
+      const user = await usersData.getUserByUserId(req.session.userId);
       if (user) {
         req.user = {
           _id: user._id,
