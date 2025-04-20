@@ -5,6 +5,16 @@ document.addEventListener("DOMContentLoaded", () => {
     const newCommentInput = document.getElementById("newCommentInput");
     
     backToListBtn.addEventListener("click", () => {
+
+        const params = new URLSearchParams(window.location.search);
+        params.delete('event');
+        const queryString = params.toString();
+        const newUrl = queryString
+          ? `${window.location.pathname}?${queryString}`
+          : window.location.pathname;
+
+        history.pushState({}, '', newUrl);
+
         // 点击返回按钮后，隐藏事件详情，显示事件列表
         eventDetailContainer.style.display = "none";
         eventListContainer.style.display = "block";
@@ -140,6 +150,9 @@ document.addEventListener("DOMContentLoaded", () => {
  * 将后端返回的 eventData 显示在 #event-detail-container 里
  */
 function showEventDetail(eventData) {
+
+    history.pushState({}, '', '?event=' + eventData._id);
+
     const detailTitle = document.getElementById("detail-title");
     const detailEventTitle = document.getElementById("detail-event-title");
     const detailEventAddress = document.getElementById("detail-event-address");

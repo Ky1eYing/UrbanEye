@@ -1,6 +1,8 @@
+let mockEvents = [];
+
 document.addEventListener('DOMContentLoaded', function () {
     // 模拟事件数据
-    const mockEvents = [
+    mockEvents = [
         {
             _id: '1',
             user_id: '1',
@@ -302,6 +304,58 @@ document.addEventListener('DOMContentLoaded', function () {
             });
         });
     }
+
+    const params = new URLSearchParams(window.location.search);
+    const eventId = params.get('event');
+    if (eventId) {
+      const result = mockEvents.find(event => event._id === eventId);
+      if (result) {
+        showEventDetail(result);
+        const eventListContainer = document.getElementById("event-list-container");
+        const eventDetailContainer = document.getElementById("event-detail-container");
+        eventListContainer.style.display = "none";
+        eventDetailContainer.style.display = "block";
+      }
+      else {
+        params.delete('event');
+        const queryString = params.toString();
+        const newUrl = queryString
+          ? `${window.location.pathname}?${queryString}`
+          : window.location.pathname;
+
+        history.pushState({}, '', newUrl);
+      }
+    }
+});
+
+window.addEventListener('popstate', () => {
+  const params = new URLSearchParams(window.location.search);
+  const eventId = params.get('event');
+  if (eventId) {
+    const result = mockEvents.find(event => event._id === eventId);
+    if (result) {
+      showEventDetail(result);
+      const eventListContainer = document.getElementById("event-list-container");
+      const eventDetailContainer = document.getElementById("event-detail-container");
+      eventListContainer.style.display = "none";
+      eventDetailContainer.style.display = "block";
+    }
+    else {
+      params.delete('event');
+      const queryString = params.toString();
+      const newUrl = queryString
+        ? `${window.location.pathname}?${queryString}`
+        : window.location.pathname;
+
+      history.pushState({}, '', newUrl);
+    }
+  }
+  else {
+    const eventListContainer = document.getElementById("event-list-container");
+    const eventDetailContainer = document.getElementById("event-detail-container");
+    eventDetailContainer.style.display = "none";
+    eventListContainer.style.display = "block";
+  }
 });
 
 // 格式化时间差

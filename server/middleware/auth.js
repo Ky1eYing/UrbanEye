@@ -48,7 +48,7 @@ const attachUser = (req, res, next) => {
 
       if (user) {
         req.user = {
-          id: user._id,
+          _id: user._id,
           userName: user.userName,
           name: user.name,
         };
