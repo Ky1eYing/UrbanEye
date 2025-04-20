@@ -4,6 +4,7 @@
     --accent-yellow: #F5DD90;
     --accent-orange: #F68E5F;
     --accent-red: #F76C5E;
+    --accent-green: #2ab5a5;
     --gray-dark: #636363;
     --gray-light: #D2D2D2;
     --black: #000000;
@@ -24,6 +25,27 @@
 }
 
 /*  main.handlebars  */
+
+h1{
+    font-size: 2.5rem;
+}
+
+h2{
+    font-size: 2rem;
+}   
+
+h3{
+    font-size: 1.5rem;
+}
+
+h4{
+    font-size: 1.2rem;
+}
+
+h5{
+    font-size: 1rem;
+}
+
 
 * {
     margin: 0;
@@ -421,6 +443,7 @@ header .container {
 .map-container {
     flex: 1;
     display: flex;
+    background-color: var(--white);
     /* padding: 15px; */
     /* min-height: 400px; */
 }
@@ -736,16 +759,18 @@ header .container {
 
 /* Login Page Styles */
 .login-content {
-    max-width: 1000px;
     width: 100%;
+    height: calc(100vh - 70px);
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: center;     /* 垂直居中 */
+    justify-content: center; /* 水平居中 */
+    text-align: center;
 }
 
 .login-form-container {
-    width: 400px;
-    margin: 0 auto 60px;
+    min-width: 400px;
+    margin: 60px;
 }
 
 .login-form {
@@ -776,38 +801,25 @@ header .container {
     font-size: 14px;
 }
 
-.form-input {
-    width: 100%;
-    padding: 12px;
-    border: 1px solid var(--primary-blue-light);
-    border-radius: 25px;
-    font-size: 16px;
-    margin-bottom: 5px;
-}
-
 .error-icon {
     margin-right: 8px;
     font-size: 10px;
 }
 
-.login-submit-btn {
+.login-actions {
+    padding: var(--spacing-xl) 0 0 0 !important;
+
+}
+
+.login-actions .submit-button {
     width: 100%;
-    padding: 12px;
-    background-color: var(--primary-blue-light);
-    color: var(--white);
-    border: none;
-    border-radius: 25px;
-    font-size: 18px;
-    font-weight: bold;
-    cursor: pointer;
-    margin-top: 10px;
 }
 
 .form-footer {
     display: flex;
     justify-content: center;
     gap: 10px;
-    margin-top: 20px;
+    margin-top: var(--spacing-md);
     font-size: 14px;
     color: var(--gray-dark);
 }
@@ -1186,7 +1198,6 @@ section {
     color: var(--primary-blue-light);
     /* margin-bottom: var(--spacing-md); */
     text-align: center;
-    font-size: 2rem;
 }
 
 /* 新增可滚动区域 */
@@ -1425,7 +1436,7 @@ section {
 #event-detail-container {
     display: flex;
     flex-direction: column;
-    padding: 1rem;
+    padding: var(--spacing-md) 0 0 var(--spacing-md) ;
 }
 
 .detail-header {
@@ -1440,36 +1451,69 @@ section {
     background-color: transparent;
     color: var(--primary-blue-light);
     border: none;
+    font-size: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1.6;
 }
 
-.detail-header h2 {
+.detail-header h3 {
     color: var(--primary-blue-light);
 }
 
 .detail-body {
-    margin-top: var(--spacing-md);
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    max-height: calc(100vh - 170px);
+    overflow-y: auto;
+    padding-right: var(--spacing-md);
 }
+
 
 .detail-event-image img {
     width: 100%;
-    max-height: 200px;
     object-fit: cover;
-    border: 1px solid #ccc;
-    border-radius: 8px;
+    border-radius: var(--radius);
 }
 
-.detail-event-content {
-    margin: 10px 0;
-    line-height: 1.5;
+.detail-section {
+    border-bottom: 1.4px solid var(--border-color);
+    padding-top: 15px;
+    padding-bottom: 15px;
+}
+
+.detail-section h2 {
+    line-height: 1.2;
+    font-weight: 501;
+}
+
+.detail-section-title {
+    /* color: var(--primary-blue-light); */
+    margin-bottom: var(--spacing-sm);
+    font-weight: 600;
+}
+
+.detail-section-content {
+    line-height: 1.2;
+}
+
+.detail-section-content-grey {
+    color: var(--gray-dark);
+    line-height: 1.2;
+}
+
+.no-border {
+    border: none;
+}
+
+.detail-event-post {
+    padding: var(--spacing-sm) 2px var(--spacing-sm) 2px;
 }
 
 .detail-event-comments {
-    margin-top: 20px;
-    border-top: 1px solid var(--gray-light);
-    padding-top: 10px;
+    padding-top: 2px;
+    padding-bottom: 2px;
 }
 
 .detail-event-comments h4 {
@@ -1478,37 +1522,113 @@ section {
 }
 
 .comment-item {
-    margin-bottom: 10px;
-    padding: 10px;
+    display: flex;
+    gap: var(--spacing-sm); /* 元素之间间距 */
+    padding: var(--spacing-sm) 2px var(--spacing-sm) 2px;
+    border-radius: var(--radius);
+    transition: all 0.3s ease;
+  }
+  
+  .comment-item:hover {
     background-color: var(--background-light);
-    border-radius: 8px;
-}
+  }
+  
+  .comment-useravator {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    overflow: hidden;
+    flex-shrink: 0; /* NO zip */
+    border: 2px solid white;
+    /* box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); */
+  }
+  
+  .comment-useravator img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  
+  .comment-body {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+  }
+  
+  .comment-header {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 2px;
+    line-height: 1.2;
+  }
+  
+  .comment-username {
+    font-weight: 600;
+  }
+  
+  .comment-time {
+    color: var(--gray-dark);
+    font-size: 0.85em;
+  }
+  
+  .comment-content {
+    line-height: 1.2;
+    /* word-break: break-word; */
+  }
+  
 
 .comment-form {
     display: flex;
-    gap: 10px;
-    margin-top: 10px;
+    gap: 5px;
 }
 
-.comment-form input {
-    flex: 1;
-    padding: 8px 12px;
-    border: 1px solid var(--gray-light);
-    border-radius: 4px;
+/* Event Actions Styles */
+
+.detail-event-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 2px;
+    padding-bottom: 2px;
 }
 
-.comment-form button {
-    background-color: var(--primary-blue-light);
-    color: var(--white);
+.action-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
     border: none;
-    border-radius: 4px;
-    padding: 8px 15px;
     cursor: pointer;
+    gap: 8px;
+    /* width: 80px; */
+    padding: 5px 13px;
+    border-radius: var(--radius);
+    transition: all 0.2s ease;
+    color: var(--gray-dark);
 }
 
-.comment-form button:hover {
-    background-color: var(--primary-blue-dark);
+.like-btn:hover {
+    background-color: #F76C5E30;
+    color: #F76C5E;
 }
+
+.comment-btn:hover {
+    background-color: #32437630;
+    color: #324376;
+}
+
+.share-btn:hover {
+    background-color: #2ab5a530;
+    color: #2ab5a5;
+}
+
+.action-btn.liked {
+    color: var(--accent-red);
+    font-weight: 400;
+}
+
+
 
 /* 个人资料编辑样式 */
 .edit-profile-container {

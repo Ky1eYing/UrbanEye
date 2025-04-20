@@ -80,25 +80,100 @@
             <!-- 用于返回事件列表的按钮 -->
             <div class="detail-header">
                 <button id="backToListBtn">
-                    < </button>
-                        <h2 id="detail-title">Event</h2>
+                    <i class="fas fa-angle-left"></i>
+                </button>
+                <h3 id="detail-title">Event</h3>
             </div>
             <div class="detail-body">
                 <!-- 这里放事件标题/图片/地址/时间/内容/评论等 -->
-                <h3 id="detail-event-title"></h3>
-                <p><strong>Address:</strong> <span id="detail-event-address"></span></p>
-                <p><strong>Distance:</strong> <span id="detail-event-distance"></span> miles near you</p>
-                <div class="detail-event-image">
+                <div class="detail-section">
+                    <h2 id="detail-event-title"></h2>
+                </div>
+
+                <div class="detail-section">
+                    <h3 class="detail-section-title">Address</h3>
+                    <div class="detail-section-content">
+                        <p id="detail-event-address"></p>
+                        <p id="detail-event-distance" class="detail-section-content-grey"></p>
+                    </div>
+                </div>
+
+                <div class="detail-event-image detail-section">
                     <img id="detail-event-img" src="" alt="Event Image">
                 </div>
-                <div class="detail-event-content" id="detail-event-content"></div>
-                <!-- 显示评论 -->
-                <div class="detail-event-comments">
-                    <div class="comment-form">
-                        <input type="text" id="newCommentInput" placeholder="Add your comment..." />
-                        <button id="postCommentBtn">POST</button>
+
+                <div class="detail-section no-border">
+                    <h3 class="detail-section-title">Content</h3>
+                    <div class="detail-section-content">
+                        <div id="detail-event-content"></div>
                     </div>
-                    <div id="commentsList"></div>
+                </div>
+
+                <div class="detail-section">
+                    <div class="detail-section-content-grey">
+                        <span id="detail-event-createdat">2:05PM Apr 11, 2025</span>
+                        <span>&nbsp;&nbsp;·&nbsp;&nbsp;</span>
+                        <span id="detail-event-clicktime">543 views</span>
+                    </div>
+                </div>
+
+                <!-- 点赞、评论、分享按钮 -->
+                <div class="detail-section detail-event-actions">
+                    <button class="action-btn like-btn" id="likeEventBtn">
+                        <i class="far fa-heart"></i>
+                        <span class="like-count">0</span>
+                    </button>
+                    <button class="action-btn comment-btn" id="focusCommentBtn">
+                        <i class="far fa-comment"></i>
+                        <span class="comment-count">0</span>
+                    </button>
+                    <button class="action-btn share-btn" id="shareEventBtn">
+                        <i class="far fa-share-square"></i>
+                        <span>Share</span>
+                    </button>
+                </div>
+
+                <div class="detail-event-post detail-section">
+                    <div class="comment-form">
+                        <input type="text" class="form-input" id="newCommentInput" placeholder="Add your comment..." />
+                        <button class="submit-button" id="postCommentBtn">POST</button>
+                    </div>
+
+                </div>
+                <div class="detail-event-comments detail-section no-border">
+                    <div id="commentsList">
+                        <div class="comment-item">
+                            <div class="comment-useravator">
+                                <img src="https://urban-eye.oss-us-east-1.aliyuncs.com/users-pic/sun.JPG"
+                                    alt="User Avatar">
+                            </div>
+                            <div class="comment-body">
+                                <div class="comment-header">
+                                    <span class="comment-username">sun</span>
+                                    <span class="comment-time">Apr 10, 17:37</span>
+                                </div>
+                                <div class="comment-content">
+                                    RIP
+                                </div>
+                            </div>
+                        </div>
+                        <div class="comment-item">
+                            <div class="comment-useravator">
+                                <img src="https://urban-eye.oss-us-east-1.aliyuncs.com/users-pic/morentouxiang.png"
+                                    alt="User Avatar">
+                            </div>
+                            <div class="comment-body">
+                                <div class="comment-header">
+                                    <span class="comment-username">leingano</span>
+                                    <span class="comment-time">Apr 10, 17:18</span>
+                                </div>
+                                <div class="comment-content">
+                                    may those who died rest in peace, prayers to their families and friends
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
                 </div>
             </div>
         </div>
@@ -190,18 +265,20 @@
             <div class="form-group">
                 <label>Location</label>
                 <div class="address-container">
-                    <span id="addressOfMap"><i class="fas fa-map-marker-alt"></i>1535 Broadway, New York, NY 10036</span>
+                    <span id="addressOfMap"><i class="fas fa-map-marker-alt"></i>1535 Broadway, New York, NY
+                        10036</span>
                     <button id="myLocation">My Location</button>
                 </div>
                 <div id="createEventMap" class="map-small"></div>
-                
+
             </div>
         </div>
 
         <div class="form-actions">
 
-            <span id="errorMessage" class="error-message"><i class="fas fa-triangle-exclamation"></i>提交失败！</span>
-            <button id="submitCreateEvent" class="submit-button">SUBMIT</button>
+            <span id="errorMessage" class="error-message"><i class="fas fa-triangle-exclamation"></i>Request
+                Denied!</span>
+            <button id="submitCreateEvent" class="submit-button">Submit</button>
         </div>
     </div>·
 </div>
