@@ -13,6 +13,34 @@ import { ENABLE_AUTH_CHECK } from "../config/env.js";
 const router = express.Router();
 
 router
+  .route("/filter")
+  // getFilterEvents
+  .get(async (req, res) => {
+
+    // location category time title skip(List sliding loading)
+    const { minLatitude, minLongitude, maxLatitude, maxLongitude, category, timeFromNow, titleLike, skip } = req.query;
+    // number of events to return per query (CONSTANT)
+    const limit = 10;
+    // Sort by number of clicks
+
+    // http://localhost:3000/api/events/filter?minLatitude=1&minLongitude=1&maxLatitude=2&maxLongitude=2&category=kill&timeFromNow=7&titleLike=NYC&skip=10
+    // 1 1 2 2 kill 7 NYC 10
+    // console.log(minLatitude, minLongitude, maxLatitude, maxLongitude, category, timeFromNow, titleLike, skip);
+    // TODO
+
+    try {
+      const events = await eventsData.getAllEvents();
+      return res.status(200).json({
+        code: 200,
+        message: "success",
+        data: events,
+      });
+    } catch (e) {
+      return res.status(500).json({ error: e.message });
+    }
+  });
+
+router
   .route("/")
   // getAllEvents
   .get(async (req, res) => {
