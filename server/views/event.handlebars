@@ -1,6 +1,7 @@
 <div class="event-container">
+    <!-- ================= [ Left Sidebar ] ================= -->
     <div class="left-sidebar">
-        <!-- 事件列表容器（默认显示） -->
+        <!-- ================= Event List Page ================= -->
         <div id="event-list-container">
             <div class="create-event-button">
                 <button id="openCreateEventModal">C R E A T E&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;E V E N T</button>
@@ -75,17 +76,18 @@
             </div>
         </div>
 
-        <!-- 事件详情容器（默认隐藏） -->
+        <!-- ================= Event Detail Page ================= -->
         <div id="event-detail-container" style="display: none;">
-            <!-- 用于返回事件列表的按钮 -->
+            {{!-- Back Button --}}
             <div class="detail-header">
                 <button id="backToListBtn">
                     <i class="fas fa-angle-left"></i>
                 </button>
                 <h3 id="detail-title">Event</h3>
             </div>
+
             <div class="detail-body">
-                <!-- 这里放事件标题/图片/地址/时间/内容/评论等 -->
+                {{!-- Event Detail --}}
                 <div class="detail-section">
                     <h2 id="detail-event-title"></h2>
                 </div>
@@ -117,13 +119,13 @@
                     </div>
                 </div>
 
-                <!-- 点赞、评论、分享按钮 -->
+                {{!-- Event Actions --}}
                 <div class="detail-section detail-event-actions">
                     <button class="action-btn like-btn" id="likeEventBtn">
                         <i class="far fa-heart"></i>
                         <span class="like-count">0</span>
                     </button>
-                    <button class="action-btn comment-btn" id="focusCommentBtn">
+                    <button class="action-btn comment-btn" id="CommentEventBtn">
                         <i class="far fa-comment"></i>
                         <span class="comment-count">0</span>
                     </button>
@@ -133,6 +135,7 @@
                     </button>
                 </div>
 
+                {{!-- New Comment Post --}}
                 <div class="detail-event-post detail-section">
                     <div class="comment-form">
                         <input type="text" class="form-input" id="newCommentInput" placeholder="Add your comment..." />
@@ -140,8 +143,12 @@
                     </div>
 
                 </div>
+
+                {{!-- Event Comments --}}
                 <div class="detail-event-comments detail-section no-border">
                     <div id="commentsList">
+
+                        {{!-- Mock Comments only use for testing --}}
                         <div class="comment-item">
                             <div class="comment-useravator">
                                 <img src="https://urban-eye.oss-us-east-1.aliyuncs.com/users-pic/sun.JPG"
@@ -179,13 +186,14 @@
         </div>
     </div>
 
+    <!-- ================= Map [ Right Sidebar ] ================= -->
     <div class="map-container">
         <div id="map" class="map"></div>
     </div>
 
 </div>
 
-<!-- ================= Creat Event Modal ================= -->
+<!-- ================= Creat Event Page ( Modal ) ================= -->
 <div class="modal-overlay" id="createEventModal">
     <div class="modal-content">
         <span class="modal-close" id="closeCreateEventModal">&times;</span>
@@ -283,29 +291,29 @@
     </div>·
 </div>
 
-<script src="/js/map.js" defer></script>
-<script src="/js/event-modal.js" defer></script>
-<script src="/js/event-detail.js" defer></script>
-<script src="/js/event-list-mock.js" defer></script>
 
 <!-- CSS -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css" />
-<!-- JS -->
+<!-- choices element -->
 <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
-<script>
+<!-- JS -->
+<script src="/js/helps.js" defer></script>
+<script src="/js/event-modal.js" defer></script>
+<script src="/js/event_list.js" defer></script>
+<script src="/js/event_detail.js" defer></script>
+<script src="/js/event_router.js" defer></script>
+<script src="/js/event_api.js" defer></script>
+<script src="/js/map.js" defer></script>
 
-    const isLoggedIn = {{#if user}}true{{else}}false{{/if}};
+
+
+
+{{!-- <script>
+
+    const isLoggedIn = {{ #if user }}true{ {else } } false{ {/if } };
     console.log('isLoggedIn: ', isLoggedIn);
-    {{#if user}}
-    const userInfo = {{{json user}}};
+    { { #if user } }
+    const userInfo = {{{ json user }}};
     console.log('userInfo: {_id: '', userName: '', name: ''}: ', userInfo);
-    {{/if}}
-
-    document.addEventListener('DOMContentLoaded', function () {
-        new Choices('.category-filter', {
-            searchEnabled: false,
-            itemSelectText: '',
-            shouldSort: false,
-        });
-    });
-</script>
+    { {/if } }
+<script> --}}
