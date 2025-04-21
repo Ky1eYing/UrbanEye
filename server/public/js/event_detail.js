@@ -1,13 +1,13 @@
-/* global getEventIdFromURL, removeLike, addLike, mockEvents, getEventByEventId, formatDistanceAway, formatTimeAgo, getLikeByUserId, addComment, showEventList */
+/* global replaceToEventList, getEventIdFromURL, removeLike, addLike, mockEvents, getEventByEventId, formatDistanceAway, formatTimeAgo, getLikeByUserId, addComment, showEventList */
 
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
 
     const eventId = getEventIdFromURL();
 
     // Set back button
     const backToListBtn = document.getElementById("backToListBtn");
-    backToListBtn.addEventListener("click", () => {
+    backToListBtn.addEventListener("click", async () => {
         const eventId = getEventIdFromURL();
 
         // If no event id, means not Event Detail Page, do nothing
@@ -18,10 +18,9 @@ document.addEventListener("DOMContentLoaded", () => {
             // Come from any page in this cite, Go back (maybe from user profile page then event list page)
             history.back();
         } else {
-            // user directly visit '/event?event=123', default back to event list page
-            let newUrl = '/event';
-            history.replaceState({}, '', newUrl);
-            showEventList();
+            // user directly visit '/event?_id=123', default back to event list page
+            replaceToEventList(eventId);
+            await showEventList();
         }
     });
 
@@ -158,9 +157,6 @@ document.addEventListener("DOMContentLoaded", () => {
  * Show event detail
  */
 async function showEventDetail() {
-
-
-    // history.pushState({}, '', '?event=' + eventData._id);
 
     // Get event id from url
     const eventId = getEventIdFromURL();

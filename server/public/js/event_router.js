@@ -7,8 +7,11 @@ function pushEventDetail(eventId) {
 }
 
 // Jump to event list page
-function replaceToEventList() {
-    history.replaceState({}, '', '/event');
+function replaceToEventList(eventId) {
+    // We directly visit '/event?_id=123', and go back to Event List page, User use `forward` to Event Detail page
+    history.replaceState(null, '', '/event'); // Make a fake visit history, as you have visited '/event'
+    history.pushState({ _id: eventId }, '', '?_id=' + eventId); // as you jump to '/event?_id=123'
+    history.back(); // as you back to '/event'
 }
 
 // Get event id from url for event detail page
@@ -17,13 +20,13 @@ function getEventIdFromURL() {
     return params.get('_id');
 }
 
-window.addEventListener('popstate', () => {
+window.addEventListener('popstate', async () => {
     // Get event _id
     const eventId = getEventIdFromURL();
 
     if (eventId) {
-        showEventDetail();
+        await showEventDetail();
     } else {
-        showEventList();
+        await showEventList();
     }
 });

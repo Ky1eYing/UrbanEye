@@ -302,7 +302,7 @@ async function showEventList() {
                 const eventId = item.getAttribute("data-event-id");
                 
                 pushEventDetail(eventId);
-                showEventDetail();
+                await showEventDetail();
             });
         });
     }
@@ -316,14 +316,14 @@ async function showEventList() {
 }
 
 
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('DOMContentLoaded', async function () {
     // Base on url (if has event id) to decide
     const eventId = getEventIdFromURL();
 
     // Diecide which view to show
     if (eventId) {
-        showEventDetail();
+        await showEventDetail();
     } else {
-        showEventList();
+        await showEventList();
     }
 });
