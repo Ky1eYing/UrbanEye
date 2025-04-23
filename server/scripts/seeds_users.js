@@ -11,7 +11,7 @@ const usersToCreate = [
     {
         //  Display
         _id: new ObjectId(),
-        userName: "USER1",                                                          // unique, not null
+        userName: "user1",                                                          // unique, not null
         name: "UserFirstName UserLastName",                                         // not null
         introduction: "I am user1.",                                                // Less than 200 characters
         sex: "Male",                                                                // Less than 20 characters
@@ -20,11 +20,11 @@ const usersToCreate = [
         avatar: "USER1avatar.jpg",                                                  // filename.jpg, png,...
 
         //  Hidden
-        password: "$2b$10$U/UvR7mvvChS/Vzxx8pvs.PonsNPYRENpHvXj3y/oCwp1pNmcFzS6"    // "admin123", Bcrypt Rounds: 10, not null
+        password: "$2b$10$RSqbqHHU71EJzUBaghkyYO/J/wsXvIy4Uu0bzdCfAzNtkmwUpL/PW"    // "admin123", Bcrypt Rounds: 10, not null
     },
     {
         _id: new ObjectId(),
-        userName: "USER2",
+        userName: "user2",
         name: "USER2Name",
         introduction: null,
         sex: "CustomXXXXXX",
@@ -32,7 +32,7 @@ const usersToCreate = [
         phone: null,
         avatar: null,
 
-        password: "$2b$10$U/UvR7mvvChS/Vzxx8pvs.PonsNPYRENpHvXj3y/oCwp1pNmcFzS6"
+        password: "$2b$10$RSqbqHHU71EJzUBaghkyYO/J/wsXvIy4Uu0bzdCfAzNtkmwUpL/PW"
     },
 
 ];
