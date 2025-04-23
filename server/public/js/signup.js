@@ -79,13 +79,11 @@ document.addEventListener("DOMContentLoaded", () => {
                     } else {
                         // Display error from server
                         console.error("Signup error:", data.message || "Registration failed");
-                        const formActions = signupForm.querySelector(".form-actions");
                         errorMessage.textContent = data.message || "Registration failed";
                         errorMessage.style.display = "flex";
                     }
                 } catch (error) {
                     console.error("Signup error:", error);
-                    const formActions = signupForm.querySelector(".form-actions");
                     errorMessage.textContent = error || "An error occurred. Please try again later.";
                     errorMessage.style.display = "flex";
                 }

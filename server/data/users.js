@@ -192,7 +192,7 @@ const createUser = async (userName, name, password, introduction, sex, email, ph
 
     newUser.introduction = introduction;
     newUser.sex = sex;
-    newUser.email = email.toLowerCase();
+    newUser.email = email ? email.toLowerCase() : null; //email is optional(fix .toLowerCase() error)
     newUser.phone = phone;
 
     const usersCollection = await users();
@@ -276,7 +276,7 @@ const updateUser = async (userId, name, introduction, sex, email, phone) => {
 
     newUser.introduction = introduction;
     newUser.sex = sex;
-    newUser.email = email.toLowerCase();
+    newUser.email = email ? email.toLowerCase() : null; //email is optional(fix .toLowerCase() error)
     newUser.phone = phone;
 
     const usersCollection = await users();
