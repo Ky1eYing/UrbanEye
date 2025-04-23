@@ -308,12 +308,12 @@
 
 
 
-{{!-- <script>
-
-    const isLoggedIn = {{ #if user }}true{ {else } } false{ {/if } };
+<script>
+    const isLoggedIn = {{#if user}} true {{else}} false {{/if}};
     console.log('isLoggedIn: ', isLoggedIn);
-    { { #if user } }
-    const userInfo = {{{ json user }}};
-    console.log('userInfo: {_id: '', userName: '', name: ''}: ', userInfo);
-    { {/if } }
-<script> --}}
+
+    {{#if user}}
+    const userInfo = {{{json user}}};
+    console.log('userInfo: {_id: "", userName: "", name: ""}: ', userInfo);
+    {{/if}}
+</script>

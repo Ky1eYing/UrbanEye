@@ -764,6 +764,7 @@ header .container {
 .login-content {
     width: 100%;
     height: calc(100vh - 70px);
+    min-height: 450px;
     display: flex;
     flex-direction: column;
     align-items: center;     /* 垂直居中 */
@@ -777,9 +778,9 @@ header .container {
 }
 
 .login-form {
-    border: 1px solid var(--gray-light);
-    border-radius: 10px;
-    padding: 30px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    padding: var(--spacing-xl);
     background-color: var(--white);
     box-shadow: 0 2px 10px var(--shadow-color);
 }
@@ -810,7 +811,10 @@ header .container {
 }
 
 .login-actions {
-    padding: var(--spacing-xl) 0 0 0 !important;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    margin-top: var(--spacing-xl);
 
 }
 
@@ -821,15 +825,19 @@ header .container {
 .form-footer {
     display: flex;
     justify-content: center;
-    gap: 10px;
-    margin-top: var(--spacing-md);
+    margin-top: var(--spacing-sm);
     font-size: 14px;
     color: var(--gray-dark);
 }
 
 .signup-link {
     color: var(--primary-blue-light);
-    text-decoration: none;
+    text-decoration: underline;
+    border: none;
+}
+
+.signup-link:hover {
+    color: var(--primary-blue-dark);
 }
 
 .signup-section {

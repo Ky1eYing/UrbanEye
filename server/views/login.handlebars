@@ -4,23 +4,24 @@
             <h3 class="login-header">Log in</h3>
 
             <div class="form-group">
-                <input type="text" placeholder="Username" class="form-input username-input">
-                <div class="error-message"></div>
+                <input id="username" type="text" placeholder="Username" class="form-input username-input">
             </div>
 
             <div class="form-group">
-                <input type="password" placeholder="Password" class="form-input password-input">
-                <div class="error-message"></div>
+                <input id="password" type="password" placeholder="Password" class="form-input password-input">
             </div>
 
-            <div class="form-actions login-actions">
-                <button class="login-submit-btn submit-button">Log in</button>
+            <div class="login-actions">
+                <span id="loginErrorMessage" class="error-message"><i class="fas fa-triangle-exclamation"></i>Request
+                Denied!</span>
+                {{!-- <button id="loginBtn" class="login-submit-btn submit-button">Log in</button> --}}
+                <a id="loginBtn" href="/profile" class="login-submit-btn submit-button">Log in</a>
             </div>
 
             <div class="form-footer">
-                <span>Do not have an account?</span>
-                <a href="/signup" class="signup-link"> Sign up </a>
-                <span>here!</span>
+                <span>Do not have an account?&nbsp;</span>
+                <span><a href="/signup" class="signup-link">Sign up</a></span>
+                <span>&nbsp;here!</span>
             </div>
         </div>
     </div>
