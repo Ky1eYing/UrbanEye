@@ -5,13 +5,14 @@ document.addEventListener("DOMContentLoaded", () => {
         const usernameInput = document.querySelector(".username-input");
         const passwordInput = document.querySelector(".password-input");
         const loginButton = document.querySelector(".login-submit-btn");
-        const errorMessages = document.querySelectorAll(".error-message");
+        const errorMessage = document.querySelector("#errorMessage");
         
         loginButton.addEventListener("click", async (e) => {
             e.preventDefault();
             
             // Clear previous errors
-            errorMessages.forEach(error => error.textContent = "");
+            errorMessage.textContent = "";
+            errorMessage.style.display = "none";
             
             // Get form data
             const username = usernameInput.value.trim();
@@ -51,11 +52,14 @@ document.addEventListener("DOMContentLoaded", () => {
                         window.location.href = "/event";
                     } else {
                         // Display error from server
-                        loginForm.querySelector(".login-actions").previousElementSibling.querySelector(".error-message").textContent = data.message || "Invalid username or password";
+                        console.error("Login error:", data.message || "Invalid username or password");
+                        errorMessage.innerHTML = "<i class='fas fa-triangle-exclamation'></i>" + data.message || "Invalid username or password";
+                        errorMessage.style.display = "flex";
                     }
                 } catch (error) {
                     console.error("Login error:", error);
-                    loginForm.querySelector(".login-actions").previousElementSibling.querySelector(".error-message").textContent = "An error occurred. Please try again later.";
+                    errorMessage.innerHTML = "<i class='fas fa-triangle-exclamation'></i>" + "An error occurred. Please try again later.";
+                    errorMessage.style.display = "flex";
                 }
             }
         });

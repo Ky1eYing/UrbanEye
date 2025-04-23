@@ -58,7 +58,7 @@ router
           data: usersData.filterUser(user),
         });
     } catch (e) {
-      return res.status(400).json({ code: 400, message: e.message });
+      return res.status(401).json({ code: 401, message: e });
     }
   });
 

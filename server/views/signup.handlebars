@@ -5,23 +5,20 @@
 
             <div class="form-group">
                 <input id="username" type="text" placeholder="Username" class="form-input username-input">
-                <div class="error-message"></div>
             </div>
 
             <div class="form-group">
                 <input id="password" type="password" placeholder="Password" class="form-input password-input">
-                <div class="error-message"></div>
             </div>
 
             <div class="form-group">
                 <input id="confirmPassword" type="password" placeholder="Confirm Password" class="form-input confirm-password-input">
-                <div class="error-message"></div>
             </div>
 
             <div class="login-actions">
-                <span id="signupErrorMessage" class="error-message">
+                <span class="error-message">
                     <i class="fas fa-triangle-exclamation"></i>
-                    Request Denied!
+                    <span id="errorMessage">Request Denied!</span>
                 </span>
                 <button id="signupBtn" class="signup-submit-btn submit-button">Sign up</button>
             </div>

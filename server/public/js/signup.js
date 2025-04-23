@@ -6,18 +6,19 @@ document.addEventListener("DOMContentLoaded", () => {
         const emailInput = document.querySelector(".email-input");
         const passwordInput = document.querySelector(".password-input");
         const confirmPasswordInput = document.querySelector(".confirm-password-input");
-        const signupButton = document.querySelector(".login-submit-btn");
-        const errorMessages = document.querySelectorAll(".error-message");
+        const signupButton = document.querySelector(".signup-submit-btn");
+        const errorMessage = document.querySelector("#errorMessage");
         
         signupButton.addEventListener("click", async (e) => {
             e.preventDefault();
             
             // Clear previous errors
-            errorMessages.forEach(error => error.textContent = "");
+            errorMessage.textContent = "";
+            errorMessage.style.display = "none";
             
             // Get form data
             const username = usernameInput.value.trim();
-            const email = emailInput.value.trim();
+            // const email = emailInput.value.trim();
             const password = passwordInput.value.trim();
             const confirmPassword = confirmPasswordInput.value.trim();
             
@@ -31,13 +32,13 @@ document.addEventListener("DOMContentLoaded", () => {
             }
             
             // Email validation
-            if (email) {
-                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-                if (!emailRegex.test(email)) {
-                    isValid = false;
-                    emailInput.nextElementSibling.textContent = "Invalid email format";
-                }
-            }
+            // if (email) {
+            //     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            //     if (!emailRegex.test(email)) {
+            //         isValid = false;
+            //         emailInput.nextElementSibling.textContent = "Invalid email format";
+            //     }
+            // }
             
             // Password validation
             if (!password) {
@@ -63,7 +64,7 @@ document.addEventListener("DOMContentLoaded", () => {
                             userName: username,
                             name: username, // Using username as name for now
                             password: password,
-                            email: email || null,
+                            email: null,
                             introduction: null,
                             sex: null,
                             phone: null
@@ -77,13 +78,16 @@ document.addEventListener("DOMContentLoaded", () => {
                         window.location.href = "/login?registered=true";
                     } else {
                         // Display error from server
+                        console.error("Signup error:", data.message || "Registration failed");
                         const formActions = signupForm.querySelector(".form-actions");
-                        formActions.previousElementSibling.querySelector(".error-message").textContent = data.message || "Registration failed";
+                        errorMessage.textContent = data.message || "Registration failed";
+                        errorMessage.style.display = "flex";
                     }
                 } catch (error) {
                     console.error("Signup error:", error);
                     const formActions = signupForm.querySelector(".form-actions");
-                    formActions.previousElementSibling.querySelector(".error-message").textContent = "An error occurred. Please try again later.";
+                    errorMessage.textContent = error || "An error occurred. Please try again later.";
+                    errorMessage.style.display = "flex";
                 }
             }
         });
