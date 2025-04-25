@@ -7,6 +7,10 @@ async function getEventByEventId(eventId){
     ;
 };
 
+async function createEvent(imageFile, selectedCategory, title, content, selectedMarkerPosition){
+    ;
+};
+
 async function removeLike(eventId){
     ;
 };

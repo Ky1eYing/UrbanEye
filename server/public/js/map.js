@@ -1,6 +1,6 @@
 let map;
 // nyc location
-const nyPosition = { lat: 40.751712448459844, lng: -73.98179241229592 };
+const nyPosition = { lat: 40.75171244845984, lng: -73.98179241229592 };
 let userLocationMarker = null;
 let mapInitialized = false;
 

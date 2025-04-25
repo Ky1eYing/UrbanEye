@@ -1,3 +1,5 @@
+/* global getEventByEventId, createEvent */
+
 const openCreateEventModalBtn = document.getElementById("openCreateEventModal");
 const createEventModal = document.getElementById("createEventModal");
 const closeCreateEventModalBtn = document.getElementById("closeCreateEventModal");
@@ -5,29 +7,14 @@ const submitCreateEventBtn = document.getElementById("submitCreateEvent");
 
 let createMap;
 let geolocationCenter;
-let selectedMarkerPosition;  // final marker position
+let selectedMarkerPosition = null;  // final marker position
 let selectedMarker;
 
 // open create event modal
 openCreateEventModalBtn.addEventListener("click", () => {
-    createEventModal.style.display = "flex";
+    showCreateEventModal();
 
-    // use high accuracy location
-    if (window.userLocationMarker) {
-        const p = window.userLocationMarker.getPosition();
-        geolocationCenter = { lat: p.lat(), lng: p.lng() };
-    }
-    // if high accuracy location is not available, use estimated location
-    else if (window.preFetchedPosition) {
-        geolocationCenter = window.preFetchedPosition;
-    }
-    // if neither is available, use default location
-    else {
-        geolocationCenter = { lat: 40.768712448459844, lng: -73.98179241229592 };
-    }
 
-    selectedMarkerPosition = { ...geolocationCenter };
-    initCreateEventMap();
 });
 
 // close create event modal
@@ -40,8 +27,69 @@ createEventModal.addEventListener("click", event => {
     }
 });
 
+// show create event modal
+async function showCreateEventModal(eventId) {
+    createEventModal.style.display = "flex";
+
+    // TODO: mock data to test, delete when page is ready
+    eventId = "1";
+    // If it use to edit event
+    if (eventId) {
+        // TODO: backend get event detail (If it use to edit event)
+        let eventData = await getEventByEventId(eventId);
+
+        // Mock data
+        if (!eventData || !eventData._id) {
+            // TODO: show error page for event detail page
+            // return;
+            // but now, mock data for testing
+            const mockGetEventById = mockEvents.find(event => event._id === eventId);
+            eventData = mockGetEventById;
+        }
+        // bind data
+        document.getElementById("imageUpload").src = eventData.photoUrl; // TODO ：show image use Aliyun OSS
+        const radio = document.querySelector(`input[name='category'][value='${eventData.category}']`);
+        if (radio) {
+            radio.checked = true;
+        }
+        document.getElementById("eventTitle").value = eventData.title;
+        document.getElementById("eventContent").value = eventData.content;
+
+        geolocationCenter = {
+            lat: parseFloat(eventData.location.latitude),
+            lng: parseFloat(eventData.location.longitude)
+        };
+
+        selectedMarkerPosition = { ...geolocationCenter };
+
+
+    }
+
+    initCreateEventMap();
+}
+
 // init create event map
 function initCreateEventMap() {
+
+    /****** Get my location ******/
+    if (!geolocationCenter) {
+        // use high accuracy location
+        if (window.userLocationMarker) {
+            const p = window.userLocationMarker.getPosition();
+            geolocationCenter = { lat: p.lat(), lng: p.lng() };
+        }
+        // if high accuracy location is not available, use estimated location
+        else if (window.preFetchedPosition) {
+            geolocationCenter = window.preFetchedPosition;
+        }
+        // if neither is available, use default location
+        else {
+            geolocationCenter = { lat: 40.768712448459844, lng: -73.98179241229592 };
+        }
+        selectedMarkerPosition = { ...geolocationCenter };
+    }
+
+    /****** Create map ******/
     if (createMap) return;
 
     // create map
@@ -49,6 +97,7 @@ function initCreateEventMap() {
     createMap = new google.maps.Map(mapDiv, {
         center: geolocationCenter,
         zoom: 14,
+        styles: isDarkMode() ? darkModeStyles : defaultStyles,
         disableDefaultUI: false,
         zoomControl: false,
         mapTypeControl: false,
@@ -57,7 +106,6 @@ function initCreateEventMap() {
         fullscreenControl: false,
         keyboardShortcuts: false,
         reportError: false,
-        styles: isDarkMode() ? darkModeStyles : defaultStyles,
         gestureHandling: 'greedy',
 
     });
@@ -90,7 +138,7 @@ function initCreateEventMap() {
 }
 
 // 提交表单
-submitCreateEventBtn.addEventListener("click", () => {
+submitCreateEventBtn.addEventListener("click", async () => {
     const imageFile = document.getElementById("imageUpload").files[0];
     const selectedCategory = document.querySelector("input[name='category']:checked")?.value;
     const title = document.getElementById("eventTitle").value.trim();
@@ -107,6 +155,9 @@ submitCreateEventBtn.addEventListener("click", () => {
         Content: content,
         Location: selectedMarkerPosition
     });
+    // TODO: backend create event
+    const eventId = await createEvent(imageFile, selectedCategory, title, content, selectedMarkerPosition);
+
 
     alert("Event Created!");
     createEventModal.style.display = "none";
