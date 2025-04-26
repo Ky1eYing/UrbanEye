@@ -54,13 +54,20 @@ const getAllCommentsByUserId = async (userId) => {
   const event = await eventsCollection
     .find({ "comments.user_id": new ObjectId(userId) })
     .toArray();
-  if (!event) {
+  if (!event || event.length === 0) {
     throw new Error("Event not found");
   }
 
   const comments = event.flatMap((e) =>
-    e.comments.filter((c) => c.user_id.toString() === userId)
+    e.comments
+      .filter((c) => c.user_id.toString() === userId)
+      .map((comment) => ({
+        ...comment,
+        event_id: e._id.toString(),
+        event_title: e.title,
+      }))
   );
+
   if (comments.length === 0) {
     throw new Error("No comments found for this user");
   }
