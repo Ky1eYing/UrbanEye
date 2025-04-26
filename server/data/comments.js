@@ -1,8 +1,7 @@
 import { ObjectId } from "mongodb";
 import { events } from "../config/mongoCollections.js";
+import { usersData } from "./index.js";
 import * as check from "../utils/helpers.js";
-
-import e from "express";
 
 const createComment = async (eventId, userId, content) => {
   eventId = check.checkObjectId(eventId);
@@ -45,6 +44,33 @@ const getAllCommentsByEventId = async (eventId) => {
     throw new Error("Event not found");
   }
   return event.comments;
+};
+
+const getAllCommentsWithUserByEventId = async (eventId) => {
+  eventId = check.checkObjectId(eventId);
+  const eventsCollection = await events();
+  const event = await eventsCollection.findOne({ _id: new ObjectId(eventId) });
+  if (!event) {
+    throw new Error("Event not found");
+  }
+
+  let commentList = event.comments;
+  let userIds = commentList.map(comment => comment.user_id.toString());
+  
+  userIds = [...new Set(userIds)];
+  const users = await usersData.getUsersByUserIds(userIds);
+
+  const userMap = new Map(users.map(user => [user._id, user]));
+
+  const commentsWithUser = commentList.map(comment => {
+    const userInfo = userMap.get(comment.user_id?.toString()) || null;
+    return {
+      ...comment,
+      user: userInfo
+    };
+  });
+  
+  return commentsWithUser;
 };
 
 const getAllCommentsByUserId = async (userId) => {
@@ -145,6 +171,7 @@ const updateComment = async (commentId, content) => {
 export default {
   createComment,
   getAllCommentsByEventId,
+  getAllCommentsWithUserByEventId,
   getAllCommentsByUserId,
   getCommentById,
   removeComment,

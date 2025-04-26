@@ -118,6 +118,17 @@ const updatePassword = async (userId, password) => {
   return true;
 };
 
+const filterUserSimple = (user) => {
+  const returnUser = {
+    _id: user._id,
+    userName: user.userName,
+    name: user.name,
+    avatar: user.avatar,
+  };
+
+  return returnUser;
+};
+
 const filterUser = (user) => {
   const returnUser = {
     _id: user._id,
@@ -227,6 +238,31 @@ const getUserByUserId = async (userId) => {
   return filterUserWithPassword(user);
 };
 
+// get multiple users by user ids
+const getUsersByUserIds = async (userIds) => {
+  if (!Array.isArray(userIds) || userIds.length === 0) {
+    throw new Error("UserIds must be a non-empty array");
+  }
+
+  userIds = userIds.map(id => check.checkObjectId(id));
+
+  let usersCollection = await users();
+  const userList = await usersCollection.find({
+    _id: { $in: userIds.map(id => new ObjectId(id)) }
+  }).toArray();
+
+  if (userList.length === 0 || userList.length !== userIds.length) {
+    throw new Error("At least one user was not found");
+  }
+
+  const filteredUsers = userList.map(user => {
+    user._id = user._id.toString();
+    return filterUserSimple(user);
+  });
+
+  return filteredUsers;
+};
+
 // remove one user by user id
 const removeUser = async (userId) => {
   userId = check.checkObjectId(userId);
@@ -295,8 +331,10 @@ const updateUser = async (userId, name, introduction, sex, email, phone) => {
 export default {
   createUser,
   getUserByUserId,
+  getUsersByUserIds,
   removeUser,
   updateUser,
+  filterUserSimple,
   filterUser,
   filterUserWithPassword,
   userCheckWithPwduserId,

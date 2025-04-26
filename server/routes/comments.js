@@ -24,7 +24,7 @@ router
     }
 
     try {
-      const comments = await commentsData.getAllCommentsByEventId(event_id);
+      const comments = await commentsData.getAllCommentsWithUserByEventId(event_id);
       return res.status(200).json({
         code: 200,
         message: "success",
