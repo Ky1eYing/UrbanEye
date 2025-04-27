@@ -18,13 +18,25 @@ async function fetchEvents() {
 
 async function getEventByEventId(eventId) {
     try {
+        if (!eventId) {
+            console.error('Error: Event ID is required');
+            return null;
+        }
+        
         const response = await fetch(`/api/events/${eventId}`);
+        
+        if (!response.ok) {
+            console.error(`Error fetching event (${response.status}): ${response.statusText}`);
+            return null;
+        }
+        
         const data = await response.json();
         
-        if (data.code === 200) {
+        if (data.code === 200 && data.data) {
+            console.log('Successfully fetched event:', data.data);
             return data.data;
         } else {
-            console.error('Error fetching event details:', data.message || 'Unknown error');
+            console.error('Error in API response:', data.message || 'Unknown error');
             return null;
         }
     } catch (error) {

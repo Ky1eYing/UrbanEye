@@ -157,105 +157,81 @@ document.addEventListener("DOMContentLoaded", async () => {
  * Show event detail
  */
 async function showEventDetail() {
-
     // Get event id from url
     const eventId = getEventIdFromURL();
+    console.log("Fetching event with ID:", eventId);
 
-    // TODO: fetch event data from backend
-    // TODO: For comments, need combine search user database to get user._id and user.avatar
+    // Fetch event data from backend
     let eventData = await getEventByEventId(eventId);
+    
     if (!eventData || !eventData._id) {
-        // TODO: show error page for event detail page
-        // return;
-        // but now, mock data for testing
-        const mockGetEventById = mockEvents.find(event => event._id === eventId);
-        eventData = mockGetEventById;
+        console.error("Failed to load event data");
+        // Show error message
+        const detailContainer = document.getElementById("event-detail-container");
+        if (detailContainer) {
+            detailContainer.innerHTML = `
+                <div class="error-container">
+                    <h2>Error Loading Event</h2>
+                    <p>Sorry, we couldn't load the event details. Please try again later.</p>
+                    <button id="backToListBtnError" class="btn">Back to Events</button>
+                </div>
+            `;
+            
+            // Add event listener for the error back button
+            const backToListBtnError = document.getElementById("backToListBtnError");
+            if (backToListBtnError) {
+                backToListBtnError.addEventListener("click", () => {
+                    window.location.href = "/event";
+                });
+            }
+            
+            return;
+        }
+        
+        // Fall back to mock data if available and we're in development
+        if (typeof mockEvents !== 'undefined') {
+            console.log("Falling back to mock data");
+            const mockGetEventById = mockEvents.find(event => event._id === eventId);
+            if (mockGetEventById) {
+                eventData = mockGetEventById;
+                console.log("Using mock data for event:", eventId);
+            } else {
+                return; // No mock data available
+            }
+        } else {
+            return; // No mock data available
+        }
     }
 
-
+    // Just update the basic event details for our test
     const detailTitle = document.getElementById("detail-title");
     const detailEventTitle = document.getElementById("detail-event-title");
     const detailEventAddress = document.getElementById("detail-event-address");
     const detailEventDistance = document.getElementById("detail-event-distance");
     const detailEventImg = document.getElementById("detail-event-img");
     const detailEventContent = document.getElementById("detail-event-content");
-    const commentsList = document.getElementById("commentsList");
-    const commentCount = document.querySelector(".comment-count");
-    const likeBtn = document.getElementById("likeEventBtn");
-    const likeCount = document.querySelector(".like-count");
 
-    detailTitle.textContent = "Event Details";
-    detailEventTitle.textContent = eventData.title || "Untitled Event";
+    if (detailTitle) detailTitle.textContent = "Event Details";
+    if (detailEventTitle) detailEventTitle.textContent = eventData.title || "Untitled Event";
 
-    detailEventAddress.textContent = eventData.location?.address || "Unknown Address";
-    let distance = formatDistanceAway(eventData.location?.latitude, eventData.location?.longitude);
-    detailEventDistance.textContent = distance || "Unknown";
-
-
-    detailEventImg.src = eventData.photoUrl || "https://images.unsplash.com/photo-1503179008861-d1e2b41f8bec?q=80&w=3869&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D";
-    detailEventImg.alt = eventData.title || "Event Image";
-
-    detailEventContent.innerText = eventData.content || "No content available.";
-
-    // Likes
-    if (likeCount && likeBtn) {
-        // Bind like count
-        likeCount.textContent = eventData.likes.length || 0;
-
-        // Decide if the user has liked the event
-        // TODO: backend get isLikedByUser'
-        const isLikedByUser = await getLikeByUserId(eventId);
-
-        
-        if (likeBtn && isLikedByUser) {
-            likeBtn.classList.add("liked");
-            likeBtn.querySelector("i").className = "fas fa-heart";
-        } else if (likeBtn && !isLikedByUser) {
-            // Clear
-            likeBtn.classList.remove("liked");
-            likeBtn.querySelector("i").className = "far fa-heart";
-        }
+    if (detailEventAddress) detailEventAddress.textContent = eventData.location?.address || "Unknown Address";
+    if (detailEventDistance) {
+        let distance = formatDistanceAway(eventData.location?.latitude, eventData.location?.longitude);
+        detailEventDistance.textContent = distance || "Unknown";
     }
 
-    // Comments
-    const commentsArray = Array.isArray(eventData.comments) ? eventData.comments : [];
-    // show comment count
-    if (commentCount) {
-        commentCount.textContent = commentsArray.length;
-    }
-    if (commentsList) {
-        // Clear
-        // commentsList.innerHTML = ""; //TODO: remove this line when backend is ready
-
-        // Bind comments
-        if (commentsArray.length > 0) {
-            commentsArray.forEach(comment => {
-                const commentHTML = `
-                    <div class="comment-item">
-                        <div class="comment-useravator">
-                            <img src="${comment.user?.avatar || "https://urban-eye.oss-us-east-1.aliyuncs.com/users-pic/morentouxiang.png"}"
-                                alt="User Avatar">
-                        </div>
-                        <div class="comment-body">
-                            <div class="comment-header">
-                                <span class="comment-username">${comment.user?._id || "Anonymous"}</span>
-                                <span class="comment-time">${formatTimeAgo(new Date(comment.created_at))}</span>
-                            </div>
-                            <div class="comment-content">
-                                ${comment.content}
-                            </div>
-                        </div>
-                    </div>
-                `;
-                commentsList.insertAdjacentHTML('beforeend', commentHTML);
-            });
-        }
+    if (detailEventImg) {
+        detailEventImg.src = eventData.photoUrl || "https://images.unsplash.com/photo-1503179008861-d1e2b41f8bec?q=80&w=3869&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D";
+        detailEventImg.alt = eventData.title || "Event Image";
     }
 
+    if (detailEventContent) detailEventContent.innerText = eventData.content || "No content available.";
+
+    console.log("Event details displayed successfully");
 
     // Hide and Change View
     const eventListContainer = document.getElementById("event-list-container");
     const eventDetailContainer = document.getElementById("event-detail-container");
-    eventListContainer.style.display = "none";
-    eventDetailContainer.style.display = "block";
+    if (eventListContainer) eventListContainer.style.display = "none";
+    if (eventDetailContainer) eventDetailContainer.style.display = "block";
 }
