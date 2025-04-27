@@ -16,24 +16,41 @@ router
   .route("/filter")
   // getFilterEvents
   .get(async (req, res) => {
+    const {
+      titleLike,
+      distance,
+      sortBy,
+      category,
+      timeRange,
+      skip
+    } = req.query;
 
-    // location category time title skip(List sliding loading)
-    const { minLatitude, minLongitude, maxLatitude, maxLongitude, category, timeFromNow, titleLike, skip } = req.query;
-    // number of events to return per query (CONSTANT)
-    const limit = 10;
-    // Sort by number of clicks
-
-    // http://localhost:3000/api/events/filter?minLatitude=1&minLongitude=1&maxLatitude=2&maxLongitude=2&category=kill&timeFromNow=7&titleLike=NYC&skip=10
-    // 1 1 2 2 kill 7 NYC 10
-    // console.log(minLatitude, minLongitude, maxLatitude, maxLongitude, category, timeFromNow, titleLike, skip);
-    // TODO
+    let userLocation = null;
+    if (req.query.latitude && req.query.longitude) {
+      userLocation = {
+        latitude: req.query.latitude,
+        longitude: req.query.longitude
+      };
+    }
 
     try {
-      const events = await eventsData.getAllEvents();
+      const filterParams = {};
+
+      if (titleLike) filterParams.titlelike = titleLike;
+      if (distance) filterParams.distance = distance;
+      if (sortBy) filterParams.sortBy = sortBy;
+      if (category) filterParams.category = category;
+      if (timeRange) filterParams.timeRange = timeRange;
+      if (userLocation) filterParams.userLocation = userLocation;
+      if (skip) filterParams.skip = parseInt(skip);
+
+      const events = await eventsData.getAllEventsByFilter(filterParams);
+
       return res.status(200).json({
         code: 200,
         message: "success",
         data: events,
+        total: events.length
       });
     } catch (e) {
       return res.status(500).json({ error: e.message });
@@ -45,11 +62,14 @@ router
   // getAllEvents
   .get(async (req, res) => {
     try {
-      const events = await eventsData.getAllEvents();
+      // Use default parameters for getAllEventsByFilter
+      const events = await eventsData.getAllEventsByFilter();
+
       return res.status(200).json({
         code: 200,
         message: "success",
         data: events,
+        total: events.length
       });
     } catch (e) {
       return res.status(500).json({ error: e.message });

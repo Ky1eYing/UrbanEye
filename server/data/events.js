@@ -60,20 +60,86 @@ const createEvent = async (
   return event;
 };
 
-// get all events
-const getAllEvents = async () => {
+// get all events by filter
+const getAllEventsByFilter = async (params = {}) => {
+  const {
+    titlelike = "",          // title fuzzy matching
+    distance = "1miles",     // default 1 miles, optional "3miles","5miles","10miles"
+    sortBy = "newest",       // default newest, optional "views"
+    category = "all",        // default all, optional specific categories
+    timeRange = "all",       // default all, optional "1day","7days","30days"
+    userLocation = null,     // { latitude, longitude }
+    skip = 10                // events per page
+  } = params;
+
   const eventsCollection = await events();
-  let eventsList = await eventsCollection.find({}).toArray();
-  if (!eventsList) {
-    throw "Could not get all events";
+
+  const query = {};
+
+  // 0. title fuzzy matching
+  if (titlelike) {
+    query.title = { $regex: titlelike, $options: "i" };
   }
 
-  eventsList = eventsList.map((element) => {
-    element._id = element._id.toString();
-    return element;
-  });
+  // 1. category filtering
+  if (category !== "all") {
+    query.category = category;
+  }
 
-  return eventsList;
+  // 2. time range filtering
+  if (timeRange !== "all") {
+    const now = new Date();
+    let dateFilter = new Date(now);
+    switch (timeRange) {
+      case "1day":
+        dateFilter.setDate(now.getDate() - 1);
+        break;
+      case "7days":
+        dateFilter.setDate(now.getDate() - 7);
+        break;
+      case "30days":
+        dateFilter.setDate(now.getDate() - 30);
+        break;
+      case "1year":
+        dateFilter.setFullYear(now.getFullYear() - 1);
+        break;
+    }
+    query.created_at = { $gte: dateFilter };
+  }
+
+  // 3. distance filtering
+  if (
+    userLocation &&
+    userLocation.latitude &&
+    userLocation.longitude
+  ) {
+    const lat = parseFloat(userLocation.latitude);
+    const lon = parseFloat(userLocation.longitude);
+    const miles = parseInt(distance.replace("miles", ""));
+    const radius = miles / 3958.8;
+    query.location = {
+      $geoWithin: {
+        $centerSphere: [[lon, lat], radius]
+      }
+    };
+  }
+
+  // 4. sort
+  const sortOption =
+    sortBy === "views"
+      ? { click_time: -1 }
+      : { created_at: -1 };
+
+  const cursor = eventsCollection
+    .find(query)
+    .sort(sortOption)
+    .limit(skip);
+
+  const results = await cursor.toArray();
+  return results.map(evt => {
+    evt._id = evt._id.toString();
+    return evt;
+  });
 };
 
 // get one event by event id
@@ -187,7 +253,7 @@ const updateEvent = async (
 
 export default {
   createEvent,
-  getAllEvents,
+  getAllEventsByFilter,
   getEventByEventId,
   getEventByUserId,
   updateEvent,

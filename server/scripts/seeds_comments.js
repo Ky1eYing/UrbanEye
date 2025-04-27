@@ -7,7 +7,7 @@ const db = await dbConnection();
 
 async function main() {
 
-    const eventList = await events.getAllEvents();
+    const eventList = await events.getAllEventsByFilter();
     let event0 = eventList[0];
     let event1 = eventList[1];
     event1 = await comments.createComment(
