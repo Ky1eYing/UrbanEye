@@ -251,6 +251,26 @@ const updateEvent = async (
   return updateInfo;
 };
 
+// add click time by event id
+export const addClickTime = async (eventId) => {
+  const checked_eventId = check.checkObjectId(eventId);
+
+  const eventsCollection = await events();
+
+  const updateInfo = await eventsCollection.findOneAndUpdate(
+    { _id: new ObjectId(checked_eventId) },
+    { $inc: { click_time: 1 } },
+    { returnDocument: "after" }
+  );
+
+  if (!updateInfo) {
+    throw new Error(`Could not find an event with id of ${checked_eventId}`);
+  }
+
+  updateInfo._id = updateInfo._id.toString();
+  return updateInfo;
+};
+
 export default {
   createEvent,
   getAllEventsByFilter,
@@ -258,4 +278,5 @@ export default {
   getEventByUserId,
   updateEvent,
   removeEvent,
+  addClickTime,
 };

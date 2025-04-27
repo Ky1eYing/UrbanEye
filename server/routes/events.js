@@ -155,6 +155,15 @@ router
 
     try {
       const event = await eventsData.getEventByEventId(checked_eventId);
+
+      try {
+        await eventsData.addClickTime(checked_eventId);
+      } catch (err) {
+        return res.status(500).json({
+          error: `Failed to increment click count: ${err.message}`
+        });
+      }
+
       return res.status(200).json({
         code: 200,
         message: "success",
