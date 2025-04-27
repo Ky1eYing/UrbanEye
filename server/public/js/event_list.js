@@ -249,43 +249,70 @@ const mockEvents = [
 ];
 
 async function showEventList() {
-
-    new Choices('.category-filter', {
-        searchEnabled: false,
-        itemSelectText: '',
-        shouldSort: false,
-    });
+    // Initialize the category filter dropdown if it exists
+    const categoryFilterElement = document.querySelector('.category-filter');
+    if (categoryFilterElement) {
+        new Choices(categoryFilterElement, {
+            searchEnabled: false,
+            itemSelectText: '',
+            shouldSort: false,
+        });
+    }
     
     // Get event list container
     const eventList = document.querySelector('.event-list');
 
     if (eventList) {
+        // Show loading state
+        eventList.innerHTML = '<div class="loading-events">Loading events...</div>';
 
-        // TODO: Fetch events
+        // Fetch events from backend using our new function
+        console.log("Calling fetchEvents() from showEventList()");
         let events = await fetchEvents();
-        //TODO: Mock for testing
-        if (!events) {
-            events = mockEvents;
-        }
-
-        // Clear
+        
+        // Log the results for debugging
+        console.log("Events fetched:", events ? events.length : 0);
+        
+        // Clear loading state
         eventList.innerHTML = '';
 
-        // Bind events list
+        // Fallback to mock data if fetch fails (during development)
+        if (!events || events.length === 0) {
+            console.warn("No events found or fetch failed. Using mock data if available.");
+            if (typeof mockEvents !== 'undefined') {
+                events = mockEvents;
+                console.log("Using mock data:", events.length);
+            }
+        }
+
+        // Handle no events scenario
+        if (!events || events.length === 0) {
+            eventList.innerHTML = `
+                <div class="no-events">
+                    <p>No events available. Be the first to report an event!</p>
+                    <button id="createFirstEventBtn" class="btn primary-btn">Create Event</button>
+                </div>
+            `;
+            return;
+        }
+
+        // Bind events list - simple version for testing
         events.forEach(event => {
             const eventItemHTML = `
                 <div class="event-item" data-event-id="${event._id}">
                     <div class="event-image">
-                        <img src="${event.photoUrl}" alt="${event.title}">
+                        <img src="${event.photoUrl || 'https://images.unsplash.com/photo-1503179008861-d1e2b41f8bec?q=80&w=3869&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'}" 
+                             alt="${event.title || 'Event Image'}"
+                             onerror="this.src='https://images.unsplash.com/photo-1503179008861-d1e2b41f8bec?q=80&w=3869&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'">
                     </div>
                     <div class="event-details">
-                        <h3>${event.title}</h3>
+                        <h3>${event.title || 'Untitled Event'}</h3>
                         <div class="event-meta">
-                            <span class="event-location">${event.location.address}</span>
+                            <span class="event-location">${event.location?.address || 'Unknown Location'}</span>
                             <div class="event-distance-time-ago">
-                                <span class="event-distance">${formatDistanceAway(event.location.latitude, event.location.longitude)}</span>
+                                <span class="event-distance">${formatDistanceAway(event.location?.latitude, event.location?.longitude) || 'Unknown distance'}</span>
                                 <span>&nbsp;· &nbsp;</span>
-                                <span class="event-time-ago">${formatTimeAgo(event.created_at)}</span>
+                                <span class="event-time-ago">${formatTimeAgo(new Date(event.created_at)) || 'Unknown time'}</span>
                             </div>
                         </div>
                     </div>
@@ -300,6 +327,7 @@ async function showEventList() {
         eventItems.forEach(item => {
             item.addEventListener("click", async () => {
                 const eventId = item.getAttribute("data-event-id");
+                console.log("Clicked on event:", eventId);
                 
                 pushEventDetail(eventId);
                 await showEventDetail();
@@ -307,12 +335,13 @@ async function showEventList() {
         });
     }
 
-
     // Hide and Change View
     const eventListContainer = document.getElementById("event-list-container");
     const eventDetailContainer = document.getElementById("event-detail-container");
-    eventListContainer.style.display = "block";
-    eventDetailContainer.style.display = "none";
+    if (eventListContainer) eventListContainer.style.display = "block";
+    if (eventDetailContainer) eventDetailContainer.style.display = "none";
+    
+    console.log("Event list displayed successfully");
 }
 
 

@@ -1,13 +1,21 @@
-//TODO: match api to backend
 async function fetchEvents() {
     try {
+        console.log('Fetching events from backend...');
+        
         const response = await fetch('/api/events');
+        
+        if (!response.ok) {
+            console.error(`Error fetching events (${response.status}): ${response.statusText}`);
+            return null;
+        }
+        
         const data = await response.json();
         
-        if (data.code === 200) {
+        if (data.code === 200 && data.data) {
+            console.log(`Successfully fetched ${data.data.length} events`);
             return data.data;
         } else {
-            console.error('Error fetching events:', data.message || 'Unknown error');
+            console.error('Error in API response:', data.message || 'Unknown error');
             return null;
         }
     } catch (error) {
