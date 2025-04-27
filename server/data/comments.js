@@ -1,6 +1,6 @@
 import { ObjectId } from "mongodb";
 import { events } from "../config/mongoCollections.js";
-import { usersData } from "./index.js";
+import usersDataFunctions from "./users.js";
 import * as check from "../utils/helpers.js";
 
 const createComment = async (eventId, userId, content) => {
@@ -56,9 +56,9 @@ const getAllCommentsWithUserByEventId = async (eventId) => {
 
   let commentList = event.comments;
   let userIds = commentList.map(comment => comment.user_id.toString());
-  
+
   userIds = [...new Set(userIds)];
-  const users = await usersData.getUsersByUserIds(userIds);
+  const users = await usersDataFunctions.getUsersByUserIds(userIds);
 
   const userMap = new Map(users.map(user => [user._id, user]));
 
@@ -69,7 +69,7 @@ const getAllCommentsWithUserByEventId = async (eventId) => {
       user: userInfo
     };
   });
-  
+
   return commentsWithUser;
 };
 
