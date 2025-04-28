@@ -352,7 +352,7 @@ async function loadComments(eventId) {
             const commentHTML = `
                 <div class="comment-item" data-comment-id="${comment._id}">
                     <div class="comment-useravator">
-                        <img src="${user.avatar || 'https://urban-eye.oss-us-east-1.aliyuncs.com/users-pic/default-avatar.jpg'}"
+                        <img src="${user.avatar || 'https://urban-eye.oss-us-east-1.aliyuncs.com/users-pic/morentouxiang.png'}"
                             alt="${user.name || 'Anonymous'} Avatar">
                     </div>
                     <div class="comment-body">
