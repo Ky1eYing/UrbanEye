@@ -28,44 +28,60 @@ createEventModal.addEventListener("click", event => {
 });
 
 // show create event modal
-async function showCreateEventModal(eventId) {
+function showCreateEventModal() {
+    // Show the modal
     createEventModal.style.display = "flex";
-
-    // TODO: mock data to test, delete when page is ready
-    eventId = "1";
-    // If it use to edit event
-    if (eventId) {
-        // TODO: backend get event detail (If it use to edit event)
-        let eventData = await getEventByEventId(eventId);
-
-        // Mock data
-        if (!eventData || !eventData._id) {
-            // TODO: show error page for event detail page
-            // return;
-            // but now, mock data for testing
-            const mockGetEventById = mockEvents.find(event => event._id === eventId);
-            eventData = mockGetEventById;
-        }
-        // bind data
-        document.getElementById("imageUpload").src = eventData.photoUrl; // TODO ：show image use Aliyun OSS
-        const radio = document.querySelector(`input[name='category'][value='${eventData.category}']`);
-        if (radio) {
-            radio.checked = true;
-        }
-        document.getElementById("eventTitle").value = eventData.title;
-        document.getElementById("eventContent").value = eventData.content;
-
-        geolocationCenter = {
-            lat: parseFloat(eventData.location.latitude),
-            lng: parseFloat(eventData.location.longitude)
-        };
-
-        selectedMarkerPosition = { ...geolocationCenter };
-
-
+    
+    // Reset form fields
+    document.getElementById("eventTitle").value = "";
+    document.getElementById("eventContent").value = "";
+    
+    // Reset image upload
+    const imageUploadInput = document.getElementById("imageUpload");
+    if (imageUploadInput) {
+        imageUploadInput.value = "";
     }
-
+    
+    // Clear category selection
+    const categoryRadios = document.querySelectorAll('input[name="category"]');
+    categoryRadios.forEach(radio => radio.checked = false);
+    
+    // Reset error message
+    const errorMessage = document.getElementById("errorMessage");
+    if (errorMessage) {
+        errorMessage.style.display = "none";
+    }
+    
+    // Get user location for the map
+    geolocationCenter = null;
+    selectedMarkerPosition = null;
+    
+    // Initialize map with user location
     initCreateEventMap();
+    
+    // Update address display
+    const addressOfMap = document.getElementById("addressOfMap");
+    if (addressOfMap) {
+        addressOfMap.innerHTML = '<i class="fas fa-map-marker-alt"></i>Select a location on the map';
+    }
+    
+    // Set up "My Location" button
+    const myLocationBtn = document.getElementById("myLocation");
+    if (myLocationBtn) {
+        myLocationBtn.addEventListener("click", function() {
+            if (window.userLocationMarker) {
+                const pos = window.userLocationMarker.getPosition();
+                createMap.setCenter(pos);
+                selectedMarker.setPosition(pos);
+                selectedMarkerPosition = { lat: pos.lat(), lng: pos.lng() };
+                
+                // Update address display
+                if (addressOfMap) {
+                    addressOfMap.innerHTML = `<i class="fas fa-map-marker-alt"></i>My Location (${pos.lat().toFixed(6)}, ${pos.lng().toFixed(6)})`;
+                }
+            }
+        });
+    }
 }
 
 // init create event map
@@ -137,28 +153,72 @@ function initCreateEventMap() {
     });
 }
 
-// 提交表单
+// Submit form
 submitCreateEventBtn.addEventListener("click", async () => {
+    // Get form data
     const imageFile = document.getElementById("imageUpload").files[0];
     const selectedCategory = document.querySelector("input[name='category']:checked")?.value;
     const title = document.getElementById("eventTitle").value.trim();
     const content = document.getElementById("eventContent").value.trim();
 
-    if (!imageFile) { alert("Please upload an image"); return; }
+    // Validate form data
     if (!selectedCategory) { alert("Please select a category"); return; }
     if (!title) { alert("Please enter a title"); return; }
+    if (!content) { alert("Please enter a description"); return; }
+    if (!selectedMarkerPosition) { alert("Please select a location on the map"); return; }
 
-    console.log({
-        Image: imageFile,
-        Category: selectedCategory,
-        Title: title,
-        Content: content,
-        Location: selectedMarkerPosition
-    });
-    // TODO: backend create event
-    const eventId = await createEvent(imageFile, selectedCategory, title, content, selectedMarkerPosition);
+    // Show loading state
+    submitCreateEventBtn.disabled = true;
+    submitCreateEventBtn.textContent = "Creating...";
 
+    try {
+        const eventId = await createEvent(
+            imageFile, 
+            selectedCategory, 
+            title, 
+            content, 
+            selectedMarkerPosition
+        );
 
-    alert("Event Created!");
-    createEventModal.style.display = "none";
+        if (eventId) {
+            alert("Event created successfully!");
+            createEventModal.style.display = "none";
+            
+            // Navigate to the new event's detail page
+            pushEventDetail(eventId);
+            await showEventDetail();
+        } else {
+            alert("Failed to create event. Please try again.");
+        }
+    } catch (error) {
+        console.error("Error creating event:", error);
+        alert("An error occurred: " + error.message);
+    } finally {
+        // Reset button state
+        submitCreateEventBtn.disabled = false;
+        submitCreateEventBtn.textContent = "Submit";
+    }
+});
+
+// Image preview
+document.getElementById("imageUpload").addEventListener("change", function(e) {
+    const file = this.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const uploadPlaceholder = document.querySelector(".upload-placeholder");
+            if (uploadPlaceholder) {
+                // Clear the placeholder and add the image preview
+                uploadPlaceholder.innerHTML = '';
+                const previewImg = document.createElement("img");
+                previewImg.src = e.target.result;
+                previewImg.className = "image-preview";
+                previewImg.style.maxWidth = "100%";
+                previewImg.style.maxHeight = "200px";
+                previewImg.style.objectFit = "contain";
+                uploadPlaceholder.appendChild(previewImg);
+            }
+        };
+        reader.readAsDataURL(file);
+    }
 });
