@@ -251,10 +251,6 @@ const getUsersByUserIds = async (userIds) => {
     _id: { $in: userIds.map(id => new ObjectId(id)) }
   }).toArray();
 
-  if (userList.length === 0 || userList.length !== userIds.length) {
-    throw new Error("At least one user was not found");
-  }
-
   const filteredUsers = userList.map(user => {
     user._id = user._id.toString();
     return filterUserSimple(user);

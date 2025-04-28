@@ -184,7 +184,16 @@ async function removeLike(eventId) {
 
 async function addComment(eventId, comment) {
     try {
-        const userId = localStorage.getItem('userId');
+        // Check if user is logged in
+        if (!isLoggedIn || !userInfo || !userInfo._id) {
+            console.log('User not logged in');
+            alert('Please log in to add comments');
+            return false;
+        }
+        
+        const userId = userInfo._id;
+        
+        console.log(`Adding comment to event ${eventId} by user ${userId}: "${comment}"`);
         
         const response = await fetch(`/api/comments/event/${eventId}`, {
             method: 'POST',
@@ -199,10 +208,36 @@ async function addComment(eventId, comment) {
         
         const data = await response.json();
         
-        return data.code === 200;
+        if (data.code === 200) {
+            console.log('Comment added successfully');
+            return true;
+        } else {
+            console.error('Error adding comment:', data.message || 'Unknown error');
+            return false;
+        }
     } catch (error) {
         console.error('Network error when adding comment:', error);
         return false;
+    }
+}
+
+async function getCommentsByEventId(eventId) {
+    try {
+        console.log(`Fetching comments for event ${eventId}`);
+        
+        const response = await fetch(`/api/comments/event/${eventId}`);
+        const data = await response.json();
+        
+        if (data.code === 200 && data.data) {
+            console.log(`Successfully fetched ${data.data.length} comments`);
+            return data.data;
+        } else {
+            console.error('Error fetching comments:', data.message || 'Unknown error');
+            return [];
+        }
+    } catch (error) {
+        console.error('Network error when fetching comments:', error);
+        return [];
     }
 }
 
