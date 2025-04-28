@@ -28,30 +28,40 @@ document.addEventListener("DOMContentLoaded", async () => {
     const likeEventBtn = document.getElementById("likeEventBtn");
     if (likeEventBtn) {
         likeEventBtn.addEventListener("click", async function () {
+            // Check if user is logged in
+            if (typeof isLoggedIn === 'undefined' || !isLoggedIn) {
+                alert("Please log in to like events");
+                return;
+            }
+            
+            const eventId = getEventIdFromURL();
             const likeCount = this.querySelector(".like-count");
             const currentCount = parseInt(likeCount.textContent);
-
-            if (this.classList.contains("liked")) {
-                if (currentCount < 1) {
-                    // something wrong, do nothing
-                    return;
+            
+            try {
+                if (this.classList.contains("liked")) {
+                    // Unlike the event
+                    const success = await removeLike(eventId);
+                    
+                    if (success) {
+                        this.classList.remove("liked");
+                        this.querySelector("i").className = "far fa-heart";
+                        likeCount.textContent = Math.max(0, currentCount - 1);
+                        console.log("Event unliked successfully");
+                    }
+                } else {
+                    // Like the event
+                    const success = await addLike(eventId);
+                    
+                    if (success) {
+                        this.classList.add("liked");
+                        this.querySelector("i").className = "fas fa-heart";
+                        likeCount.textContent = currentCount + 1;
+                        console.log("Event liked successfully");
+                    }
                 }
-                // unlike
-                this.classList.remove("liked");
-                this.querySelector("i").className = "far fa-heart";
-                likeCount.textContent = currentCount - 1;
-
-                // TODO: backend removeLike
-                await removeLike(eventId);
-
-            } else {
-                // make a like
-                this.classList.add("liked");
-                this.querySelector("i").className = "fas fa-heart";
-                likeCount.textContent = currentCount + 1;
-
-                // TODO: backend addLike
-                await addLike(eventId);
+            } catch (error) {
+                console.error("Error processing like action:", error);
             }
         });
     }
@@ -241,6 +251,28 @@ async function showEventDetail() {
     } 
 
     if (detailEventClickTime) detailEventClickTime.innerText = eventData.click_time + " Views" || "";
+
+    // Update likes count and state
+    const likeEventBtn = document.getElementById("likeEventBtn");
+    const likeCount = likeEventBtn?.querySelector(".like-count");
+    
+    if (likeCount) {
+        // Set the initial like count
+        likeCount.textContent = eventData.likes ? eventData.likes.length : 0;
+    }
+    
+    // Check if the current user has liked the event
+    if (typeof isLoggedIn !== 'undefined' && isLoggedIn && likeEventBtn) {
+        const likeStatus = await getLikeStatus(eventId);
+        
+        if (likeStatus.liked) {
+            likeEventBtn.classList.add("liked");
+            likeEventBtn.querySelector("i").className = "fas fa-heart";
+        } else {
+            likeEventBtn.classList.remove("liked");
+            likeEventBtn.querySelector("i").className = "far fa-heart";
+        }
+    }
 
     console.log("Event details displayed successfully");
 

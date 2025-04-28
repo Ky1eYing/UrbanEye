@@ -112,26 +112,18 @@ async function createEvent(imageFile, selectedCategory, title, content, selected
     }
 }
 
-async function removeLike(eventId) {
-    try {
-        const userId = localStorage.getItem('userId');
-        
-        const response = await fetch(`/api/likes/${userId}/${eventId}`, {
-            method: 'DELETE'
-        });
-        
-        const data = await response.json();
-        
-        return data.code === 200;
-    } catch (error) {
-        console.error('Network error when removing like:', error);
-        return false;
-    }
-}
-
 async function addLike(eventId) {
     try {
-        const userId = localStorage.getItem('userId');
+        // Check if user is logged in
+        if (!isLoggedIn || !userInfo || !userInfo._id) {
+            console.log('User not logged in');
+            alert('Please log in to like events');
+            return false;
+        }
+        
+        const userId = userInfo._id;
+        
+        console.log(`Adding like for event ${eventId} by user ${userId}`);
         
         const response = await fetch('/api/likes', {
             method: 'POST',
@@ -146,9 +138,46 @@ async function addLike(eventId) {
         
         const data = await response.json();
         
-        return data.code === 200;
+        if (data.code === 200) {
+            console.log('Like added successfully');
+            return true;
+        } else {
+            console.error('Error adding like:', data.message || 'Unknown error');
+            return false;
+        }
     } catch (error) {
         console.error('Network error when adding like:', error);
+        return false;
+    }
+}
+
+async function removeLike(eventId) {
+    try {
+        // Check if user is logged in
+        if (!isLoggedIn || !userInfo || !userInfo._id) {
+            console.log('User not logged in');
+            return false;
+        }
+        
+        const userId = userInfo._id;
+        
+        console.log(`Removing like for event ${eventId} by user ${userId}`);
+        
+        const response = await fetch(`/api/likes/${userId}/${eventId}`, {
+            method: 'DELETE'
+        });
+        
+        const data = await response.json();
+        
+        if (data.code === 200) {
+            console.log('Like removed successfully');
+            return true;
+        } else {
+            console.error('Error removing like:', data.message || 'Unknown error');
+            return false;
+        }
+    } catch (error) {
+        console.error('Network error when removing like:', error);
         return false;
     }
 }
@@ -177,24 +206,28 @@ async function addComment(eventId, comment) {
     }
 }
 
-async function getLikeByUserId(eventId) {
+async function getLikeStatus(eventId) {
     try {
-        const userId = localStorage.getItem('userId');
-        
-        if (!userId) {
-            return false; // User not logged in
+        // Check if user is logged in
+        if (!isLoggedIn || !userInfo || !userInfo._id) {
+            console.log('User not logged in or user info not available');
+            return { liked: false };
         }
+        
+        const userId = userInfo._id;
         
         const response = await fetch(`/api/likes/${userId}/${eventId}`);
         const data = await response.json();
         
-        if (data.code === 200) {
-            return data.data.liked;
+        if (data.code === 200 && data.data) {
+            console.log('Like status:', data.data);
+            return data.data; // { liked: true/false, like_id, liked_at }
         } else {
-            return false;
+            console.error('Error getting like status:', data.message || 'Unknown error');
+            return { liked: false };
         }
     } catch (error) {
         console.error('Network error when checking like status:', error);
-        return false;
+        return { liked: false };
     }
 }
