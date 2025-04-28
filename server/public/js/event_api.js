@@ -55,27 +55,22 @@ async function getEventByEventId(eventId) {
 
 async function createEvent(imageFile, selectedCategory, title, content, selectedMarkerPosition) {
     try {
-        // First handle the image upload
-        const formData = new FormData();
-        formData.append('image', imageFile);
-        
-        // Upload image first
-        const imageUploadResponse = await fetch('/api/upload', {
-            method: 'POST',
-            body: formData
-        });
-        
-        const imageData = await imageUploadResponse.json();
-        if (!imageData.success) {
-            throw new Error('Image upload failed');
+        // Check if user is logged in
+        if (typeof isLoggedIn === 'undefined' || !isLoggedIn || !userInfo || !userInfo._id) {
+            console.error('User not logged in or user info not available');
+            alert('Please log in to create events');
+            return null;
         }
         
-        // Get the current user ID from session
-        // This would typically be stored in the session or a state management system
-        // For now, we'll assume it's available in localStorage or similar
-        const userId = localStorage.getItem('userId');
+        const userId = userInfo._id;
         
-        // Prepare the event data
+        // Generate an address based on the selected location
+        const address = `Location at ${selectedMarkerPosition.lat.toFixed(6)}, ${selectedMarkerPosition.lng.toFixed(6)}`;
+        
+        // use a default image URL
+        const photoUrl = "https://urban-eye.oss-us-east-1.aliyuncs.com/events-pic/23be41e3-7246-4ca5-b837-a801cae0f4f0-IMG_7863.JPG";
+        
+        // Prepare event data
         const eventData = {
             user_id: userId,
             title: title,
@@ -83,13 +78,14 @@ async function createEvent(imageFile, selectedCategory, title, content, selected
             location: {
                 latitude: selectedMarkerPosition.lat.toString(),
                 longitude: selectedMarkerPosition.lng.toString(),
-                address: 'Address will be determined by coordinates' // This should be fetched from Google Maps API in a real app
+                address: address
             },
             category: selectedCategory,
-            photoUrl: imageData.photoUrl // URL returned from the image upload endpoint
+            photoUrl: photoUrl
         };
         
-        // Create the event
+        console.log('Creating event with data:', eventData);
+        
         const response = await fetch('/api/events', {
             method: 'POST',
             headers: {
@@ -98,16 +94,23 @@ async function createEvent(imageFile, selectedCategory, title, content, selected
             body: JSON.stringify(eventData)
         });
         
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.error || 'Error creating event');
+        }
+        
         const data = await response.json();
         
         if (data.code === 200) {
-            return data.data._id; // Return the new event ID
+            console.log('Event created successfully:', data.data);
+            return data.data._id;
         } else {
             console.error('Error creating event:', data.message || 'Unknown error');
             return null;
         }
     } catch (error) {
-        console.error('Network error when creating event:', error);
+        console.error('Error when creating event:', error);
+        alert('Failed to create event: ' + error.message);
         return null;
     }
 }

@@ -320,40 +320,56 @@ async function loadComments(eventId) {
     // Clear existing comments
     commentsList.innerHTML = '<div class="loading-comments">Loading comments...</div>';
     
-    // Fetch comments from backend
-    const comments = await getCommentsByEventId(eventId);
-    
-    // Clear loading state
-    commentsList.innerHTML = '';
-    
-    if (!comments || comments.length === 0) {
+    try {
+        // Fetch comments from backend
+        const response = await fetch(`/api/comments/event/${eventId}`);
+        
+        if (!response.ok) {
+            if (response.status === 404) {
+                commentsList.innerHTML = '<div class="no-comments">No comments yet. Be the first to comment!</div>';
+                return;
+            }
+            throw new Error(`Error fetching comments: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        const comments = data.data || [];
+        
+        // Clear loading state
+        commentsList.innerHTML = '';
+        
+        if (!comments || comments.length === 0) {
+            commentsList.innerHTML = '<div class="no-comments">No comments yet. Be the first to comment!</div>';
+            return;
+        }
+        
+        // Sort comments by date, newest first
+        comments.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+        
+        // Render comments
+        comments.forEach(comment => {
+            const user = comment.user || {}; // Get user info if available
+            const commentHTML = `
+                <div class="comment-item" data-comment-id="${comment._id}">
+                    <div class="comment-useravator">
+                        <img src="${user.avatar || 'https://urban-eye.oss-us-east-1.aliyuncs.com/users-pic/default-avatar.jpg'}"
+                            alt="${user.name || 'Anonymous'} Avatar">
+                    </div>
+                    <div class="comment-body">
+                        <div class="comment-header">
+                            <span class="comment-username">${user.name || user.userName || 'Anonymous'}</span>
+                            <span class="comment-time">${formatTimeAgo(new Date(comment.created_at))}</span>
+                        </div>
+                        <div class="comment-content">
+                            ${comment.content}
+                        </div>
+                    </div>
+                </div>
+            `;
+            commentsList.insertAdjacentHTML('beforeend', commentHTML);
+        });
+    } catch (error) {
+        console.error("Failed to load comments:", error);
         commentsList.innerHTML = '<div class="no-comments">No comments yet. Be the first to comment!</div>';
-        return;
     }
-    
-    // Sort comments by date, newest first
-    comments.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
-    
-    // Render comments
-    comments.forEach(comment => {
-        const user = comment.user || {}; // Get user info if available
-        const commentHTML = `
-            <div class="comment-item" data-comment-id="${comment._id}">
-                <div class="comment-useravator">
-                    <img src="${user.avatar || 'https://urban-eye.oss-us-east-1.aliyuncs.com/users-pic/default-avatar.jpg'}"
-                        alt="${user.name || 'Anonymous'} Avatar">
-                </div>
-                <div class="comment-body">
-                    <div class="comment-header">
-                        <span class="comment-username">${user.name || user.userName || 'Anonymous'}</span>
-                        <span class="comment-time">${formatTimeAgo(new Date(comment.created_at))}</span>
-                    </div>
-                    <div class="comment-content">
-                        ${comment.content}
-                    </div>
-                </div>
-            </div>
-        `;
-        commentsList.insertAdjacentHTML('beforeend', commentHTML);
-    });
 }
