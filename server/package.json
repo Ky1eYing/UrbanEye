@@ -1,41 +1,42 @@
 {
-	"name": "urbaneye",
-	"version": "1.0.0",
-	"description": "A Website for urban activities report",
-	"homepage": "https://github.com/sunxy488/UrbanEye#readme",
-	"bugs": {
-		"url": "https://github.com/sunxy488/UrbanEye/issues"
-	},
-	"repository": {
-		"type": "git",
-		"url": "git+https://github.com/sunxy488/UrbanEye.git"
-	},
-	"license": "MIT",
-	"author": "",
-	"type": "module",
-	"main": "app.js",
-	"scripts": {
-		"start": "node app.js",
-		"seed": "node ./scripts/seeds_events.js && node ./scripts/seeds_users.js && node ./scripts/seeds_likes.js && node ./scripts/seeds_comments.js",
-		"watch-server": "nodemon app.js --watch server",
-		"watch-browser": "browser-sync start --proxy 'localhost:3000' --port 3001 --ui-port 3002 --files \"public/css/**/*.css\" \"public/js/**/*.js\" \"views/**/*.handlebars\" --inject-changes --browser \"google chrome\"",
-		"dev": "concurrently \"npm:watch-server\" \"npm:watch-browser\""
-	},
-	"dependencies": {
-		"bcrypt": "^5.1.1",
-		"bcryptjs": "^3.0.2",
-		"dotenv": "^16.5.0",
-		"express": "^4.21.2",
-		"express-handlebars": "^8.0.1",
-		"express-session": "^1.17.0",
-		"mongodb": "^6.15.0"
-	},
-	"devDependencies": {
-		"@eslint/js": "^9.25.0",
-		"browser-sync": "^3.0.4",
-		"concurrently": "^9.1.2",
-		"eslint": "^9.25.0",
-		"globals": "^16.0.0",
-		"nodemon": "^3.1.10"
-	}
+  "name": "urbaneye",
+  "version": "1.0.0",
+  "description": "A Website for urban activities report",
+  "homepage": "https://github.com/sunxy488/UrbanEye#readme",
+  "bugs": {
+    "url": "https://github.com/sunxy488/UrbanEye/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sunxy488/UrbanEye.git"
+  },
+  "license": "MIT",
+  "author": "",
+  "type": "module",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "seed": "node ./scripts/seeds_events.js && node ./scripts/seeds_users.js && node ./scripts/seeds_likes.js && node ./scripts/seeds_comments.js",
+    "watch-server": "nodemon app.js --watch server",
+    "watch-browser": "browser-sync start --proxy 'localhost:3000' --port 3001 --ui-port 3002 --files \"public/css/**/*.css\" \"public/js/**/*.js\" \"views/**/*.handlebars\" --inject-changes --browser \"google chrome\"",
+    "dev": "concurrently \"npm:watch-server\" \"npm:watch-browser\"",
+    "nodemon": "nodemon app.js"
+  },
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "bcryptjs": "^3.0.2",
+    "dotenv": "^16.5.0",
+    "express": "^4.21.2",
+    "express-handlebars": "^8.0.1",
+    "express-session": "^1.17.0",
+    "mongodb": "^6.15.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.25.0",
+    "browser-sync": "^3.0.4",
+    "concurrently": "^9.1.2",
+    "eslint": "^9.25.0",
+    "globals": "^16.0.0",
+    "nodemon": "^3.1.10"
+  }
 }
