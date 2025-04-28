@@ -210,6 +210,8 @@ async function showEventDetail() {
     const detailEventDistance = document.getElementById("detail-event-distance");
     const detailEventImg = document.getElementById("detail-event-img");
     const detailEventContent = document.getElementById("detail-event-content");
+    const detailEventCreatedat = document.getElementById("detail-event-createdat");
+    const detailEventClickTime = document.getElementById("detail-event-clicktime");
 
     if (detailTitle) detailTitle.textContent = "Event Details";
     if (detailEventTitle) detailEventTitle.textContent = eventData.title || "Untitled Event";
@@ -226,6 +228,19 @@ async function showEventDetail() {
     }
 
     if (detailEventContent) detailEventContent.innerText = eventData.content || "No content available.";
+
+    if (detailEventCreatedat){
+        const createdAt = new Date(eventData.created_at);
+        detailEventCreatedat.innerText = createdAt.toLocaleString('en-US', {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit'
+          }) || "";
+    } 
+
+    if (detailEventClickTime) detailEventClickTime.innerText = eventData.click_time + " Views" || "";
 
     console.log("Event details displayed successfully");
 
