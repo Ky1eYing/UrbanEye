@@ -1,24 +1,47 @@
 document.addEventListener("DOMContentLoaded", () => {
     const profileView = document.getElementById("profileView");
-    const editProfileContainer = document.getElementById("editProfileContainer");
+    const editProfileView = document.getElementById("editProfileView");
     const editProfileBtn = document.getElementById("editProfileBtn");
+    const signOutBtn = document.getElementById("signOutBtn");
+    const backToProfileBtn = document.getElementById("backToProfileBtn");
 
-    // 初始化性别选择框
-    const currentSex = document.getElementById("sexDisplay").textContent.trim();
+    // get old user info
+    const oldAvatar = document.getElementById("avatarDisplay").src;
+    const oldName = document.getElementById("nameDisplay").textContent.trim();
+    const oldUsername = document.getElementById("usernameDisplay").textContent.trim();
+    const oldIntroduction = document.getElementById("introductionDisplay").textContent.trim();
+    const oldSex = document.getElementById("sexDisplay").textContent.trim();
+    const oldEmail = document.getElementById("emailDisplay").textContent.trim();
+    const oldPhone = document.getElementById("phoneDisplay").textContent.trim();
+    
+    
+    document.getElementById("avatarPreview").src = oldAvatar;
+    document.getElementById("editName").value = oldName;
+    document.getElementById("editUsername").value = oldUsername;
+    document.getElementById("editIntroduction").value = oldIntroduction;
+    document.getElementById("editEmail").value = oldEmail;
+    document.getElementById("editPhone").value = oldPhone;
+
     const sexSelect = document.getElementById("editSex");
+    let sexChoices;
     if (sexSelect) {
-        for (let i = 0; i < sexSelect.options.length; i++) {
-            if (sexSelect.options[i].value === currentSex) {
-                sexSelect.options[i].selected = true;
-                break;
-            }
+        sexChoices = new Choices(sexSelect, {
+            searchEnabled: false,
+            itemSelectText: '',
+            shouldSort: false,
+            allowHTML: true
+        });
+        
+        // Set default value
+        if (oldSex) {
+            sexChoices.setChoiceByValue(oldSex);
         }
     }
 
     // 切换到编辑资料视图
     editProfileBtn.addEventListener("click", () => {
         profileView.style.display = "none";
-        editProfileContainer.style.display = "block";
+        editProfileView.style.display = "flex";
     });
 
     // 监听所有 cancel/save 按钮
@@ -77,6 +100,22 @@ document.addEventListener("DOMContentLoaded", () => {
                 // 预览可直接用 FileReader
                 previewAvatar(file);
             }
+        });
+    }
+
+    // Back to profile button
+    if (backToProfileBtn) {
+        backToProfileBtn.addEventListener('click', function() {
+            editProfileView.style.display = 'none';
+            profileView.style.display = 'flex';
+        });
+    }
+
+    // Sign out button
+    if (signOutBtn) {
+        signOutBtn.addEventListener('click', function() {
+            // Redirect to logout route
+            window.location.href = '/logout';
         });
     }
 });
