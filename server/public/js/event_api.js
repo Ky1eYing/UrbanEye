@@ -115,6 +115,70 @@ async function createEvent(imageFile, selectedCategory, title, content, selected
     }
 }
 
+async function updateEvent(eventId, imageFile, selectedCategory, title, content, selectedMarkerPosition) {
+    try {
+        // Check if user is logged in
+        if (typeof isLoggedIn === 'undefined' || !isLoggedIn || !userInfo || !userInfo._id) {
+            console.error('User not logged in or user info not available');
+            alert('Please log in to update events');
+            return null;
+        }
+        
+        const address = `Location at ${selectedMarkerPosition.lat.toFixed(6)}, ${selectedMarkerPosition.lng.toFixed(6)}`;
+        
+        // Get the existing event to use its photoUrl if no new image is uploaded
+        const existingEvent = await getEventByEventId(eventId);
+        let photoUrl = existingEvent?.photoUrl || "https://urban-eye.oss-us-east-1.aliyuncs.com/events-pic/23be41e3-7246-4ca5-b837-a801cae0f4f0-IMG_7863.JPG";
+        
+        // TODO：handle actual image upload here later
+        if (imageFile) {
+            console.log("New image selected, would upload in a complete implementation");
+        }
+        
+        // Prepare event data
+        const eventData = {
+            title: title,
+            content: content,
+            location: {
+                latitude: selectedMarkerPosition.lat.toString(),
+                longitude: selectedMarkerPosition.lng.toString(),
+                address: address
+            },
+            category: selectedCategory,
+            photoUrl: photoUrl
+        };
+        
+        console.log('Updating event with data:', eventData);
+        
+        const response = await fetch(`/api/events/${eventId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(eventData)
+        });
+        
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.error || 'Error updating event');
+        }
+        
+        const data = await response.json();
+        
+        if (data.code === 200) {
+            console.log('Event updated successfully:', data.data);
+            return data.data._id; // Return the event ID
+        } else {
+            console.error('Error updating event:', data.message || 'Unknown error');
+            return null;
+        }
+    } catch (error) {
+        console.error('Error when updating event:', error);
+        alert('Failed to update event: ' + error.message);
+        return null;
+    }
+}
+
 async function addLike(eventId) {
     try {
         // Check if user is logged in

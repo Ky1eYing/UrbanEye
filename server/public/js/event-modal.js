@@ -27,48 +27,125 @@ createEventModal.addEventListener("click", event => {
     }
 });
 
-// show create event modal
-function showCreateEventModal() {
+// Show create event modal
+function showCreateEventModal(eventId) {
     // Show the modal
     createEventModal.style.display = "flex";
     
-    // Reset form fields
-    document.getElementById("eventTitle").value = "";
-    document.getElementById("eventContent").value = "";
-    
-    // Reset image upload
-    const imageUploadInput = document.getElementById("imageUpload");
-    if (imageUploadInput) {
-        imageUploadInput.value = "";
+    if (eventId) {
+        // Edit mode - load existing event data
+        getEventByEventId(eventId).then(eventData => {
+            if (eventData && eventData._id) {
+                // Update modal title
+                const modalTitle = createEventModal.querySelector("h2");
+                if (modalTitle) {
+                    modalTitle.textContent = "Edit Event";
+                }
+                
+                document.getElementById("eventTitle").value = eventData.title || "";
+                document.getElementById("eventContent").value = eventData.content || "";
+                
+                const categoryRadio = document.querySelector(`input[name="category"][value="${eventData.category}"]`);
+                if (categoryRadio) {
+                    categoryRadio.checked = true;
+                }
+                
+                // Set location data for the map
+                if (eventData.location) {
+                    geolocationCenter = { 
+                        lat: parseFloat(eventData.location.latitude), 
+                        lng: parseFloat(eventData.location.longitude) 
+                    };
+                    selectedMarkerPosition = { ...geolocationCenter };
+                    
+                    // Update address display
+                    const addressOfMap = document.getElementById("addressOfMap");
+                    if (addressOfMap) {
+                        addressOfMap.innerHTML = `<i class="fas fa-map-marker-alt"></i>${eventData.location.address || 'Selected location'}`;
+                    }
+                }
+                
+                // Show preview of existing image
+                if (eventData.photoUrl) {
+                    const uploadPlaceholder = document.querySelector(".upload-placeholder");
+                    if (uploadPlaceholder) {
+                        uploadPlaceholder.innerHTML = '';
+                        const previewImg = document.createElement("img");
+                        previewImg.src = eventData.photoUrl;
+                        previewImg.className = "image-preview";
+                        previewImg.style.maxWidth = "100%";
+                        previewImg.style.maxHeight = "200px";
+                        previewImg.style.objectFit = "contain";
+                        uploadPlaceholder.appendChild(previewImg);
+                    }
+                }
+                
+                if (submitCreateEventBtn) {
+                    submitCreateEventBtn.textContent = "Update Event";
+                    // Store the event ID as a data attribute for the submit handler
+                    submitCreateEventBtn.setAttribute('data-edit-id', eventId);
+                }
+            } else {
+                console.error("Could not load event data for editing");
+            }
+        }).catch(error => {
+            console.error("Error loading event for editing:", error);
+        });
+    } else {
+        // Create mode - reset form fields
+        const modalTitle = createEventModal.querySelector("h2");
+        if (modalTitle) {
+            modalTitle.textContent = "Create Event";
+        }
+        
+        document.getElementById("eventTitle").value = "";
+        document.getElementById("eventContent").value = "";
+        
+        const imageUploadInput = document.getElementById("imageUpload");
+        if (imageUploadInput) {
+            imageUploadInput.value = "";
+        }
+        
+        const uploadPlaceholder = document.querySelector(".upload-placeholder");
+        if (uploadPlaceholder) {
+            uploadPlaceholder.innerHTML = `
+                <i class="fas fa-image"></i>
+                <span>Choose an image</span>
+            `;
+        }
+        
+        const categoryRadios = document.querySelectorAll('input[name="category"]');
+        categoryRadios.forEach(radio => radio.checked = false);
+        
+        const errorMessage = document.getElementById("errorMessage");
+        if (errorMessage) {
+            errorMessage.style.display = "none";
+        }
+        
+        geolocationCenter = null;
+        selectedMarkerPosition = null;
+        
+        const addressOfMap = document.getElementById("addressOfMap");
+        if (addressOfMap) {
+            addressOfMap.innerHTML = '<i class="fas fa-map-marker-alt"></i>Select a location on the map';
+        }
+        
+        if (submitCreateEventBtn) {
+            submitCreateEventBtn.textContent = "Submit";
+            submitCreateEventBtn.removeAttribute('data-edit-id');
+        }
     }
     
-    // Clear category selection
-    const categoryRadios = document.querySelectorAll('input[name="category"]');
-    categoryRadios.forEach(radio => radio.checked = false);
-    
-    // Reset error message
-    const errorMessage = document.getElementById("errorMessage");
-    if (errorMessage) {
-        errorMessage.style.display = "none";
-    }
-    
-    // Get user location for the map
-    geolocationCenter = null;
-    selectedMarkerPosition = null;
-    
-    // Initialize map with user location
     initCreateEventMap();
-    
-    // Update address display
-    const addressOfMap = document.getElementById("addressOfMap");
-    if (addressOfMap) {
-        addressOfMap.innerHTML = '<i class="fas fa-map-marker-alt"></i>Select a location on the map';
-    }
     
     // Set up "My Location" button
     const myLocationBtn = document.getElementById("myLocation");
     if (myLocationBtn) {
-        myLocationBtn.addEventListener("click", function() {
+        // Remove existing event listener to avoid duplicates
+        const newLocationBtn = myLocationBtn.cloneNode(true);
+        myLocationBtn.parentNode.replaceChild(newLocationBtn, myLocationBtn);
+        
+        newLocationBtn.addEventListener("click", function() {
             if (window.userLocationMarker) {
                 const pos = window.userLocationMarker.getPosition();
                 createMap.setCenter(pos);
@@ -76,6 +153,7 @@ function showCreateEventModal() {
                 selectedMarkerPosition = { lat: pos.lat(), lng: pos.lng() };
                 
                 // Update address display
+                const addressOfMap = document.getElementById("addressOfMap");
                 if (addressOfMap) {
                     addressOfMap.innerHTML = `<i class="fas fa-map-marker-alt"></i>My Location (${pos.lat().toFixed(6)}, ${pos.lng().toFixed(6)})`;
                 }
@@ -169,34 +247,50 @@ submitCreateEventBtn.addEventListener("click", async () => {
 
     // Show loading state
     submitCreateEventBtn.disabled = true;
-    submitCreateEventBtn.textContent = "Creating...";
+    submitCreateEventBtn.textContent = "Processing...";
 
     try {
-        const eventId = await createEvent(
-            imageFile, 
-            selectedCategory, 
-            title, 
-            content, 
-            selectedMarkerPosition
-        );
+        let eventId;
+        const editEventId = submitCreateEventBtn.getAttribute('data-edit-id');
+        
+        if (editEventId) {
+            // Edit mode - update existing event
+            eventId = await updateEvent(
+                editEventId,
+                imageFile,
+                selectedCategory,
+                title,
+                content,
+                selectedMarkerPosition
+            );
+        } else {
+            // Create mode - create new event
+            eventId = await createEvent(
+                imageFile, 
+                selectedCategory, 
+                title, 
+                content, 
+                selectedMarkerPosition
+            );
+        }
 
         if (eventId) {
-            alert("Event created successfully!");
+            alert(editEventId ? "Event updated successfully!" : "Event created successfully!");
             createEventModal.style.display = "none";
             
-            // Navigate to the new event's detail page
+            // Navigate to the event's detail page
             pushEventDetail(eventId);
             await showEventDetail();
         } else {
-            alert("Failed to create event. Please try again.");
+            alert(editEventId ? "Failed to update event. Please try again." : "Failed to create event. Please try again.");
         }
     } catch (error) {
-        console.error("Error creating event:", error);
+        console.error("Error processing event:", error);
         alert("An error occurred: " + error.message);
     } finally {
         // Reset button state
         submitCreateEventBtn.disabled = false;
-        submitCreateEventBtn.textContent = "Submit";
+        submitCreateEventBtn.textContent = submitCreateEventBtn.hasAttribute('data-edit-id') ? "Update Event" : "Submit";
     }
 });
 
