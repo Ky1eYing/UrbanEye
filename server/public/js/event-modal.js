@@ -368,9 +368,7 @@ function displayFormErrorMessage(message) {
         errorElement = document.createElement("div");
         errorElement.id = "formErrorMessage";
         errorElement.style.color = "#ff3333";
-        errorElement.style.backgroundColor = "#ffeeee";
-        errorElement.style.padding = "8px 12px";
-        errorElement.style.borderRadius = "4px";
+        errorElement.style.padding = "8px 0";
         errorElement.style.marginTop = "10px";
         errorElement.style.marginBottom = "10px";
         errorElement.style.fontSize = "14px";
@@ -410,9 +408,7 @@ function displayFormSuccessMessage(message) {
         successElement = document.createElement("div");
         successElement.id = "formSuccessMessage";
         successElement.style.color = "#33aa33";
-        successElement.style.backgroundColor = "#eeffee";
-        successElement.style.padding = "8px 12px";
-        successElement.style.borderRadius = "4px";
+        successElement.style.padding = "8px 0";
         successElement.style.marginTop = "10px";
         successElement.style.marginBottom = "10px";
         successElement.style.fontSize = "14px";
