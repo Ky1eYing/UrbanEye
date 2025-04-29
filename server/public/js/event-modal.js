@@ -38,6 +38,9 @@ function showCreateEventModal(eventId) {
     // Show the modal
     createEventModal.style.display = "flex";
     
+    // Clear any existing error or success messages
+    clearFormErrorMessage();
+    
     if (eventId) {
         // Edit mode - load existing event data
         getEventByEventId(eventId).then(eventData => {
@@ -240,8 +243,12 @@ function initCreateEventMap() {
 // Submit form
 if (submitCreateEventBtn) {
     submitCreateEventBtn.addEventListener("click", async () => {
+    // Clear any previous error messages
+    clearFormErrorMessage();
+    
+    // Check if user is logged in before showing the modal
     if (typeof isLoggedIn === 'undefined' || !isLoggedIn || !userInfo || !userInfo._id) {
-        alert("Please log in to create events");
+        displayFormErrorMessage("Please log in to create events");
         createEventModal.style.display = "none";
         return;
     }
@@ -253,10 +260,26 @@ if (submitCreateEventBtn) {
     const content = document.getElementById("eventContent").value.trim();
 
     // Validate form data
-    if (!selectedCategory) { alert("Please select a category"); return; }
-    if (!title) { alert("Please enter a title"); return; }
-    if (!content) { alert("Please enter a description"); return; }
-    if (!selectedMarkerPosition) { alert("Please select a location on the map"); return; }
+    if (!selectedCategory) { 
+        displayFormErrorMessage("Please select a category");
+        return; 
+    }
+    if (!title) { 
+        displayFormErrorMessage("Please enter a title");
+        return; 
+    }
+    if (!content) { 
+        displayFormErrorMessage("Please enter a description");
+        return; 
+    }
+    if (!selectedMarkerPosition) { 
+        displayFormErrorMessage("Please select a location on the map");
+        return; 
+    }
+    if (!imageFile && !submitCreateEventBtn.hasAttribute('data-edit-id')) { 
+        displayFormErrorMessage("Please upload an image");
+        return; 
+    }
 
     // Show loading state
     submitCreateEventBtn.disabled = true;
@@ -288,18 +311,19 @@ if (submitCreateEventBtn) {
         }
 
         if (eventId) {
-            alert(editEventId ? "Event updated successfully!" : "Event created successfully!");
-            createEventModal.style.display = "none";
-            
-            // Navigate to the event's detail page
-            pushEventDetail(eventId);
-            await showEventDetail();
+            displayFormSuccessMessage(editEventId ? "Event updated successfully!" : "Event created successfully!");
+            setTimeout(() => {
+                createEventModal.style.display = "none";
+                
+                pushEventDetail(eventId);
+                showEventDetail();
+            }, 1000);
         } else {
-            alert(editEventId ? "Failed to update event. Please try again." : "Failed to create event. Please try again.");
+            displayFormErrorMessage(editEventId ? "Failed to update event. Please try again." : "Failed to create event. Please try again.");
         }
     } catch (error) {
         console.error("Error processing event:", error);
-        alert("An error occurred: " + error.message);
+        displayFormErrorMessage("An error occurred: " + error.message);
     } finally {
         // Reset button state
         submitCreateEventBtn.disabled = false;
@@ -333,4 +357,104 @@ if (imageUpload) {
         reader.readAsDataURL(file);
     }
     });
+}
+
+// Display error message function
+function displayFormErrorMessage(message) {
+    // Get or create the error message element
+    let errorElement = document.getElementById("formErrorMessage");
+    
+    if (!errorElement) {
+        errorElement = document.createElement("div");
+        errorElement.id = "formErrorMessage";
+        errorElement.style.color = "#ff3333";
+        errorElement.style.backgroundColor = "#ffeeee";
+        errorElement.style.padding = "8px 12px";
+        errorElement.style.borderRadius = "4px";
+        errorElement.style.marginTop = "10px";
+        errorElement.style.marginBottom = "10px";
+        errorElement.style.fontSize = "14px";
+        errorElement.style.display = "flex";
+        errorElement.style.alignItems = "center";
+        
+        // Add warning icon
+        const icon = document.createElement("i");
+        icon.className = "fas fa-exclamation-triangle";
+        icon.style.marginRight = "8px";
+        errorElement.appendChild(icon);
+        
+        const textSpan = document.createElement("span");
+        errorElement.appendChild(textSpan);
+        
+        const submitBtn = document.getElementById("submitCreateEvent");
+        if (submitBtn && submitBtn.parentNode) {
+            submitBtn.parentNode.insertBefore(errorElement, submitBtn);
+        }
+    }
+    
+    const textSpan = errorElement.querySelector("span");
+    if (textSpan) {
+        textSpan.textContent = message;
+    }
+    
+    // Show the error message
+    errorElement.style.display = "flex";
+}
+
+// Display success message function
+function displayFormSuccessMessage(message) {
+    let successElement = document.getElementById("formSuccessMessage");
+    
+    if (!successElement) {
+        // Create success message element if it doesn't exist
+        successElement = document.createElement("div");
+        successElement.id = "formSuccessMessage";
+        successElement.style.color = "#33aa33";
+        successElement.style.backgroundColor = "#eeffee";
+        successElement.style.padding = "8px 12px";
+        successElement.style.borderRadius = "4px";
+        successElement.style.marginTop = "10px";
+        successElement.style.marginBottom = "10px";
+        successElement.style.fontSize = "14px";
+        successElement.style.display = "flex";
+        successElement.style.alignItems = "center";
+        
+        // Add success icon
+        const icon = document.createElement("i");
+        icon.className = "fas fa-check-circle";
+        icon.style.marginRight = "8px";
+        successElement.appendChild(icon);
+        
+        const textSpan = document.createElement("span");
+        successElement.appendChild(textSpan);
+        
+        const submitBtn = document.getElementById("submitCreateEvent");
+        if (submitBtn && submitBtn.parentNode) {
+            submitBtn.parentNode.insertBefore(successElement, submitBtn);
+        }
+    }
+    
+    const textSpan = successElement.querySelector("span");
+    if (textSpan) {
+        textSpan.textContent = message;
+    }
+    
+    clearFormErrorMessage();
+    
+    successElement.style.display = "flex";
+}
+
+// Clear error message function
+function clearFormErrorMessage() {
+    // Hide error message if it exists
+    const errorElement = document.getElementById("formErrorMessage");
+    if (errorElement) {
+        errorElement.style.display = "none";
+    }
+    
+    // Hide success message if it exists
+    const successElement = document.getElementById("formSuccessMessage");
+    if (successElement) {
+        successElement.style.display = "none";
+    }
 }
