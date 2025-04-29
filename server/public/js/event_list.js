@@ -345,6 +345,12 @@ async function showEventList() {
 }
 
 
+// Global filters state object to track active filters
+let activeFilters = {
+    titleLike: null,
+    category: null
+};
+
 document.addEventListener('DOMContentLoaded', async function () {
     // Base on url (if has event id) to decide
     const eventId = getEventIdFromURL();
@@ -366,11 +372,12 @@ document.addEventListener('DOMContentLoaded', async function () {
                 event.preventDefault(); // Prevent form submission
                 const searchTerm = this.value.trim();
                 console.log('Search term entered:', searchTerm);
-                if (searchTerm) {
-                    searchEvents(searchTerm);
-                } else {
-                    showEventList();
-                }
+                
+                // Update active filters
+                activeFilters.titleLike = searchTerm || null;
+                
+                // Apply all active filters
+                applyFilters();
             }
         });
     } else {
@@ -390,11 +397,10 @@ document.addEventListener('DOMContentLoaded', async function () {
         // Add event listener for category changes
         categoryFilterElement.addEventListener('change', function() {
             const selectedCategory = this.value;
-            if (selectedCategory === 'all') {
-                showEventList();
-            } else {
-                filterEventsByCategory(selectedCategory);
-            }
+            
+            activeFilters.category = (selectedCategory !== 'all') ? selectedCategory : null;
+            
+            applyFilters();
         });
     }
 
@@ -405,6 +411,23 @@ document.addEventListener('DOMContentLoaded', async function () {
         await showEventList();
     }
 });
+
+// Function to apply all active filters together
+function applyFilters() {
+    // Create params object from active filters
+    const params = Object.fromEntries(
+        Object.entries(activeFilters).filter(([_, value]) => value !== null)
+    );
+    
+    console.log('Applying filters:', params);
+    
+    // If no filters active, show all events
+    if (Object.keys(params).length === 0) {
+        showEventList();
+    } else {
+        fetchAndDisplayEvents(params);
+    }
+}
 
 async function fetchAndDisplayEvents(params = {}) {
     try {
@@ -445,11 +468,14 @@ async function fetchAndDisplayEvents(params = {}) {
             
             // If no results found
             if (data.data.length === 0) {
+                // Build a message based on active filters
                 let message = 'No events found';
-                if (params.titleLike) {
+                
+                if (params.titleLike && params.category) {
+                    message += ` matching "${params.titleLike}" in category "${params.category}"`;
+                } else if (params.titleLike) {
                     message += ` matching "${params.titleLike}"`;
-                }
-                if (params.category && params.category !== 'all') {
+                } else if (params.category) {
                     message += ` in category "${params.category}"`;
                 }
                 
@@ -512,12 +538,11 @@ async function fetchAndDisplayEvents(params = {}) {
 }
 
 function searchEvents(searchTerm) {
-    return fetchAndDisplayEvents({ titleLike: searchTerm });
+    activeFilters.titleLike = searchTerm || null;
+    return applyFilters();
 }
 
 function filterEventsByCategory(category) {
-    if (category === 'all') {
-        return fetchAndDisplayEvents();
-    }
-    return fetchAndDisplayEvents({ category: category });
+    activeFilters.category = (category !== 'all') ? category : null;
+    return applyFilters();
 }
