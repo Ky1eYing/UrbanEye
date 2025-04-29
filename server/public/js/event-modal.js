@@ -11,11 +11,17 @@ let selectedMarkerPosition = null;  // final marker position
 let selectedMarker;
 
 // open create event modal
-openCreateEventModalBtn.addEventListener("click", () => {
+if (openCreateEventModalBtn) {
+    openCreateEventModalBtn.addEventListener("click", () => {
+    // Check if user is logged in before showing the modal
+    if (typeof isLoggedIn === 'undefined' || !isLoggedIn) {
+        alert("Please log in to create events");
+        return;
+    }
+    
     showCreateEventModal();
-
-
-});
+    });
+}
 
 // close create event modal
 closeCreateEventModalBtn.addEventListener("click", () => {
@@ -232,7 +238,14 @@ function initCreateEventMap() {
 }
 
 // Submit form
-submitCreateEventBtn.addEventListener("click", async () => {
+if (submitCreateEventBtn) {
+    submitCreateEventBtn.addEventListener("click", async () => {
+    if (typeof isLoggedIn === 'undefined' || !isLoggedIn || !userInfo || !userInfo._id) {
+        alert("Please log in to create events");
+        createEventModal.style.display = "none";
+        return;
+    }
+
     // Get form data
     const imageFile = document.getElementById("imageUpload").files[0];
     const selectedCategory = document.querySelector("input[name='category']:checked")?.value;
@@ -292,10 +305,14 @@ submitCreateEventBtn.addEventListener("click", async () => {
         submitCreateEventBtn.disabled = false;
         submitCreateEventBtn.textContent = submitCreateEventBtn.hasAttribute('data-edit-id') ? "Update Event" : "Submit";
     }
-});
+    });
+}
 
 // Image preview
-document.getElementById("imageUpload").addEventListener("change", function(e) {
+const imageUpload = document.getElementById("imageUpload");
+if (imageUpload) {
+    imageUpload.addEventListener("change", function(e) {
+    console.log("Image selected for upload:", this.files[0]?.name);
     const file = this.files[0];
     if (file) {
         const reader = new FileReader();
@@ -315,4 +332,5 @@ document.getElementById("imageUpload").addEventListener("change", function(e) {
         };
         reader.readAsDataURL(file);
     }
-});
+    });
+}
