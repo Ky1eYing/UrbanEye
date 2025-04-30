@@ -419,7 +419,7 @@ function addEventMarker(event) {
 
     // navigate to event detail
     if (typeof pushEventDetail === 'function' && typeof showEventDetail === 'function') {
-      history.replaceState({ _id: event._id }, '', '?_id=' + event._id);
+      history.replaceState(null, '', '?_id=' + event._id);
       showEventDetail();
     } else {
       window.location.href = `/event?id=${event._id}`;
