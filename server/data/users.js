@@ -330,12 +330,40 @@ const updateUser = async (userId, name, introduction, sex, email, phone) => {
   return filterUserWithPassword(updateInfo);
 };
 
+const updateAvatar = async (userId, avatar) => {
+  userId = check.checkObjectId(userId);
+
+  avatar = check.checkStringAllowNull(avatar);
+
+  let newUser = {
+    avatar: avatar,
+  };
+
+  const usersCollection = await users();
+
+  let updateInfo = await usersCollection.findOneAndUpdate(
+    { _id: new ObjectId(userId) },
+    { $set: newUser },
+    { returnDocument: "after" }
+  );
+
+  if (!updateInfo) {
+    throw new Error(
+      `Error: Update failed, could not find an user with id of ${userId}`
+    );
+  }
+  updateInfo._id = updateInfo._id.toString();
+
+  return filterUserWithPassword(updateInfo);
+};
+
 export default {
   createUser,
   getUserByUserId,
   getUsersByUserIds,
   removeUser,
   updateUser,
+  updateAvatar,
   filterUserSimple,
   filterUser,
   filterUserWithPassword,

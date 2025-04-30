@@ -50,13 +50,11 @@ router
         email,
         phone
       );
-      return res
-        .status(200)
-        .json({
-          code: 200,
-          message: "success",
-          data: usersData.filterUser(user),
-        });
+      return res.status(200).json({
+        code: 200,
+        message: "success",
+        data: usersData.filterUser(user),
+      });
     } catch (e) {
       return res.status(400).json({ code: 400, message: e.message });
     }
@@ -132,13 +130,11 @@ router
     }
     try {
       const user = await usersData.getUserByUserId(userId);
-      return res
-        .status(200)
-        .json({
-          code: 200,
-          message: "success",
-          data: usersData.filterUser(user),
-        });
+      return res.status(200).json({
+        code: 200,
+        message: "success",
+        data: usersData.filterUser(user),
+      });
     } catch (e) {
       return res.status(404).json({ code: 404, message: e.message });
     }
@@ -245,12 +241,10 @@ router
     }
 
     if (userName !== null && password !== null) {
-      return res
-        .status(400)
-        .json({
-          code: 400,
-          message: "Cannot update two fields at the same time",
-        });
+      return res.status(400).json({
+        code: 400,
+        message: "Cannot update two fields at the same time",
+      });
     }
 
     if (userName === null && password === null) {
@@ -280,12 +274,10 @@ router
         req.session.destroy((err) => {
           if (err) return res.status(500).send("Logout failed");
           res.clearCookie(SESSION_COOKIE_NAME || "connect.sid");
-          return res
-            .status(200)
-            .json({
-              code: 200,
-              message: "Update successfully! You will be logged out.",
-            });
+          return res.status(200).json({
+            code: 200,
+            message: "Update successfully! You will be logged out.",
+          });
         });
       } catch (e) {
         return res.status(404).json({ code: 404, message: e.message });
@@ -299,12 +291,10 @@ router
         req.session.destroy((err) => {
           if (err) return res.status(500).send("Logout failed");
           res.clearCookie(SESSION_COOKIE_NAME || "connect.sid");
-          return res
-            .status(200)
-            .json({
-              code: 200,
-              message: "Update successfully! You will be logged out.",
-            });
+          return res.status(200).json({
+            code: 200,
+            message: "Update successfully! You will be logged out.",
+          });
         });
       } catch (e) {
         return res.status(404).json({ code: 404, message: e.message });
@@ -360,16 +350,65 @@ router
         email,
         phone
       );
-      return res
-        .status(200)
-        .json({
-          code: 200,
-          message: "success",
-          data: usersData.filterUser(user),
-        });
+      return res.status(200).json({
+        code: 200,
+        message: "success",
+        data: usersData.filterUser(user),
+      });
     } catch (e) {
       return res.status(404).json({ code: 404, message: e.message });
     }
   });
+
+router.route("/avatar/:userId").put(requireLogin, async (req, res) => {
+  let userId;
+  try {
+    userId = check.checkObjectId(req.params.userId);
+  } catch (e) {
+    return res.status(400).json({ code: 400, message: e.message });
+  }
+
+  if (ENABLE_AUTH_CHECK) {
+    if (req.session.userId !== userId) {
+      return res
+        .status(403)
+        .json({ code: 403, message: "Forbidden! You are not authorized" });
+    }
+  }
+
+  const reqBody = req.body;
+  if (!reqBody || Object.keys(reqBody).length === 0) {
+    return res.status(400).json({
+      code: 400,
+      message: "There are no fields in the request body",
+    });
+  }
+
+  let { avatar } = reqBody;
+
+  if (avatar===undefined) {
+    return res.status(400).json({
+      code: 400,
+      message: "There are no avatar in the request body",
+    });
+  }
+
+  try {
+    avatar = check.checkStringAllowNull(avatar, "avatar");
+  } catch (e) {
+    return res.status(400).json({ code: 400, message: e.message });
+  }
+
+  try {
+    const user = await usersData.updateAvatar(userId, avatar);
+    return res.status(200).json({
+      code: 200,
+      message: "success",
+      data: usersData.filterUser(user),
+    });
+  } catch (e) {
+    return res.status(404).json({ code: 404, message: e.message });
+  }
+});
 
 export default router;
