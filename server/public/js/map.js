@@ -417,9 +417,9 @@ function addEventMarker(event) {
     // center and zoom the map on this marker
     focusMapOnMarker(marker);
 
-    // Then navigate to event detail
+    // navigate to event detail
     if (typeof pushEventDetail === 'function' && typeof showEventDetail === 'function') {
-      pushEventDetail(event._id);
+      history.replaceState({ _id: event._id }, '', '?_id=' + event._id);
       showEventDetail();
     } else {
       window.location.href = `/event?id=${event._id}`;

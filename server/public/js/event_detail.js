@@ -186,7 +186,7 @@ async function showEventDetail() {
     const eventId = getEventIdFromURL();
     console.log("Fetching event with ID:", eventId);
 
-    // 如果有事件ID，尝试聚焦地图到该事件位置
+    // if focusMapOnEvent is defined, focus map on this event marker
     if (eventId && typeof window.focusMapOnEvent === 'function') {
         window.focusMapOnEvent(eventId);
     }
