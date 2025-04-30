@@ -1450,7 +1450,8 @@ section {
 }
 
 .error-message i {
-    margin-right: 5px;
+    margin-right: 8px;
+    font-size: 0.9rem
 }
 
 /* 提交按钮样式 */
@@ -1858,3 +1859,12 @@ section {
     text-decoration: underline;
 }
 
+.logout-actions {
+    
+    gap: 10px;
+   
+
+}
+i{
+    margin-right: var(--spacing-sm);
+}

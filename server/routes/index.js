@@ -64,6 +64,12 @@ const constructorMethod = (app) => {
     });
   });
 
+  app.get("/logout", (req, res) => {
+    res.render("logout", {
+      title: "Log Out",
+    });
+  });
+
   app.get("/profile", redirectLogin, attachUser, (req, res) => {
     res.render("profile", {
       title: "Profile",
