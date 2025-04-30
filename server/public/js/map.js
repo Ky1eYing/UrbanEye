@@ -219,11 +219,11 @@ function addMyLocationButton(map) {
     if (userLocationMarker) {
       const pos = userLocationMarker.getPosition();
       map.setCenter(pos);
-      map.setZoom(15);
+      map.setZoom(12.8);
     }
     else if (window.preFetchedPosition) {
       map.setCenter(window.preFetchedPosition);
-      map.setZoom(15);
+      map.setZoom(12.8);
 
       if (!userLocationMarker) {
         updateUserLocation(window.preFetchedPosition, "(from service)");
@@ -240,7 +240,7 @@ function addMyLocationButton(map) {
           };
 
           map.setCenter(pos);
-          map.setZoom(15);
+          map.setZoom(12.8);
           updateUserLocation(pos, "(new)");
 
           locationButton.innerHTML = '<i class="fas fa-location-arrow"></i>';
@@ -435,7 +435,7 @@ function addEventMarker(event) {
 // Focus map on a specific marker
 function focusMapOnMarker(marker) {
   map.setCenter(marker.getPosition());
-  map.setZoom(15);
+  map.setZoom(12.8);
   marker.setAnimation(google.maps.Animation.BOUNCE);
   setTimeout(() => {
     marker.setAnimation(null);
