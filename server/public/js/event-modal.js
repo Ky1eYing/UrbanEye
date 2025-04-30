@@ -155,7 +155,9 @@ function showCreateEventModal(eventId) {
         myLocationBtn.parentNode.replaceChild(newLocationBtn, myLocationBtn);
 
         newLocationBtn.addEventListener("click", function () {
+            // get accurate location
             if (window.userLocationMarker) {
+                // Use existing marker on map if available
                 const pos = window.userLocationMarker.getPosition();
                 createMap.setCenter(pos);
                 selectedMarker.setPosition(pos);
@@ -163,6 +165,39 @@ function showCreateEventModal(eventId) {
 
                 // Update address display
                 updateAddressDisplay(selectedMarkerPosition);
+            } else if (window.preFetchedPosition) {
+                // Otherwise use the global position from location service
+                const pos = window.preFetchedPosition;
+                createMap.setCenter(pos);
+                selectedMarker.setPosition(pos);
+                selectedMarkerPosition = { lat: pos.lat, lng: pos.lng };
+
+                // Update address display
+                updateAddressDisplay(selectedMarkerPosition);
+            } else {
+                // get a new position
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(
+                        position => {
+                            const pos = {
+                                lat: position.coords.latitude,
+                                lng: position.coords.longitude
+                            };
+                            createMap.setCenter(pos);
+                            selectedMarker.setPosition(pos);
+                            selectedMarkerPosition = pos;
+
+                            // Update address display
+                            updateAddressDisplay(selectedMarkerPosition);
+                        },
+                        error => {
+                            console.error("Error getting location for My Location button:", error);
+                            alert("Could not get your location. Please try again or select a location manually.");
+                        }
+                    );
+                } else {
+                    alert("Geolocation is not supported by your browser. Please select a location manually.");
+                }
             }
         });
     }

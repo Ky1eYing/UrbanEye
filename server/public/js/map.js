@@ -8,10 +8,6 @@ let mapInitialized = false;
 let preFetchedPosition = null;
 let preFetchDone = false;
 
-// expose to event-modal.js
-window.preFetchedPosition = null;
-window.userLocationMarker = null;
-
 // dark mode styles
 const darkModeStyles = [
   { elementType: "geometry", stylers: [{ color: "#242f3e" }] },
@@ -104,9 +100,16 @@ const defaultStyles = [
 ];
 
 document.addEventListener("DOMContentLoaded", () => {
-  console.log("page ready: parallel pre-fetch & load Google Maps script");
-  preFetchUserLocation();      // low accuracy quick pre-fetch
-  loadGoogleMapsAPI();         // parallel load map
+  console.log("page ready: loading Google Maps script");
+  loadGoogleMapsAPI();         // load map
+
+  // Listen for location updates from location-service.js
+  document.addEventListener('userLocationUpdated', (e) => {
+    if (mapInitialized && e.detail) {
+      console.log("Map received location update from service", e.detail);
+      updateUserLocation(e.detail, "(from service)");
+    }
+  });
 });
 
 // check if dark mode
@@ -160,14 +163,21 @@ function initMap() {
   // 添加一些示例事件标记
   addSampleMarkers();
 
-  if (preFetchDone && preFetchedPosition) {
-    console.log("use pre-fetched location");
-    updateUserLocation(preFetchedPosition, "(estimated)");
+  // Check if already have the position from the location service
+  if (window.preFetchedPosition) {
+    console.log("using position from location service", window.preFetchedPosition);
+    updateUserLocation(window.preFetchedPosition, "(from service)");
   } else {
-    google.maps.event.addListenerOnce(map, 'idle', () => {
-      console.log("map idle, start high accuracy location");
-      getHighAccuracyLocation();
-    });
+    if (preFetchDone && preFetchedPosition) {
+      console.log("use pre-fetched location");
+      updateUserLocation(preFetchedPosition, "(estimated)");
+    } else {
+      // Only get low accuracy location if we don't have any position yet
+      google.maps.event.addListenerOnce(map, 'idle', () => {
+        console.log("map idle, start high accuracy location");
+        getLowAccuracyLocation();
+      });
+    }
   }
 }
 
@@ -247,6 +257,9 @@ function updateUserLocation(position, tag = "") {
         strokeWeight: 2
       }
     });
+
+    window.userLocationMarker = userLocationMarker;
+
     new google.maps.Circle({
       map,
       center: position,
@@ -258,11 +271,8 @@ function updateUserLocation(position, tag = "") {
       strokeWeight: 1
     });
   }
-  window.userLocationMarker = userLocationMarker;
   console.log(`user location ${tag} updated on map:`, position);
 }
-
-
 
 // 添加示例事件标记
 function addSampleMarkers() {
