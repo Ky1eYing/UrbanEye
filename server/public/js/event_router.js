@@ -27,6 +27,7 @@ window.addEventListener('popstate', async () => {
     if (eventId) {
         await showEventDetail();
     } else {
-        await showEventList();
+        // await showEventList();
+        applyFilters();
     }
 });

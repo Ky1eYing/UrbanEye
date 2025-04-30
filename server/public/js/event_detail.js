@@ -20,7 +20,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         } else {
             // user directly visit '/event?_id=123', default back to event list page
             replaceToEventList(eventId);
-            await showEventList();
+            // await showEventList();
+            applyFilters();
         }
     });
 

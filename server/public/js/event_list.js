@@ -267,8 +267,8 @@ async function showEventList() {
         eventList.innerHTML = '<div class="loading-events">Loading events...</div>';
 
         // Fetch events from backend using our new function
-        console.log("Calling fetchEvents() from showEventList()");
         let events = await fetchEvents();
+        
 
         // Log the results for debugging
         console.log("Events fetched:", events ? events.length : 0);
@@ -278,7 +278,6 @@ async function showEventList() {
 
         // Fallback to mock data if fetch fails (during development)
         if (!events || events.length === 0) {
-            console.warn("No events found or fetch failed. Using mock data if available.");
             if (typeof mockEvents !== 'undefined') {
                 events = mockEvents;
                 console.log("Using mock data:", events.length);
@@ -378,8 +377,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         const newSearchInput = searchInput.cloneNode(true);
         searchInput.parentNode.replaceChild(newSearchInput, searchInput);
 
-        newSearchInput.addEventListener('keypress', function (event) {
-            if (event.key === 'Enter') {
+        newSearchInput.addEventListener('input', function (event) {
                 event.preventDefault(); // Prevent form submission
                 const searchTerm = this.value.trim();
                 console.log('Search term entered:', searchTerm);
@@ -389,7 +387,6 @@ document.addEventListener('DOMContentLoaded', async function () {
 
                 // Apply all active filters
                 applyFilters();
-            }
         });
     } else {
         console.error('Search input not found on the page');
@@ -419,7 +416,8 @@ document.addEventListener('DOMContentLoaded', async function () {
     if (eventId) {
         await showEventDetail();
     } else {
-        await showEventList();
+        // await showEventList();
+        applyFilters();
     }
 });
 
@@ -528,10 +526,6 @@ async function fetchAndDisplayEvents(params = {}) {
             const eventItems = eventList.querySelectorAll(".event-item");
             eventItems.forEach(item => {
                 item.addEventListener('click', async (event) => {
-                    // Check if the click is on the "likes" button or its children
-                    if (event.target.closest('.event-likes')) {
-                        return; // Stop propagation for like button clicks
-                    }
 
                     const eventId = item.dataset.eventId;
                     console.log(`Event item clicked: ${eventId}`);
@@ -557,6 +551,12 @@ async function fetchAndDisplayEvents(params = {}) {
             eventList.innerHTML = '<div class="error-events">Error fetching events. Please try again later.</div>';
         }
     }
+
+    // Hide and Change View
+    const eventListContainer = document.getElementById("event-list-container");
+    const eventDetailContainer = document.getElementById("event-detail-container");
+    if (eventListContainer) eventListContainer.style.display = "block";
+    if (eventDetailContainer) eventDetailContainer.style.display = "none";
 }
 
 function searchEvents(searchTerm) {
