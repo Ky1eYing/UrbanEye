@@ -325,12 +325,7 @@ async function showEventList() {
         const eventItems = eventList.querySelectorAll(".event-item");
         eventItems.forEach(item => {
             item.addEventListener('click', async (event) => {
-                // Check if the click is on the "likes" button or its children
-                if (event.target.closest('.event-likes')) {
-                    return; // Stop propagation for like button clicks
-                }
-
-                const eventId = item.dataset.eventId;
+                const eventId = item.getAttribute('data-event-id');
                 console.log(`Event item clicked: ${eventId}`);
 
                 // focus map on this event marker
@@ -527,7 +522,7 @@ async function fetchAndDisplayEvents(params = {}) {
             eventItems.forEach(item => {
                 item.addEventListener('click', async (event) => {
 
-                    const eventId = item.dataset.eventId;
+                    const eventId = item.getAttribute('data-event-id');
                     console.log(`Event item clicked: ${eventId}`);
 
                     // focus map on this event marker
