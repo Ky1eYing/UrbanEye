@@ -23,25 +23,6 @@
                 </select>
             </div>
             <div class="event-list">
-                {{#if events.length}}
-                {{#each events}}
-                <div class="event-item" data-event-id="{{this._id}}">
-                    <div class="event-image">
-                        <img src="{{this.imageUrl}}" alt="{{this.title}}">
-                    </div>
-                    <div class="event-details">
-                        <h3>{{this.title}}</h3>
-                        <div class="event-meta">
-                            <span>{{this.location}}</span>
-                            <span>{{this.time}}</span>
-                            <span>{{this.day}}</span>
-                            <span>{{this.timeAgo}}</span>
-                        </div>
-                    </div>
-                </div>
-                {{/each}}
-                {{else}}
-                <!-- fallback 示例 -->
                 <div class="event-item" data-event-id="fake-id-1">
                     <div class="event-image">
                         <img src="https://urban-eye.oss-us-east-1.aliyuncs.com/events-pic/23be41e3-7246-4ca5-b837-a801cae0f4f0-IMG_7863.JPG"
@@ -72,7 +53,6 @@
                         </div>
                     </div>
                 </div>
-                {{/if}}
             </div>
         </div>
 
@@ -205,7 +185,8 @@
             <div class="form-group">
                 <label for="imageUpload">Image</label>
                 <div class="upload-container">
-                    <input type="file" id="imageUpload" accept="image/*" />
+                    <input type="file" id="imageUpload" accept="image/*" hidden/>
+                    <img id="eventPhoto" src="" alt="Preview" hidden/>
                     <div class="upload-placeholder">
                         <i class="fas fa-image"></i>
                         <span>Choose an image</span>

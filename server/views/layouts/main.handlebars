@@ -6,16 +6,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>UrbanEye - {{title}}</title>
     <link rel="stylesheet" href="/css/styles.css">
+    {{!-- icons --}}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap"
         rel="stylesheet">
+    {{!-- font-erode --}}
     <link href="https://api.fontshare.com/v2/css?f[]=erode@300,301,400,500,501,600,700&display=swap" rel="stylesheet">
     <!-- choices element -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css" />
     <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
-
+    {{!-- Aliyun OSS SDK --}}
+    <script src="https://gosspublic.alicdn.com/aliyun-oss-sdk-6.20.0.min.js"></script>      
 </head>
 
 <body>
@@ -72,5 +75,8 @@
 
     <script src="/js/location-service.js"></script>
 </body>
+
+<!-- JS -->
+<script src="/js/aliyun.js" defer></script>
 
 </html>

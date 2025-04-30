@@ -7,6 +7,10 @@ document.addEventListener("DOMContentLoaded", () => {
         const loginButton = document.querySelector(".login-submit-btn");
         const errorMessage = document.querySelector("#errorMessage");
         
+        // Clear previous errors
+        errorMessage.textContent = "";
+        errorMessage.style.display = "none";
+
         loginButton.addEventListener("click", async (e) => {
             e.preventDefault();
             

@@ -31,6 +31,7 @@ const constructorMethod = (app) => {
   app.get("/", attachUser, (req, res) => {
     res.render("home", {
       title: "Home",
+      isHome: true,
       user: req.user,
     });
   });
@@ -38,6 +39,7 @@ const constructorMethod = (app) => {
   app.get("/event", attachUser, (req, res) => {
     res.render("event", {
       title: "Events",
+      isEvent: true,
       user: req.user,
     });
   });
@@ -45,6 +47,7 @@ const constructorMethod = (app) => {
   app.get("/about", attachUser, (req, res) => {
     res.render("about", {
       title: "About",
+      isAbout: true,
       user: req.user,
     });
   });
