@@ -33,16 +33,16 @@ document.addEventListener("DOMContentLoaded", async () => {
                 alert("Please log in to like events");
                 return;
             }
-            
+
             const eventId = getEventIdFromURL();
             const likeCount = this.querySelector(".like-count");
             const currentCount = parseInt(likeCount.textContent);
-            
+
             try {
                 if (this.classList.contains("liked")) {
                     // Unlike the event
                     const success = await removeLike(eventId);
-                    
+
                     if (success) {
                         this.classList.remove("liked");
                         this.querySelector("i").className = "far fa-heart";
@@ -52,7 +52,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 } else {
                     // Like the event
                     const success = await addLike(eventId);
-                    
+
                     if (success) {
                         this.classList.add("liked");
                         this.querySelector("i").className = "fas fa-heart";
@@ -124,40 +124,40 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (postCommentBtn && newCommentInput) {
         postCommentBtn.addEventListener("click", async () => {
             const commentText = newCommentInput.value.trim();
-            
+
             if (!commentText) {
                 alert("Please enter a comment");
                 return;
             }
-            
+
             if (!isLoggedIn) {
                 alert("Please log in to add comments");
                 return;
             }
-            
+
             const eventId = getEventIdFromURL();
-            
+
             // Show loading state
             postCommentBtn.disabled = true;
             postCommentBtn.textContent = "Posting...";
-            
+
             // Post comment to backend
             const success = await addComment(eventId, commentText);
-            
+
             // Reset button state
             postCommentBtn.disabled = false;
             postCommentBtn.textContent = "Post";
-            
+
             if (success) {
                 // Clear comment input
                 newCommentInput.value = "";
-                
+
                 // Reload comments to show the new comment
                 await loadComments(eventId);
-                
+
                 // Get updated event data to get the accurate total comment count
                 const updatedEventData = await getEventByEventId(eventId);
-                
+
                 // Update comment count with the total number
                 const commentCount = document.querySelector(".comment-count");
                 if (commentCount && updatedEventData && updatedEventData.comments) {
@@ -167,7 +167,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 alert("Failed to post comment. Please try again.");
             }
         });
-        
+
         // Add enter key support for posting comments
         newCommentInput.addEventListener("keypress", (e) => {
             if (e.key === "Enter" && !e.shiftKey) {
@@ -186,9 +186,14 @@ async function showEventDetail() {
     const eventId = getEventIdFromURL();
     console.log("Fetching event with ID:", eventId);
 
+    // 如果有事件ID，尝试聚焦地图到该事件位置
+    if (eventId && typeof window.focusMapOnEvent === 'function') {
+        window.focusMapOnEvent(eventId);
+    }
+
     // Fetch event data from backend
     let eventData = await getEventByEventId(eventId);
-    
+
     if (!eventData || !eventData._id) {
         console.error("Failed to load event data");
         // Show error message
@@ -201,7 +206,7 @@ async function showEventDetail() {
                     <button id="backToListBtnError" class="btn">Back to Events</button>
                 </div>
             `;
-            
+
             // Add event listener for the error back button
             const backToListBtnError = document.getElementById("backToListBtnError");
             if (backToListBtnError) {
@@ -209,10 +214,10 @@ async function showEventDetail() {
                     window.location.href = "/event";
                 });
             }
-            
+
             return;
         }
-        
+
         // Fall back to mock data if available and we're in development
         if (typeof mockEvents !== 'undefined') {
             console.log("Falling back to mock data");
@@ -254,7 +259,7 @@ async function showEventDetail() {
 
     if (detailEventContent) detailEventContent.innerText = eventData.content || "No content available.";
 
-    if (detailEventCreatedat){
+    if (detailEventCreatedat) {
         const createdAt = new Date(eventData.created_at);
         detailEventCreatedat.innerText = createdAt.toLocaleString('en-US', {
             year: 'numeric',
@@ -262,15 +267,15 @@ async function showEventDetail() {
             day: '2-digit',
             hour: '2-digit',
             minute: '2-digit'
-          }) || "";
-    } 
+        }) || "";
+    }
 
     if (detailEventClickTime) detailEventClickTime.innerText = eventData.click_time + " Views" || "";
 
     // Update likes count and state
     const likeEventBtn = document.getElementById("likeEventBtn");
     const likeCount = likeEventBtn?.querySelector(".like-count");
-    
+
     if (likeCount) {
         // Set the initial like count
         likeCount.textContent = eventData.likes ? eventData.likes.length : 0;
@@ -279,16 +284,16 @@ async function showEventDetail() {
     // Update comment count
     const commentEventBtn = document.getElementById("CommentEventBtn");
     const commentCount = commentEventBtn?.querySelector(".comment-count");
-    
+
     if (commentCount) {
         // Set the initial comment count to the total number of comments
         commentCount.textContent = eventData.comments ? eventData.comments.length : 0;
     }
-    
+
     // Check if the current user has liked the event
     if (typeof isLoggedIn !== 'undefined' && isLoggedIn && likeEventBtn) {
         const likeStatus = await getLikeStatus(eventId);
-        
+
         if (likeStatus.liked) {
             likeEventBtn.classList.add("liked");
             likeEventBtn.querySelector("i").className = "fas fa-heart";
@@ -316,14 +321,14 @@ async function showEventDetail() {
 async function loadComments(eventId) {
     const commentsList = document.getElementById("commentsList");
     if (!commentsList) return;
-    
+
     // Clear existing comments
     commentsList.innerHTML = '<div class="loading-comments">Loading comments...</div>';
-    
+
     try {
         // Fetch comments from backend
         const response = await fetch(`/api/comments/event/${eventId}`);
-        
+
         if (!response.ok) {
             if (response.status === 404) {
                 commentsList.innerHTML = '<div class="no-comments">No comments yet. Be the first to comment!</div>';
@@ -331,21 +336,21 @@ async function loadComments(eventId) {
             }
             throw new Error(`Error fetching comments: ${response.status}`);
         }
-        
+
         const data = await response.json();
         const comments = data.data || [];
-        
+
         // Clear loading state
         commentsList.innerHTML = '';
-        
+
         if (!comments || comments.length === 0) {
             commentsList.innerHTML = '<div class="no-comments">No comments yet. Be the first to comment!</div>';
             return;
         }
-        
+
         // Sort comments by date, newest first
         comments.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
-        
+
         // Render comments
         comments.forEach(comment => {
             const user = comment.user || {}; // Get user info if available

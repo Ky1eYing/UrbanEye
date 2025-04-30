@@ -122,7 +122,7 @@ function loadGoogleMapsAPI() {
   if (typeof google === 'undefined' || typeof google.maps === 'undefined') {
     console.log("loading Google Maps API...");
     const script = document.createElement("script");
-    script.src = "https://maps.googleapis.com/maps/api/js?key=AIzaSyBZ1cnugGu4jiIWn3PipPsmG1Vli9hTEmo&libraries=geometry&callback=initMap&language=en&region=US&loading=async";
+    script.src = "https://maps.googleapis.com/maps/api/js?key=AIzaSyBZ1cnugGu4jiIWn3PipPsmG1Vli9hTEmo&libraries=geometry&callback=initMap&language=en&region=US";
     script.async = true;
     script.onerror = () => {
       console.error("Google Maps API loading failed");
@@ -157,14 +157,14 @@ function initMap() {
     map.setOptions({ styles: e.matches ? darkModeStyles : defaultStyles });
   });
 
-  // 添加"回到我的位置"按钮
+  // add my location button
   addMyLocationButton(map);
 
   mapInitialized = true;
   console.log("main map created");
 
-  // 添加一些示例事件标记
-  addSampleMarkers();
+  // load and show event markers
+  loadEventMarkers();
 
   // Check if already have the position from the location service
   if (window.preFetchedPosition) {
@@ -356,53 +356,149 @@ function updateUserLocation(position, tag = "") {
   console.log(`user location ${tag} updated on map:`, position);
 }
 
-// 添加示例事件标记
-function addSampleMarkers() {
-  const events = [
-    { lat: 40.7589, lng: -73.9851, title: "Gun Shot Incident", type: "gun shot" },
-    { lat: 40.7128, lng: -74.0060, title: "Traffic Accident", type: "accident" },
-    { lat: 40.7282, lng: -73.9942, title: "Street Performance", type: "performance" },
-    { lat: 40.7429, lng: -73.9712, title: "Road Closed", type: "road closed" },
-    { lat: 40.7831, lng: -73.9712, title: "Food Truck Festival", type: "food truck" }
-  ];
+// load event markers
+async function loadEventMarkers() {
+  try {
+    // get events from API
+    let events = await fetchEvents();
 
-  events.forEach(event => {
-    const marker = new google.maps.Marker({
-      position: { lat: event.lat, lng: event.lng },
-      map: map,
-      title: event.title,
-      // 可以根据事件类型定制图标
-      // icon: getIconForEventType(event.type)
-    });
+    if (!events || events.length === 0) {
+      console.warn("No events from API, using mockEvents if available");
+      events = [];
+    }
 
-    // 为标记添加点击事件
-    marker.addListener("click", () => {
-      // 在实际应用中，这里可以显示事件详情或跳转到事件详情页
-      alert(event.title);
-    });
-  });
+    clearEventMarkers();
+
+    // create event markers
+    events.forEach(event => addEventMarker(event));
+
+  } catch (error) {
+    console.error("Error loading event markers:", error);
+  }
 }
 
-// 实用函数：根据事件类型返回不同的图标
-// 这个功能可以根据需要扩展
-function getIconForEventType(type) {
-  const iconBase = "https://maps.google.com/mapfiles/ms/icons/";
+// event markers array
+let eventMarkers = [];
 
+// clear all event markers
+function clearEventMarkers() {
+  eventMarkers.forEach(marker => marker.setMap(null));
+  eventMarkers = [];
+}
+
+// add single event marker
+function addEventMarker(event) {
+  if (!event.location || !event.location.latitude || !event.location.longitude) {
+    console.warn("Event missing location data:", event);
+    return;
+  }
+
+  // get location data
+  const position = {
+    lat: parseFloat(event.location.latitude),
+    lng: parseFloat(event.location.longitude)
+  };
+
+  if (isNaN(position.lat) || isNaN(position.lng)) {
+    console.warn("Invalid location coordinates:", event.location);
+    return;
+  }
+
+  // create marker
+  const marker = new google.maps.Marker({
+    position: position,
+    map: map,
+    title: event.title,
+    icon: getIconForEventType(event.category)
+  });
+
+  // add click event jump to event detail page
+  marker.addListener("click", () => {
+    // center and zoom the map on this marker
+    focusMapOnMarker(marker);
+
+    // Then navigate to event detail
+    if (typeof pushEventDetail === 'function' && typeof showEventDetail === 'function') {
+      pushEventDetail(event._id);
+      showEventDetail();
+    } else {
+      window.location.href = `/event?id=${event._id}`;
+    }
+  });
+
+  // Store the event id with the marker for later reference
+  marker.eventId = event._id;
+
+  eventMarkers.push(marker);
+}
+
+// Focus map on a specific marker
+function focusMapOnMarker(marker) {
+  map.setCenter(marker.getPosition());
+  map.setZoom(15);
+  marker.setAnimation(google.maps.Animation.BOUNCE);
+  setTimeout(() => {
+    marker.setAnimation(null);
+  }, 1400);
+}
+
+// focus on a marker by event ID
+function focusMapOnEvent(eventId) {
+  if (!eventId || !map || !eventMarkers.length) return;
+
+  const marker = eventMarkers.find(m => m.eventId === eventId);
+  if (marker) {
+    focusMapOnMarker(marker);
+  }
+}
+
+// Expose the function globally so it can be called from event_list.js
+window.focusMapOnEvent = focusMapOnEvent;
+
+// custom icon for event type
+function getIconForEventType(type) {
+  const iconConfig = {
+    size: new google.maps.Size(32, 32),
+    origin: new google.maps.Point(0, 0),
+    anchor: new google.maps.Point(16, 32),
+    scaledSize: new google.maps.Size(32, 32)
+  };
+
+  // select icon file based on event type
   switch (type) {
     case "gun shot":
+      iconConfig.url = "/images/gun.png";
+      break;
     case "fight":
+      iconConfig.url = "/images/fight.png";
+      break;
     case "stealing":
+      iconConfig.url = "/images/stealing.png";
+      break;
     case "assaulting":
-      return iconBase + "red-dot.png";
+      iconConfig.url = "/images/assaulting.png";
+      break;
     case "traffic jam":
+      iconConfig.url = "/images/trafficjam.png";
+      break;
     case "road closed":
+      iconConfig.url = "/images/roadclosed.png";
+      break;
     case "accident":
-      return iconBase + "yellow-dot.png";
+      iconConfig.url = "/images/accident.png";
+      break;
     case "performance":
+      iconConfig.url = "/images/performance.png";
+      break;
     case "food truck":
+      iconConfig.url = "/images/foodtruck.png";
+      break;
     case "parade":
-      return iconBase + "blue-dot.png";
+      iconConfig.url = "/images/parade.png";
+      break;
     default:
-      return iconBase + "red-dot.png";
+      return null;
   }
+
+  return iconConfig;
 } 

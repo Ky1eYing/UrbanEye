@@ -52,11 +52,11 @@ const getAllEventsByFilter = async (params = {}) => {
 	const {
 		titlelike = "", // title fuzzy matching
 		distance = "1miles", // default 1 miles, optional "3miles","5miles","10miles"
-		sortBy = "views", // default newest, optional "views"
+		sortBy = "newest", // default newest, optional "views"
 		category = "all", // default all, optional specific categories
 		timeRange = "all", // default all, optional "1day","7days","30days"
 		userLocation = null, // { latitude, longitude }
-		skip = 10 // events per page
+		skip = 200 // events per page
 	} = params;
 
 	const eventsCollection = await events();
@@ -110,9 +110,9 @@ const getAllEventsByFilter = async (params = {}) => {
 	// 4. sort
 	const sortOption = sortBy === "views" ? { click_time: -1 } : { created_at: -1 };
 
-	const cursor = eventsCollection.find(query).sort(sortOption).limit(skip);
+	const eventSorted = eventsCollection.find(query).sort(sortOption).limit(skip);
 
-	const results = await cursor.toArray();
+	const results = await eventSorted.toArray();
 	return results.map(evt => {
 		evt._id = evt._id.toString();
 		return evt;

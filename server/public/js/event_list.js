@@ -258,7 +258,7 @@ async function showEventList() {
             shouldSort: false,
         });
     }
-    
+
     // Get event list container
     const eventList = document.querySelector('.event-list');
 
@@ -269,10 +269,10 @@ async function showEventList() {
         // Fetch events from backend using our new function
         console.log("Calling fetchEvents() from showEventList()");
         let events = await fetchEvents();
-        
+
         // Log the results for debugging
         console.log("Events fetched:", events ? events.length : 0);
-        
+
         // Clear loading state
         eventList.innerHTML = '';
 
@@ -325,10 +325,21 @@ async function showEventList() {
         // Bind click event to jump to event detail page
         const eventItems = eventList.querySelectorAll(".event-item");
         eventItems.forEach(item => {
-            item.addEventListener("click", async () => {
-                const eventId = item.getAttribute("data-event-id");
-                console.log("Clicked on event:", eventId);
-                
+            item.addEventListener('click', async (event) => {
+                // Check if the click is on the "likes" button or its children
+                if (event.target.closest('.event-likes')) {
+                    return; // Stop propagation for like button clicks
+                }
+
+                const eventId = item.dataset.eventId;
+                console.log(`Event item clicked: ${eventId}`);
+
+                // focus map on this event marker
+                if (typeof window.focusMapOnEvent === 'function') {
+                    window.focusMapOnEvent(eventId);
+                }
+
+                // jump to event detail page
                 pushEventDetail(eventId);
                 await showEventDetail();
             });
@@ -340,7 +351,7 @@ async function showEventList() {
     const eventDetailContainer = document.getElementById("event-detail-container");
     if (eventListContainer) eventListContainer.style.display = "block";
     if (eventDetailContainer) eventDetailContainer.style.display = "none";
-    
+
     console.log("Event list displayed successfully");
 }
 
@@ -356,26 +367,26 @@ document.addEventListener('DOMContentLoaded', async function () {
     const eventId = getEventIdFromURL();
 
     // search functionality
-    const searchInput = document.querySelector('input[type="text"]') || 
-                        document.querySelector('.search-area input') ||
-                        document.querySelector('input[placeholder*="Search"]');
-    
+    const searchInput = document.querySelector('input[type="text"]') ||
+        document.querySelector('.search-area input') ||
+        document.querySelector('input[placeholder*="Search"]');
+
     if (searchInput) {
         console.log('Search input found:', searchInput);
-        
+
         // Remove any existing listeners to avoid duplicates
         const newSearchInput = searchInput.cloneNode(true);
         searchInput.parentNode.replaceChild(newSearchInput, searchInput);
-        
-        newSearchInput.addEventListener('keypress', function(event) {
+
+        newSearchInput.addEventListener('keypress', function (event) {
             if (event.key === 'Enter') {
                 event.preventDefault(); // Prevent form submission
                 const searchTerm = this.value.trim();
                 console.log('Search term entered:', searchTerm);
-                
+
                 // Update active filters
                 activeFilters.titleLike = searchTerm || null;
-                
+
                 // Apply all active filters
                 applyFilters();
             }
@@ -393,13 +404,13 @@ document.addEventListener('DOMContentLoaded', async function () {
             itemSelectText: '',
             shouldSort: false,
         });
-        
+
         // Add event listener for category changes
-        categoryFilterElement.addEventListener('change', function() {
+        categoryFilterElement.addEventListener('change', function () {
             const selectedCategory = this.value;
-            
+
             activeFilters.category = (selectedCategory !== 'all') ? selectedCategory : null;
-            
+
             applyFilters();
         });
     }
@@ -418,9 +429,9 @@ function applyFilters() {
     const params = Object.fromEntries(
         Object.entries(activeFilters).filter(([_, value]) => value !== null)
     );
-    
+
     console.log('Applying filters:', params);
-    
+
     // If no filters active, show all events
     if (Object.keys(params).length === 0) {
         showEventList();
@@ -432,13 +443,13 @@ function applyFilters() {
 async function fetchAndDisplayEvents(params = {}) {
     try {
         console.log('Fetching events with params:', params);
-        
+
         // Show loading state
         const eventList = document.querySelector('.event-list');
         if (eventList) {
             eventList.innerHTML = '<div class="loading-events">Loading events...</div>';
         }
-        
+
         // Build query string
         let queryString = '';
         if (Object.keys(params).length > 0) {
@@ -446,31 +457,31 @@ async function fetchAndDisplayEvents(params = {}) {
                 .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
                 .join('&');
         }
-        
+
         const apiUrl = `/api/events/filter${queryString}`;
-        
+
         const response = await fetch(apiUrl);
-        
+
         if (!response.ok) {
             console.error(`Error fetching events (${response.status}): ${response.statusText}`);
             return;
         }
-        
+
         const data = await response.json();
-        
+
         if (data.code === 200 && data.data) {
             console.log(`Found ${data.data.length} events`);
-            
+
             // Clear the event list
             if (eventList) {
                 eventList.innerHTML = '';
             }
-            
+
             // If no results found
             if (data.data.length === 0) {
                 // Build a message based on active filters
                 let message = 'No events found';
-                
+
                 if (params.titleLike && params.category) {
                     message += ` matching "${params.titleLike}" in category "${params.category}"`;
                 } else if (params.titleLike) {
@@ -478,7 +489,7 @@ async function fetchAndDisplayEvents(params = {}) {
                 } else if (params.category) {
                     message += ` in category "${params.category}"`;
                 }
-                
+
                 eventList.innerHTML = `
                     <div class="no-events">
                         <p>${message}. Try different filters.</p>
@@ -486,7 +497,7 @@ async function fetchAndDisplayEvents(params = {}) {
                 `;
                 return;
             }
-            
+
             // Render the events
             data.data.forEach(event => {
                 const eventItemHTML = `
@@ -512,14 +523,25 @@ async function fetchAndDisplayEvents(params = {}) {
 
                 eventList.insertAdjacentHTML('beforeend', eventItemHTML);
             });
-            
+
             // Bind click events to each event item
             const eventItems = eventList.querySelectorAll(".event-item");
             eventItems.forEach(item => {
-                item.addEventListener("click", async () => {
-                    const eventId = item.getAttribute("data-event-id");
-                    console.log("Clicked on event:", eventId);
-                    
+                item.addEventListener('click', async (event) => {
+                    // Check if the click is on the "likes" button or its children
+                    if (event.target.closest('.event-likes')) {
+                        return; // Stop propagation for like button clicks
+                    }
+
+                    const eventId = item.dataset.eventId;
+                    console.log(`Event item clicked: ${eventId}`);
+
+                    // focus map on this event marker
+                    if (typeof window.focusMapOnEvent === 'function') {
+                        window.focusMapOnEvent(eventId);
+                    }
+
+                    // jump to event detail page
                     pushEventDetail(eventId);
                     await showEventDetail();
                 });
