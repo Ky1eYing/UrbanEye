@@ -157,6 +157,9 @@ function initMap() {
     map.setOptions({ styles: e.matches ? darkModeStyles : defaultStyles });
   });
 
+  // 添加"回到我的位置"按钮
+  addMyLocationButton(map);
+
   mapInitialized = true;
   console.log("main map created");
 
@@ -179,6 +182,85 @@ function initMap() {
       });
     }
   }
+}
+
+// add my location button
+function addMyLocationButton(map) {
+  // create button element
+  const locationButton = document.createElement("button");
+  locationButton.classList.add("my-location-button");
+  locationButton.innerHTML = '<i class="fas fa-location-arrow"></i>';
+  locationButton.title = "back to my location";
+
+  // add styles
+  locationButton.style.backgroundColor = "#fff";
+  locationButton.style.border = "none";
+  locationButton.style.borderRadius = "2px";
+  locationButton.style.boxShadow = "0 1px 4px rgba(0,0,0,0.3)";
+  locationButton.style.cursor = "pointer";
+  locationButton.style.margin = "10px";
+  locationButton.style.padding = "0";
+  locationButton.style.width = "40px";
+  locationButton.style.height = "40px";
+  locationButton.style.textAlign = "center";
+  locationButton.style.lineHeight = "40px";
+  locationButton.style.fontSize = "18px";
+  locationButton.style.borderRadius = "50%";
+  locationButton.style.transition = "background-color 0.3s ease";
+  locationButton.addEventListener("mouseover", () => {
+    locationButton.style.backgroundColor = "#f1f1f1";
+  });
+  locationButton.addEventListener("mouseout", () => {
+    locationButton.style.backgroundColor = "#fff";
+  });
+
+  locationButton.addEventListener("click", () => {
+    // check if user location marker exists
+    if (userLocationMarker) {
+      const pos = userLocationMarker.getPosition();
+      map.setCenter(pos);
+      map.setZoom(15);
+    }
+    else if (window.preFetchedPosition) {
+      map.setCenter(window.preFetchedPosition);
+      map.setZoom(15);
+
+      if (!userLocationMarker) {
+        updateUserLocation(window.preFetchedPosition, "(from service)");
+      }
+    }
+    else {
+      locationButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const pos = {
+            lat: position.coords.latitude,
+            lng: position.coords.longitude
+          };
+
+          map.setCenter(pos);
+          map.setZoom(15);
+          updateUserLocation(pos, "(new)");
+
+          locationButton.innerHTML = '<i class="fas fa-location-arrow"></i>';
+        },
+        (error) => {
+          console.error("Error getting location: ", error);
+          locationButton.innerHTML = '<i class="fas fa-location-arrow"></i>';
+          alert("cannot get your location, please check your location permission");
+        },
+        {
+          enableHighAccuracy: true,
+          timeout: 10000,
+          maximumAge: 0
+        }
+      );
+    }
+  });
+
+  // add button to map right bottom
+  map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(locationButton);
 }
 
 // low accuracy pre-fetch location
