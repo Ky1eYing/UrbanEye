@@ -31,8 +31,6 @@ const constructorMethod = (app) => {
   app.get("/", attachUser, (req, res) => {
     res.render("home", {
       title: "Home",
-      isHome: true,
-      centeredContent: true,
       user: req.user,
     });
   });
@@ -40,7 +38,6 @@ const constructorMethod = (app) => {
   app.get("/event", attachUser, (req, res) => {
     res.render("event", {
       title: "Events",
-      isEvent: true,
       user: req.user,
     });
   });
@@ -48,8 +45,6 @@ const constructorMethod = (app) => {
   app.get("/about", attachUser, (req, res) => {
     res.render("about", {
       title: "About",
-      isAbout: true,
-      centeredContent: true,
       user: req.user,
     });
   });
@@ -57,16 +52,12 @@ const constructorMethod = (app) => {
   app.get("/login", (req, res) => {
     res.render("login", {
       title: "Login",
-      isLogin: true,
-      centeredContent: true,
     });
   });
 
   app.get("/signup", (req, res) => {
     res.render("signup", {
       title: "Sign Up",
-      isLogin: true,
-      centeredContent: true,
     });
   });
 

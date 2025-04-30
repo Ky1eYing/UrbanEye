@@ -12,6 +12,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap"
         rel="stylesheet">
     <link href="https://api.fontshare.com/v2/css?f[]=erode@300,301,400,500,501,600,700&display=swap" rel="stylesheet">
+    <!-- choices element -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
 
 </head>
 
@@ -37,8 +40,9 @@
                 {{#if user}}
                 <div class="user-profile-icon">
                     <a href="/profile">
-                        <div class="avatar-container">
-                            <div class="avatar-circle"></div>
+                        <div class="comment-useravator">
+                            <img src="{{user.avatar}}" alt="User Avatar"
+                                onerror="this.onerror=null; this.src='https://urban-eye.oss-us-east-1.aliyuncs.com/users-pic/morentouxiang.png';" />
                         </div>
                     </a>
                 </div>

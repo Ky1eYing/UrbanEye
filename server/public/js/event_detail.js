@@ -124,40 +124,55 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (postCommentBtn && newCommentInput) {
         postCommentBtn.addEventListener("click", async () => {
             const commentText = newCommentInput.value.trim();
-
-            // TODO: handle error. If no comment text, show error message
-            if (!commentText) return;
-
-            // TODO: backend post addComment
-            await addComment(eventId, commentText);
-            // Add new comment to HTML
-            const commentsList = document.getElementById("commentsList");
-            const commentHTML = `
-                <div class="comment-item">
-                    <div class="comment-useravator">
-                        <img src="https://urban-eye.oss-us-east-1.aliyuncs.com/users-pic/Jo..JPG"
-                            alt="User Avatar">
-                    </div>
-                    <div class="comment-body">
-                        <div class="comment-header">
-                            <span class="comment-username">Jo.</span>
-                            <span class="comment-time">Just Now</span>
-                        </div>
-                        <div class="comment-content">
-                            ${commentText}
-                        </div>
-                    </div>
-                </div>
-            `;
-            commentsList.insertAdjacentHTML('afterbegin', commentHTML); // shows to the top of the list
-
-            // Clear comment input
-            newCommentInput.value = "";
-
-            // Update comment count
-            const commentCount = document.querySelector(".comment-count");
-            if (commentCount) {
-                commentCount.textContent = parseInt(commentCount.textContent) + 1;
+            
+            if (!commentText) {
+                alert("Please enter a comment");
+                return;
+            }
+            
+            if (!isLoggedIn) {
+                alert("Please log in to add comments");
+                return;
+            }
+            
+            const eventId = getEventIdFromURL();
+            
+            // Show loading state
+            postCommentBtn.disabled = true;
+            postCommentBtn.textContent = "Posting...";
+            
+            // Post comment to backend
+            const success = await addComment(eventId, commentText);
+            
+            // Reset button state
+            postCommentBtn.disabled = false;
+            postCommentBtn.textContent = "Post";
+            
+            if (success) {
+                // Clear comment input
+                newCommentInput.value = "";
+                
+                // Reload comments to show the new comment
+                await loadComments(eventId);
+                
+                // Get updated event data to get the accurate total comment count
+                const updatedEventData = await getEventByEventId(eventId);
+                
+                // Update comment count with the total number
+                const commentCount = document.querySelector(".comment-count");
+                if (commentCount && updatedEventData && updatedEventData.comments) {
+                    commentCount.textContent = updatedEventData.comments.length;
+                }
+            } else {
+                alert("Failed to post comment. Please try again.");
+            }
+        });
+        
+        // Add enter key support for posting comments
+        newCommentInput.addEventListener("keypress", (e) => {
+            if (e.key === "Enter" && !e.shiftKey) {
+                e.preventDefault(); // Prevent default Enter behavior
+                postCommentBtn.click(); // Trigger the post button click
             }
         });
     }
@@ -260,6 +275,15 @@ async function showEventDetail() {
         // Set the initial like count
         likeCount.textContent = eventData.likes ? eventData.likes.length : 0;
     }
+
+    // Update comment count
+    const commentEventBtn = document.getElementById("CommentEventBtn");
+    const commentCount = commentEventBtn?.querySelector(".comment-count");
+    
+    if (commentCount) {
+        // Set the initial comment count to the total number of comments
+        commentCount.textContent = eventData.comments ? eventData.comments.length : 0;
+    }
     
     // Check if the current user has liked the event
     if (typeof isLoggedIn !== 'undefined' && isLoggedIn && likeEventBtn) {
@@ -274,6 +298,9 @@ async function showEventDetail() {
         }
     }
 
+    // Load comments for the event
+    await loadComments(eventId);
+
     console.log("Event details displayed successfully");
 
     // Hide and Change View
@@ -281,4 +308,68 @@ async function showEventDetail() {
     const eventDetailContainer = document.getElementById("event-detail-container");
     if (eventListContainer) eventListContainer.style.display = "none";
     if (eventDetailContainer) eventDetailContainer.style.display = "block";
+}
+
+/**
+ * Load comments for an event
+ */
+async function loadComments(eventId) {
+    const commentsList = document.getElementById("commentsList");
+    if (!commentsList) return;
+    
+    // Clear existing comments
+    commentsList.innerHTML = '<div class="loading-comments">Loading comments...</div>';
+    
+    try {
+        // Fetch comments from backend
+        const response = await fetch(`/api/comments/event/${eventId}`);
+        
+        if (!response.ok) {
+            if (response.status === 404) {
+                commentsList.innerHTML = '<div class="no-comments">No comments yet. Be the first to comment!</div>';
+                return;
+            }
+            throw new Error(`Error fetching comments: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        const comments = data.data || [];
+        
+        // Clear loading state
+        commentsList.innerHTML = '';
+        
+        if (!comments || comments.length === 0) {
+            commentsList.innerHTML = '<div class="no-comments">No comments yet. Be the first to comment!</div>';
+            return;
+        }
+        
+        // Sort comments by date, newest first
+        comments.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+        
+        // Render comments
+        comments.forEach(comment => {
+            const user = comment.user || {}; // Get user info if available
+            const commentHTML = `
+                <div class="comment-item" data-comment-id="${comment._id}">
+                    <div class="comment-useravator">
+                        <img src="${user.avatar || 'https://urban-eye.oss-us-east-1.aliyuncs.com/users-pic/morentouxiang.png'}"
+                            alt="${user.name || 'Anonymous'} Avatar">
+                    </div>
+                    <div class="comment-body">
+                        <div class="comment-header">
+                            <span class="comment-username">${user.name || user.userName || 'Anonymous'}</span>
+                            <span class="comment-time">${formatTimeAgo(new Date(comment.created_at))}</span>
+                        </div>
+                        <div class="comment-content">
+                            ${comment.content}
+                        </div>
+                    </div>
+                </div>
+            `;
+            commentsList.insertAdjacentHTML('beforeend', commentHTML);
+        });
+    } catch (error) {
+        console.error("Failed to load comments:", error);
+        commentsList.innerHTML = '<div class="no-comments">No comments yet. Be the first to comment!</div>';
+    }
 }

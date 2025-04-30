@@ -278,8 +278,10 @@ header .container {
   }
 
 
+
+
   /* 覆盖 Choices.js 容器背景为纯白 */
-  .search-filter .choices__inner {
+  .choices .choices__inner {
     background-color: var(--white);
     border: 1px solid var(--gray-light) !important;
     border-radius: var(--radius);
@@ -287,14 +289,14 @@ header .container {
     min-height: 0 !important;   
   }
 
-  .search-filter .choices.is-open .choices__inner {
+  .choices.is-open .choices__inner {
     border-color: var(--primary-blue-light) !important;
     /* border-radius: var(--radius) var(--radius) 0 0 ; */
     border-radius: var(--radius)  !important;
     /* padding: 1px !important; */
   }
 
-  .search-filter .choices__list--dropdown{
+  .choices__list--dropdown{
     background-color: var(--white);
     /* border-radius: 0 0 var(--radius) var(--radius)  !important; */
     border-radius: var(--radius)  !important;
@@ -878,10 +880,11 @@ header .container {
 /* Profile Page Styles */
 .profile-content {
     display: flex;
-    padding: 20px;
+    padding: 30px;
+    padding-bottom: 60px;
     position: relative;
     width: 100%;
-    min-height: 100vh;
+    min-height: calc(100vh - 70px);
 }
 
 .profile-view {
@@ -892,8 +895,7 @@ header .container {
     
 }
 
-.profile-card,
-.dashboard-card {
+.profile-section {
     border: 1px solid var(--border-color);
     border-radius: var(--radius);
     /* padding: var(--spacing-xl); */
@@ -902,14 +904,6 @@ header .container {
     width: 40%;
     min-width: 600px;
     margin: 0 auto;
-}
-
-.user-info-card {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-bottom: 30px;
-    position: relative;
 }
 
 .user-top {
@@ -931,36 +925,91 @@ header .container {
     transform: translateY(50%);
 }
 
+.user-actions {
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-end;
+    padding-right: var(--spacing-xl);
+    padding-top: var(--spacing-md);
+    gap: var(--spacing-md);
+}
+
+.edit-profile-btn i {
+    font-size: 1rem;
+    margin-right: var(--spacing-sm);
+}
+
 .edit-profile-btn {
-    
+    background-color: var(--background-light) !important;
+    color: var(--gray-dark) !important;
+    font-weight: 600 !important;
+    padding: 10px var(--spacing-md) !important;
+}
+
+.edit-profile-btn:hover {
+    background-color: var(--primary-blue-light) !important;
+    color: var(--white) !important;
+}
+
+.signout-button:hover {
+    color: var(--white) !important;
+    background-color: var(--accent-red) !important;
+}
+
+.user-detail-name {
+    display: flex;
+    flex-direction: column;
+    /* margin-bottom: var(--spacing-md); */
+}
+
+.name {
+    font-size: 24px;
 }
 
 .user-name {
-    font-size: 24px;
-    margin-bottom: 10px;
+    color: var(--gray-dark);
+    font-size: 14px;
 }
-
-
 
 .user-details {
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: var(--spacing-md);
+    padding: var(--spacing-md);
+    margin-bottom: var(--spacing-md);
 }
 
 .user-detail {
     display: flex;
-    align-items: center;
+    
+
 }
 
 .detail-label {
     font-weight: bold;
-    width: 80px;
     color: var(--gray-dark);
+    display: flex;
+    align-items: center;
+    margin-right: var(--spacing-md);
+    padding-left: var(--spacing-sm);
+}
+
+.user-name i,
+.detail-label i {
+    font-size: 1rem;
+    color: var(--gray-dark);
+    width: 24px;
+    text-align: center;
+    margin-right: var(--spacing-sm);
 }
 
 .detail-value {
-    color: var(--black);
+    color: var(--gray-dark);
+    font-weight: 500;
+}
+
+.dashboard-card {
+    padding: var(--spacing-md);
 }
 
 .dashboard-title {
@@ -975,34 +1024,54 @@ header .container {
     gap: 10px;
     color: var(--gray-dark);
     margin-bottom: 25px;
+    font-size: 0.9rem;
+}
+
+.visibility-note i {
+    color: var(--gray-dark);
 }
 
 .dashboard-items {
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: var(--spacing-sm);
 }
 
-.dashboard-item {
+.dashboard-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-md);
+}
+
+.dashboard-cell {
     display: flex;
     align-items: center;
-    gap: 15px;
-    font-size: 18px;
-    color: var(--black);
+    gap: var(--spacing-sm);
+    padding: var(--spacing-sm);
+    border-radius: var(--radius);
+    transition: all 0.3s ease;
 }
 
-.item-icon {
-    font-size: 20px;
+.dashboard-cell:hover {
+    background-color: var(--background-light);
 }
 
-.user-actions {
-    position: absolute;
-    top: 80px;
-    right: 50px;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    gap: 20px;
+.dashboard-cell i {
+    font-size: 1.2rem;
+    color: var(--gray-dark);
+    width: 24px;
+    text-align: center;
+}
+
+.item-text {
+    flex: 1;
+    font-weight: 500;
+    color: var(--gray-dark);
+}
+
+.item-count {
+    font-weight: 600;
+    color: var(--primary-blue-light);
 }
 
 .user-menu {
@@ -1450,18 +1519,30 @@ section {
     align-items: center;
 }
 
-.detail-header button {
-    margin-right: var(--spacing-md);
-    padding: var(--spacing-sm);
-    cursor: pointer;
-    background-color: transparent;
-    color: var(--primary-blue-light);
+
+.back-button {
+    background: none;
     border: none;
-    font-size: 1.5rem;
+    color: var(--primary-blue-light);
+    font-size: 1rem;
+    cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    line-height: 1.6;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-radius: var(--radius);
+    transition: all 0.3s ease;
+    margin-right: var(--spacing-md);
+}
+
+.back-button:hover {
+    background-color: var(--background-light);
+    color: var(--primary-blue-dark);
+}
+
+.back-button i {
+    font-size: 1.2rem;
 }
 
 .detail-header h3 {
@@ -1637,99 +1718,106 @@ section {
 
 
 /* 个人资料编辑样式 */
-.edit-profile-container {
-    background-color: #fff;
-    border-radius: 15px;
-    padding: 20px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    width: 70%;
-    margin: 0 auto;
+.edit-header {
+    display: flex;
+    align-items: center;
 }
+
+.edit-header h2 {
+    flex: 1;
+    text-align: center;
+    color: var(--primary-blue-dark);
+    margin: 0;
+}
+
+
 
 .avatar-edit-section {
     display: flex;
     align-items: center;
-    gap: 15px;
-    margin-bottom: 20px;
+    gap: var(--spacing-lg);
 }
 
-.upload-avatar-btn {
-    display: inline-block;
-    background-color: var(--primary-blue-light);
-    color: var(--white);
-    padding: 8px 15px;
-    border-radius: 4px;
-    cursor: pointer;
+.user-avatar-edit {
+    width: 80px;
+    height: 80px;
+}
+
+
+
+.edit-fields {
+    padding: var(--spacing-md);
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
 }
 
 .edit-field {
     display: flex;
     align-items: center;
-    margin-bottom: 15px;
+    padding: var(--spacing-sm) 0;
 }
 
 .edit-field label {
     width: 120px;
-    font-weight: bold;
-}
-
-.edit-field input[type="text"],
-.edit-field input[type="password"],
-.edit-field select {
-    flex: 1;
-    padding: 6px;
-    margin-right: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-}
-
-.cancel-btn,
-.save-btn {
-    margin-right: 5px;
-    padding: 6px 12px;
-    cursor: pointer;
-    border: 1px solid #aaa;
-    background-color: #f1f1f1;
-    border-radius: 4px;
-    transition: background-color 0.3s;
-}
-
-.cancel-btn:hover,
-.save-btn:hover {
-    background-color: #ddd;
-}
-
-/* 确保编辑页面标题样式 */
-.edit-profile-container h2 {
-    margin-bottom: 15px;
-    color: var(--primary-blue-dark);
-    font-size: 20px;
-}
-
-/* 密码更改部分样式 */
-.edit-profile-container hr {
-    margin: 20px 0;
-    border: none;
-    border-top: 1px solid var(--gray-light);
-}
-
-/* 头像预览样式 */
-#avatarPreview {
-    background-size: cover;
-    background-position: center;
-}
-
-/* Logo链接样式 */
-.logo-link {
+    font-weight: 500;
+    color: var(--gray-dark);
     display: flex;
     align-items: center;
-    text-decoration: none;
-    color: inherit;
+    gap: var(--spacing-sm);
 }
 
-.logo-link:hover {
-    opacity: 0.9;
+.edit-password-fields label{
+    width: 200px;
 }
+
+.edit-field label i {
+    width: 20px;
+    text-align: center;
+    color: var(--primary-blue-light);
+    font-size: 1rem;
+}
+
+.edit-field input{
+    flex: 1;
+    margin-right: var(--spacing-md);
+}
+
+
+.edit-field .choices{
+    flex: 1;
+    margin-right: var(--spacing-md);
+    margin-bottom: 0;
+}
+
+.field-actions {
+    display: flex;
+    gap: var(--spacing-sm);
+}
+
+.password-actions {
+    justify-content: flex-end;
+    margin-right: var(--spacing-md);
+
+}
+
+
+
+.cancel-btn {
+    letter-spacing: 0;
+    background-color: var(--background-light);
+    color: var(--gray-dark);
+}
+
+.cancel-btn:hover {
+    background-color: var(--gray-light);
+}
+
+.save-btn:hover {
+    background-color: var(--primary-blue-dark);
+    border-color: var(--primary-blue-dark);
+}
+
 
 /* 地址容器样式 */
 .address-container {

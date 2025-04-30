@@ -1,61 +1,195 @@
 <div class="profile-content">
-    <div class="profile-view" id="profileView">
-        <div class="profile-card">
+    <div class="profile-view" id="profileView" style="display: none;">
+        <div class="profile-section user-card">
             <div class="user-top">
                 <div class="user-background">
-                <img
-                    src="https://d19rpgkrjeba2z.cloudfront.net/static/gen/befae3b68bbf5ef9f69d.svg"
-                    alt="user background">
-                    </div>
+                    <img src="https://d19rpgkrjeba2z.cloudfront.net/static/gen/befae3b68bbf5ef9f69d.svg"
+                        alt="user background">
+                </div>
                 <div class="comment-useravator user-avatar">
-                    <img src="https://urban-eye.oss-us-east-1.aliyuncs.com/users-pic/Jo..JPG" alt="User Avatar">
+                    <img id="avatarDisplay" src="{{user.avatar}}" alt="User Avatar"
+                        onerror="this.onerror=null; this.src='https://urban-eye.oss-us-east-1.aliyuncs.com/users-pic/morentouxiang.png';" />
                 </div>
 
 
             </div>
 
             <div class="user-actions">
-                <button class="edit-profile-btn submit-button" id="editProfileBtn">Edit profile</button>
+                <button class="edit-profile-btn submit-button" id="editProfileBtn"><i
+                        class="fa-solid fa-pen-to-square"></i>Edit profile</button>
+                <button class="edit-profile-btn submit-button signout-button" id="signOutBtn"><i
+                        class="fa-solid fa-arrow-right-from-bracket"></i>Sign out</button>
             </div>
 
             <div class="user-details">
-                <div class="user-detail">
-                    <h3 class="user-name" id="usernameDisplay">Jo.</h3>
+                <div class="user-detail-name">
+                    <h3 class="name" id="nameDisplay">Jo.</h3>
+                    <h3 class="user-name" id="usernameDisplay"><i class="fa-solid fa-at"></i>jiaojh</h3>
                 </div>
                 <div class="user-detail">
-                    <span class="detail-label">sex: </span>
-                    <span class="detail-value" id="sexDisplay">{{user.sex}}</span>
+                    <span class="detail-value" id="introductionDisplay">Passionate about keeping my neighborhood safe and informed. Sharing real-time updates on traffic, events, and local alerts. Always on the lookout for the next community story.
+                         </span>
+                </div>
+                <br>
+                <div class="user-detail">
+                    <span class="detail-label"><i class="fa-solid fa-venus-mars"></i>Sex: </span>
+                    <span class="detail-value" id="sexDisplay">Male</span>
                 </div>
                 <div class="user-detail">
-                    <span class="detail-label">email:</span>
-                    <span class="detail-value" id="emailDisplay">{{user.email}}</span>
+                    <span class="detail-label"><i class="fa-regular fa-envelope"></i>Email:</span>
+                    <span class="detail-value" id="emailDisplay">jo@gmail.com</span>
+                </div>
+                <div class="user-detail">
+                    <span class="detail-label"><i class="fa-solid fa-mobile-screen-button"></i>Phone:</span>
+                    <span class="detail-value" id="phoneDisplay">201920799</span>
                 </div>
             </div>
         </div>
 
-        <div class="dashboard-card">
+        <div class="profile-section dashboard-card">
             <h3 class="dashboard-title">Dashboard</h3>
             <div class="visibility-note">
-                <span class="eye-icon">👁️</span>
+                <span class="eye-icon"><i class="fa-regular fa-eye"></i></span>
                 <span>only visible to you</span>
             </div>
 
             <div class="dashboard-items">
-                <div class="dashboard-item">
-                    <span class="item-icon">□</span>
-                    <span class="item-text">events</span>
+                <div class="dashboard-row">
+                    <div class="dashboard-cell" id="events">
+                        <i class="fa-regular fa-calendar-check"></i>
+                        <span class="item-text">events</span>
+                    </div>
+                    <div class="dashboard-cell" id="likes">
+                        <i class="fa-regular fa-heart"></i>
+                        <span class="item-text">likes</span>
+
+                    </div>
                 </div>
-                <div class="dashboard-item">
-                    <span class="item-icon">💬</span>
-                    <span class="item-text">comments</span>
-                </div>
-                <div class="dashboard-item">
-                    <span class="item-icon">♥</span>
-                    <span class="item-text">likes</span>
+                <div class="dashboard-row">
+                    <div class="dashboard-cell" id="comments">
+                        <i class="fa-regular fa-comment-dots"></i>
+                        <span class="item-text">comments</span>
+                    </div>
+
                 </div>
             </div>
         </div>
     </div>
+
+
+    <div class="profile-view" id="editProfileView">
+        <div class="profile-section dashboard-card">
+            <div class="edit-header">
+                <button class="back-button" id="backToProfileBtn"><i class="fas fa-angle-left"></i></button>
+                <h3>Edit Profile</h3>
+            </div>
+        </div>
+        <div class="profile-section dashboard-card">
+            <div class="avatar-edit-section">
+                <img class="comment-useravator user-avatar-edit" id="avatarPreview" src="" alt="User Avatar">
+                <label for="avatarUpload" class="submit-button">Upload</label>
+                <input type="file" id="avatarUpload" accept="image/*" style="display: none;">
+            </div>
+        </div>
+        <div class="profile-section dashboard-card">
+            <h4>introduction</h4>
+            <div class="edit-fields">
+                <div class="edit-field">
+                    <textarea id="editIntroduction" class="form-input" rows="5"
+                        placeholder="Introduce yourself ..."></textarea>
+                </div>
+            </div>
+            <div class="field-actions password-actions">
+                <button class="submit-button cancel-btn" data-field="introduction">Cancel</button>
+                <button class="submit-button" data-field="introduction">Save</button>
+            </div>
+        </div>
+        <div class="profile-section dashboard-card">
+            <h4>Profile</h4>
+            <div class="edit-fields">
+                <div class="edit-field">
+                    <label><i class="fa-regular fa-user"></i> Username: </label>
+                    <input type="text" id="editUsername" class="form-input">
+                    <div class="field-actions">
+                        <button class="submit-button cancel-btn" data-field="username">Cancel</button>
+                        <button class="submit-button" data-field="username">Save</button>
+                    </div>
+                </div>
+                <div class="edit-field">
+                    <label><i class="fa-solid fa-signature"></i> Name: </label>
+                    <input type="text" id="editName" class="form-input">
+                    <div class="field-actions">
+                        <button class="submit-button cancel-btn" data-field="name">Cancel</button>
+                        <button class="submit-button" data-field="name">Save</button>
+                    </div>
+                </div>
+                <div class="edit-field">
+                    <label><i class="fa-solid fa-venus-mars"></i> Sex: </label>
+                    <select class="editSex" id="editSex">
+                        <option value="">&nbsp;</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                        <option value="Transgender Male">Transgender Male</option>
+                        <option value="Transgender Female">Transgender Female</option>
+                        <option value="Non-binary">Non-binary</option>
+                        <option value="Genderqueer">Genderqueer</option>
+                        <option value="Genderfluid">Genderfluid</option>
+                        <option value="Intersex">Intersex</option>
+                        <option value="Agender">Agender</option>
+                        <option value="Bigender">Bigender</option>
+                        <option value="Two-Spirit">Two-Spirit</option>
+                        <option value="I don't know">I don't know</option>
+                        <option value="Prefer not to say">Prefer not to say</option>
+                    </select>
+                    <div class="field-actions">
+                        <button class="submit-button cancel-btn" data-field="sex">Cancel</button>
+                        <button class="submit-button" data-field="sex">Save</button>
+                    </div>
+                </div>
+                <div class="edit-field">
+                    <label><i class="fa-regular fa-envelope"></i> Email: </label>
+                    <input type="text" id="editEmail" class="form-input">
+                    <div class="field-actions">
+                        <button class="submit-button cancel-btn" data-field="email">Cancel</button>
+                        <button class="submit-button" data-field="email">Save</button>
+                    </div>
+                </div>
+                <div class="edit-field">
+                    <label><i class="fa-solid fa-mobile-screen-button"></i> Phone: </label>
+                    <input type="text" id="editPhone" class="form-input">
+                    <div class="field-actions">
+                        <button class="submit-button cancel-btn" data-field="phone">Cancel</button>
+                        <button class="submit-button" data-field="phone">Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="profile-section dashboard-card">
+            <h4>Change Password</h4>
+            <div class="edit-fields edit-password-fields">
+                <div class="edit-field">
+                    <label><i class="fa-solid fa-lock"></i> Old password: </label>
+                    <input type="password" id="oldPassword" class="form-input">
+                </div>
+                <div class="edit-field">
+                    <label><i class="fa-solid fa-key"></i> New password: </label>
+                    <input type="password" id="newPassword" class="form-input">
+                </div>
+                <div class="edit-field">
+                    <label><i class="fa-solid fa-check-double"></i> Confirm password: </label>
+                    <input type="password" id="confirmPassword" class="form-input">
+                </div>
+                <div class="field-actions password-actions">
+                    <button class="submit-button cancel-btn" data-field="password">Cancel</button>
+                    <button class="submit-button" data-field="password">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
 </div>
 
 
@@ -70,57 +204,7 @@
     </div>
 </div> --}}
 
-{{!-- <div class="edit-profile-container" id="editProfileContainer" style="display: none;">
-    <h2>Change Profile</h2>
-    <div class="avatar-edit-section">
-        <div class="avatar-circle-large" id="avatarPreview"></div>
-        <label for="avatarUpload" class="upload-avatar-btn">Upload</label>
-        <input type="file" id="avatarUpload" accept="image/*" style="display: none;">
-    </div>
 
-    <div class="edit-field">
-        <label>Name: </label>
-        <input type="text" id="editName" value="{{user.username}}">
-        <button class="cancel-btn" data-field="name">cancel</button>
-        <button class="save-btn" data-field="name">save</button>
-    </div>
-    <div class="edit-field">
-        <label>Sex: </label>
-        <select id="editSex">
-            <option value="male">male</option>
-            <option value="female">female</option>
-        </select>
-        <button class="cancel-btn" data-field="sex">cancel</button>
-        <button class="save-btn" data-field="sex">save</button>
-    </div>
-    <div class="edit-field">
-        <label>Email: </label>
-        <input type="text" id="editEmail" value="{{user.email}}">
-        <button class="cancel-btn" data-field="email">cancel</button>
-        <button class="save-btn" data-field="email">save</button>
-    </div>
-
-    <hr />
-
-    <h2>Change Password</h2>
-    <div class="edit-field">
-        <label>Old password: </label>
-        <input type="password" id="oldPassword">
-    </div>
-    <div class="edit-field">
-        <label>New password: </label>
-        <input type="password" id="newPassword">
-    </div>
-    <div class="edit-field">
-        <label>Confirm password: </label>
-        <input type="password" id="confirmPassword">
-    </div>
-    <div class="edit-field">
-        <button class="cancel-btn" data-field="password">cancel</button>
-        <button class="save-btn" data-field="password">save</button>
-    </div>
-
-</div> --}}
 
 
 <script src="/js/profile.js"></script>

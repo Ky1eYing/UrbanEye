@@ -240,22 +240,24 @@ const getUserByUserId = async (userId) => {
 
 // get multiple users by user ids
 const getUsersByUserIds = async (userIds) => {
-  if (!Array.isArray(userIds) || userIds.length === 0) {
+  if (userIds === undefined || userIds === null) {
+    return [];
+  } else if (!Array.isArray(userIds)) {
     throw new Error("UserIds must be a non-empty array");
+  } else if (userIds.length === 0) {
+    return [];
   }
 
-  userIds = userIds.map(id => check.checkObjectId(id));
+  userIds = userIds.map((id) => check.checkObjectId(id));
 
   let usersCollection = await users();
-  const userList = await usersCollection.find({
-    _id: { $in: userIds.map(id => new ObjectId(id)) }
-  }).toArray();
+  const userList = await usersCollection
+    .find({
+      _id: { $in: userIds.map((id) => new ObjectId(id)) },
+    })
+    .toArray();
 
-  if (userList.length === 0 || userList.length !== userIds.length) {
-    throw new Error("At least one user was not found");
-  }
-
-  const filteredUsers = userList.map(user => {
+  const filteredUsers = userList.map((user) => {
     user._id = user._id.toString();
     return filterUserSimple(user);
   });

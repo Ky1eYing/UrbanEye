@@ -55,27 +55,22 @@ async function getEventByEventId(eventId) {
 
 async function createEvent(imageFile, selectedCategory, title, content, selectedMarkerPosition) {
     try {
-        // First handle the image upload
-        const formData = new FormData();
-        formData.append('image', imageFile);
-        
-        // Upload image first
-        const imageUploadResponse = await fetch('/api/upload', {
-            method: 'POST',
-            body: formData
-        });
-        
-        const imageData = await imageUploadResponse.json();
-        if (!imageData.success) {
-            throw new Error('Image upload failed');
+        // Check if user is logged in
+        if (typeof isLoggedIn === 'undefined' || !isLoggedIn || !userInfo || !userInfo._id) {
+            console.error('User not logged in or user info not available');
+            alert('Please log in to create events');
+            return null;
         }
         
-        // Get the current user ID from session
-        // This would typically be stored in the session or a state management system
-        // For now, we'll assume it's available in localStorage or similar
-        const userId = localStorage.getItem('userId');
+        const userId = userInfo._id;
         
-        // Prepare the event data
+        // Generate an address based on the selected location
+        const address = `Location at ${selectedMarkerPosition.lat.toFixed(6)}, ${selectedMarkerPosition.lng.toFixed(6)}`;
+        
+        // use a default image URL
+        const photoUrl = "https://urban-eye.oss-us-east-1.aliyuncs.com/events-pic/23be41e3-7246-4ca5-b837-a801cae0f4f0-IMG_7863.JPG";
+        
+        // Prepare event data
         const eventData = {
             user_id: userId,
             title: title,
@@ -83,13 +78,14 @@ async function createEvent(imageFile, selectedCategory, title, content, selected
             location: {
                 latitude: selectedMarkerPosition.lat.toString(),
                 longitude: selectedMarkerPosition.lng.toString(),
-                address: 'Address will be determined by coordinates' // This should be fetched from Google Maps API in a real app
+                address: address
             },
             category: selectedCategory,
-            photoUrl: imageData.photoUrl // URL returned from the image upload endpoint
+            photoUrl: photoUrl
         };
         
-        // Create the event
+        console.log('Creating event with data:', eventData);
+        
         const response = await fetch('/api/events', {
             method: 'POST',
             headers: {
@@ -98,16 +94,87 @@ async function createEvent(imageFile, selectedCategory, title, content, selected
             body: JSON.stringify(eventData)
         });
         
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.error || 'Error creating event');
+        }
+        
         const data = await response.json();
         
         if (data.code === 200) {
-            return data.data._id; // Return the new event ID
+            console.log('Event created successfully:', data.data);
+            return data.data._id;
         } else {
             console.error('Error creating event:', data.message || 'Unknown error');
             return null;
         }
     } catch (error) {
-        console.error('Network error when creating event:', error);
+        console.error('Error when creating event:', error);
+        alert('Failed to create event: ' + error.message);
+        return null;
+    }
+}
+
+async function updateEvent(eventId, imageFile, selectedCategory, title, content, selectedMarkerPosition) {
+    try {
+        // Check if user is logged in
+        if (typeof isLoggedIn === 'undefined' || !isLoggedIn || !userInfo || !userInfo._id) {
+            console.error('User not logged in or user info not available');
+            alert('Please log in to update events');
+            return null;
+        }
+        
+        const address = `Location at ${selectedMarkerPosition.lat.toFixed(6)}, ${selectedMarkerPosition.lng.toFixed(6)}`;
+        
+        // Get the existing event to use its photoUrl if no new image is uploaded
+        const existingEvent = await getEventByEventId(eventId);
+        let photoUrl = existingEvent?.photoUrl || "https://urban-eye.oss-us-east-1.aliyuncs.com/events-pic/23be41e3-7246-4ca5-b837-a801cae0f4f0-IMG_7863.JPG";
+        
+        // TODO：handle actual image upload here later
+        if (imageFile) {
+            console.log("New image selected, would upload in a complete implementation");
+        }
+        
+        // Prepare event data
+        const eventData = {
+            title: title,
+            content: content,
+            location: {
+                latitude: selectedMarkerPosition.lat.toString(),
+                longitude: selectedMarkerPosition.lng.toString(),
+                address: address
+            },
+            category: selectedCategory,
+            photoUrl: photoUrl
+        };
+        
+        console.log('Updating event with data:', eventData);
+        
+        const response = await fetch(`/api/events/${eventId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(eventData)
+        });
+        
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.error || 'Error updating event');
+        }
+        
+        const data = await response.json();
+        
+        if (data.code === 200) {
+            console.log('Event updated successfully:', data.data);
+            return data.data._id; // Return the event ID
+        } else {
+            console.error('Error updating event:', data.message || 'Unknown error');
+            return null;
+        }
+    } catch (error) {
+        console.error('Error when updating event:', error);
+        alert('Failed to update event: ' + error.message);
         return null;
     }
 }
@@ -184,7 +251,16 @@ async function removeLike(eventId) {
 
 async function addComment(eventId, comment) {
     try {
-        const userId = localStorage.getItem('userId');
+        // Check if user is logged in
+        if (!isLoggedIn || !userInfo || !userInfo._id) {
+            console.log('User not logged in');
+            alert('Please log in to add comments');
+            return false;
+        }
+        
+        const userId = userInfo._id;
+        
+        console.log(`Adding comment to event ${eventId} by user ${userId}: "${comment}"`);
         
         const response = await fetch(`/api/comments/event/${eventId}`, {
             method: 'POST',
@@ -199,10 +275,36 @@ async function addComment(eventId, comment) {
         
         const data = await response.json();
         
-        return data.code === 200;
+        if (data.code === 200) {
+            console.log('Comment added successfully');
+            return true;
+        } else {
+            console.error('Error adding comment:', data.message || 'Unknown error');
+            return false;
+        }
     } catch (error) {
         console.error('Network error when adding comment:', error);
         return false;
+    }
+}
+
+async function getCommentsByEventId(eventId) {
+    try {
+        console.log(`Fetching comments for event ${eventId}`);
+        
+        const response = await fetch(`/api/comments/event/${eventId}`);
+        const data = await response.json();
+        
+        if (data.code === 200 && data.data) {
+            console.log(`Successfully fetched ${data.data.length} comments`);
+            return data.data;
+        } else {
+            console.error('Error fetching comments:', data.message || 'Unknown error');
+            return [];
+        }
+    } catch (error) {
+        console.error('Network error when fetching comments:', error);
+        return [];
     }
 }
 

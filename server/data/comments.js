@@ -54,7 +54,14 @@ const getAllCommentsWithUserByEventId = async (eventId) => {
     throw new Error("Event not found");
   }
 
-  let commentList = event.comments;
+  // If no comments, return empty array instead of throwing error
+  let commentList = event.comments || [];
+  
+  // If there are no comments, return empty array early
+  if (commentList.length === 0) {
+    return [];
+  }
+  
   let userIds = commentList.map(comment => comment.user_id.toString());
 
   userIds = [...new Set(userIds)];

@@ -50,6 +50,7 @@ const attachUser = async (req, res, next) => {
           _id: user._id,
           userName: user.userName,
           name: user.name,
+          avatar: user.avatar
         };
       }
     } catch (error) {

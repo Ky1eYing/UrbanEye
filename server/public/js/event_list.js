@@ -345,14 +345,204 @@ async function showEventList() {
 }
 
 
+// Global filters state object to track active filters
+let activeFilters = {
+    titleLike: null,
+    category: null
+};
+
 document.addEventListener('DOMContentLoaded', async function () {
     // Base on url (if has event id) to decide
     const eventId = getEventIdFromURL();
 
-    // Diecide which view to show
+    // search functionality
+    const searchInput = document.querySelector('input[type="text"]') || 
+                        document.querySelector('.search-area input') ||
+                        document.querySelector('input[placeholder*="Search"]');
+    
+    if (searchInput) {
+        console.log('Search input found:', searchInput);
+        
+        // Remove any existing listeners to avoid duplicates
+        const newSearchInput = searchInput.cloneNode(true);
+        searchInput.parentNode.replaceChild(newSearchInput, searchInput);
+        
+        newSearchInput.addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                event.preventDefault(); // Prevent form submission
+                const searchTerm = this.value.trim();
+                console.log('Search term entered:', searchTerm);
+                
+                // Update active filters
+                activeFilters.titleLike = searchTerm || null;
+                
+                // Apply all active filters
+                applyFilters();
+            }
+        });
+    } else {
+        console.error('Search input not found on the page');
+    }
+
+    // Initialize the category filter dropdown if it exists
+    const categoryFilterElement = document.querySelector('.category-filter');
+    if (categoryFilterElement) {
+        // Initialize Choices.js on the dropdown
+        const categoryFilter = new Choices(categoryFilterElement, {
+            searchEnabled: false,
+            itemSelectText: '',
+            shouldSort: false,
+        });
+        
+        // Add event listener for category changes
+        categoryFilterElement.addEventListener('change', function() {
+            const selectedCategory = this.value;
+            
+            activeFilters.category = (selectedCategory !== 'all') ? selectedCategory : null;
+            
+            applyFilters();
+        });
+    }
+
+    // Decide which view to show
     if (eventId) {
         await showEventDetail();
     } else {
         await showEventList();
     }
 });
+
+// Function to apply all active filters together
+function applyFilters() {
+    // Create params object from active filters
+    const params = Object.fromEntries(
+        Object.entries(activeFilters).filter(([_, value]) => value !== null)
+    );
+    
+    console.log('Applying filters:', params);
+    
+    // If no filters active, show all events
+    if (Object.keys(params).length === 0) {
+        showEventList();
+    } else {
+        fetchAndDisplayEvents(params);
+    }
+}
+
+async function fetchAndDisplayEvents(params = {}) {
+    try {
+        console.log('Fetching events with params:', params);
+        
+        // Show loading state
+        const eventList = document.querySelector('.event-list');
+        if (eventList) {
+            eventList.innerHTML = '<div class="loading-events">Loading events...</div>';
+        }
+        
+        // Build query string
+        let queryString = '';
+        if (Object.keys(params).length > 0) {
+            queryString = '?' + Object.entries(params)
+                .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
+                .join('&');
+        }
+        
+        const apiUrl = `/api/events/filter${queryString}`;
+        
+        const response = await fetch(apiUrl);
+        
+        if (!response.ok) {
+            console.error(`Error fetching events (${response.status}): ${response.statusText}`);
+            return;
+        }
+        
+        const data = await response.json();
+        
+        if (data.code === 200 && data.data) {
+            console.log(`Found ${data.data.length} events`);
+            
+            // Clear the event list
+            if (eventList) {
+                eventList.innerHTML = '';
+            }
+            
+            // If no results found
+            if (data.data.length === 0) {
+                // Build a message based on active filters
+                let message = 'No events found';
+                
+                if (params.titleLike && params.category) {
+                    message += ` matching "${params.titleLike}" in category "${params.category}"`;
+                } else if (params.titleLike) {
+                    message += ` matching "${params.titleLike}"`;
+                } else if (params.category) {
+                    message += ` in category "${params.category}"`;
+                }
+                
+                eventList.innerHTML = `
+                    <div class="no-events">
+                        <p>${message}. Try different filters.</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            // Render the events
+            data.data.forEach(event => {
+                const eventItemHTML = `
+                    <div class="event-item" data-event-id="${event._id}">
+                        <div class="event-image">
+                            <img src="${event.photoUrl || 'https://images.unsplash.com/photo-1503179008861-d1e2b41f8bec?q=80&w=3869&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'}" 
+                                 alt="${event.title || 'Event Image'}"
+                                 onerror="this.src='https://images.unsplash.com/photo-1503179008861-d1e2b41f8bec?q=80&w=3869&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'">
+                        </div>
+                        <div class="event-details">
+                            <h3>${event.title || 'Untitled Event'}</h3>
+                            <div class="event-meta">
+                                <span class="event-location">${event.location?.address || 'Unknown Location'}</span>
+                                <div class="event-distance-time-ago">
+                                    <span class="event-distance">${formatDistanceAway(event.location?.latitude, event.location?.longitude) || 'Unknown distance'}</span>
+                                    <span>&nbsp;· &nbsp;</span>
+                                    <span class="event-time-ago">${formatTimeAgo(new Date(event.created_at)) || 'Unknown time'}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                eventList.insertAdjacentHTML('beforeend', eventItemHTML);
+            });
+            
+            // Bind click events to each event item
+            const eventItems = eventList.querySelectorAll(".event-item");
+            eventItems.forEach(item => {
+                item.addEventListener("click", async () => {
+                    const eventId = item.getAttribute("data-event-id");
+                    console.log("Clicked on event:", eventId);
+                    
+                    pushEventDetail(eventId);
+                    await showEventDetail();
+                });
+            });
+        } else {
+            console.error('Error in API response:', data.message || 'Unknown error');
+            eventList.innerHTML = '<div class="error-events">Error fetching events. Please try again later.</div>';
+        }
+    } catch (error) {
+        console.error('Network error when fetching events:', error);
+        const eventList = document.querySelector('.event-list');
+        if (eventList) {
+            eventList.innerHTML = '<div class="error-events">Error fetching events. Please try again later.</div>';
+        }
+    }
+}
+
+function searchEvents(searchTerm) {
+    activeFilters.titleLike = searchTerm || null;
+    return applyFilters();
+}
+
+function filterEventsByCategory(category) {
+    activeFilters.category = (category !== 'all') ? category : null;
+    return applyFilters();
+}
