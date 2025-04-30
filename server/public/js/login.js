@@ -27,12 +27,16 @@ document.addEventListener("DOMContentLoaded", () => {
             
             if (!username) {
                 isValid = false;
-                usernameInput.nextElementSibling.textContent = "Username is required";
+                // usernameInput.nextElementSibling.textContent = "Username is required";
+                errorMessage.innerHTML = "<i class='fas fa-triangle-exclamation'></i>" + "Password is required";
+                errorMessage.style.display = "flex";
             }
             
             if (!password) {
                 isValid = false;
-                passwordInput.nextElementSibling.textContent = "Password is required";
+                // passwordInput.nextElementSibling.textContent = "Password is required";
+                errorMessage.innerHTML = "<i class='fas fa-triangle-exclamation'></i>" + "Password is required";
+                errorMessage.style.display = "flex";
             }
             
             // Submit form if valid

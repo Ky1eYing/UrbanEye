@@ -53,7 +53,9 @@ async function getEventByEventId(eventId) {
     }
 }
 
-async function createEvent(photoUrl, selectedCategory, title, content, selectedMarkerPosition) {
+async function createEvent(photoUrl, selectedCategory, title, content, selectedMarkerPosition, address1) {
+    console.log("photoUrl", photoUrl);
+    
     try {
         // Check if user is logged in
         if (typeof isLoggedIn === 'undefined' || !isLoggedIn || !userInfo || !userInfo._id) {
@@ -65,7 +67,7 @@ async function createEvent(photoUrl, selectedCategory, title, content, selectedM
         const userId = userInfo._id;
         
         // Generate an address based on the selected location
-        const address = `Location at ${selectedMarkerPosition.lat.toFixed(6)}, ${selectedMarkerPosition.lng.toFixed(6)}`;
+        let address = address1|| `Location at ${selectedMarkerPosition.lat.toFixed(6)}, ${selectedMarkerPosition.lng.toFixed(6)}`;
         
         
         // Prepare event data

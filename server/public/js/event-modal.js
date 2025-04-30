@@ -5,6 +5,7 @@ const createEventModal = document.getElementById("createEventModal");
 const closeCreateEventModalBtn = document.getElementById("closeCreateEventModal");
 const submitCreateEventBtn = document.getElementById("submitCreateEvent");
 
+let formattedAddress;
 let createMap;
 let geolocationCenter;
 let selectedMarkerPosition = null; // final marker position
@@ -270,7 +271,7 @@ function initCreateEventMap() {
         geocoder.geocode({ location: latLng }, (results, status) => {
             if (status === "OK" && results[0]) {
                 // Get formatted address
-                const formattedAddress = results[0].formatted_address;
+                formattedAddress = results[0].formatted_address;
                 // Update display
                 addressOfMap.innerHTML = `<i class="fas fa-map-marker-alt"></i>${formattedAddress}`;
             } else {
@@ -331,6 +332,8 @@ if (submitCreateEventBtn) {
         const selectedCategory = document.querySelector("input[name='category']:checked")?.value;
         const title = document.getElementById("eventTitle").value.trim();
         const content = document.getElementById("eventContent").value.trim();
+        const address = formattedAddress || document.getElementById("addressOfMap").textContent;
+        console.log("photoUrl", document.getElementById("eventPhoto").src);
 
         // Validate form data
         if (!selectedCategory) {
@@ -349,6 +352,7 @@ if (submitCreateEventBtn) {
             displayFormErrorMessage("Please select a location on the map");
             return;
         }
+        
         // if (!imageFile && !submitCreateEventBtn.hasAttribute('data-edit-id')) {
         //     displayFormErrorMessage("Please upload an image");
         //     return;
@@ -370,7 +374,8 @@ if (submitCreateEventBtn) {
                     selectedCategory,
                     title,
                     content,
-                    selectedMarkerPosition
+                    selectedMarkerPosition,
+                    address
                 );
             } else {
                 // Create mode - create new event
@@ -379,7 +384,8 @@ if (submitCreateEventBtn) {
                     selectedCategory,
                     title,
                     content,
-                    selectedMarkerPosition
+                    selectedMarkerPosition,
+                    address
                 );
             }
 

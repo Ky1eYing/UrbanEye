@@ -7,6 +7,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const passwordInput = document.querySelector(".password-input");
         const confirmPasswordInput = document.querySelector(".confirm-password-input");
         const signupButton = document.querySelector(".signup-submit-btn");
+        const errorContainer = document.querySelector("#errorMessageContainer");
         const errorMessage = document.querySelector("#errorMessage");
         
         signupButton.addEventListener("click", async (e) => {
@@ -14,7 +15,7 @@ document.addEventListener("DOMContentLoaded", () => {
             
             // Clear previous errors
             errorMessage.textContent = "";
-            errorMessage.style.display = "none";
+            errorContainer.style.display = "none";
             
             // Get form data
             const username = usernameInput.value.trim();
@@ -28,7 +29,9 @@ document.addEventListener("DOMContentLoaded", () => {
             // Username validation
             if (!username) {
                 isValid = false;
-                usernameInput.nextElementSibling.textContent = "Username is required";
+                // usernameInput.nextElementSibling.textContent = "Username is required";
+                errorMessage.textContent = "Username is required";
+                        errorContainer.style.display = "flex";
             }
             
             // Email validation
@@ -43,13 +46,17 @@ document.addEventListener("DOMContentLoaded", () => {
             // Password validation
             if (!password) {
                 isValid = false;
-                passwordInput.nextElementSibling.textContent = "Password is required";
+                // passwordInput.nextElementSibling.textContent = "Password is required";
+                errorMessage.textContent = "Password is required";
+                        errorContainer.style.display = "flex";
             }
             
             // Confirm password validation
             if (password !== confirmPassword) {
                 isValid = false;
-                confirmPasswordInput.nextElementSibling.textContent = "Passwords do not match";
+                // confirmPasswordInput.nextElementSibling.textContent = "Passwords do not match";
+                errorMessage.textContent = "Passwords do not match";
+                        errorContainer.style.display = "flex";
             }
             
             // Submit form if valid
@@ -80,12 +87,12 @@ document.addEventListener("DOMContentLoaded", () => {
                         // Display error from server
                         console.error("Signup error:", data.message || "Registration failed");
                         errorMessage.textContent = data.message || "Registration failed";
-                        errorMessage.style.display = "flex";
+                        errorContainer.style.display = "flex";
                     }
                 } catch (error) {
                     console.error("Signup error:", error);
                     errorMessage.textContent = error || "An error occurred. Please try again later.";
-                    errorMessage.style.display = "flex";
+                    errorContainer.style.display = "flex";
                 }
             }
         });
