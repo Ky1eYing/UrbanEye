@@ -35,6 +35,9 @@ createEventModal.addEventListener("click", event => {
 
 // Show create event modal
 function showCreateEventModal(eventId) {
+
+    //  eventId = '680bc0d81cb1ed54b36c0152';
+
     // Show the modal
     createEventModal.style.display = "flex";
 
@@ -50,7 +53,7 @@ function showCreateEventModal(eventId) {
                 if (modalTitle) {
                     modalTitle.textContent = "Edit Event";
                 }
-
+                
                 document.getElementById("eventTitle").value = eventData.title || "";
                 document.getElementById("eventContent").value = eventData.content || "";
 
@@ -73,7 +76,7 @@ function showCreateEventModal(eventId) {
                         addressOfMap.innerHTML = `<i class="fas fa-map-marker-alt"></i>${eventData.location.address || 'Selected location'}`;
                     }
                 }
-
+                
                 // Show preview of existing image
                 if (eventData.photoUrl) {
                     const uploadPlaceholder = document.querySelector(".upload-placeholder");
@@ -88,7 +91,7 @@ function showCreateEventModal(eventId) {
                         uploadPlaceholder.appendChild(previewImg);
                     }
                 }
-
+                
                 if (submitCreateEventBtn) {
                     submitCreateEventBtn.textContent = "Update Event";
                     // Store the event ID as a data attribute for the submit handler
@@ -106,21 +109,21 @@ function showCreateEventModal(eventId) {
         if (modalTitle) {
             modalTitle.textContent = "Create Event";
         }
-
+        
         document.getElementById("eventTitle").value = "";
         document.getElementById("eventContent").value = "";
-
+        
         const imageUploadInput = document.getElementById("imageUpload");
         if (imageUploadInput) {
             imageUploadInput.value = "";
         }
-
+        
         const uploadPlaceholder = document.querySelector(".upload-placeholder");
-        if (uploadPlaceholder) {
-            uploadPlaceholder.innerHTML = `
-                <i class="fas fa-image"></i>
-                <span>Choose an image</span>
-            `;
+        const eventPhoto = document.getElementById("eventPhoto");
+        if (uploadPlaceholder && eventPhoto) {
+            uploadPlaceholder.style.display = "flex";
+            eventPhoto.style.display = "none";
+            eventPhoto.src = '';
         }
 
         const categoryRadios = document.querySelectorAll('input[name="category"]');
@@ -153,9 +156,8 @@ function showCreateEventModal(eventId) {
         // Remove existing event listener to avoid duplicates
         const newLocationBtn = myLocationBtn.cloneNode(true);
         myLocationBtn.parentNode.replaceChild(newLocationBtn, myLocationBtn);
-
-        newLocationBtn.addEventListener("click", function () {
-            // get accurate location
+        
+        newLocationBtn.addEventListener("click", function() {
             if (window.userLocationMarker) {
                 // Use existing marker on map if available
                 const pos = window.userLocationMarker.getPosition();
@@ -305,6 +307,11 @@ function initCreateEventMap() {
     }
 }
 
+
+document.querySelector(".upload-container").addEventListener("click", () => {
+    document.getElementById("imageUpload").click();
+});
+
 // Submit form
 if (submitCreateEventBtn) {
     submitCreateEventBtn.addEventListener("click", async () => {
@@ -318,62 +325,62 @@ if (submitCreateEventBtn) {
             return;
         }
 
-        // Get form data
-        const imageFile = document.getElementById("imageUpload").files[0];
-        const selectedCategory = document.querySelector("input[name='category']:checked")?.value;
-        const title = document.getElementById("eventTitle").value.trim();
-        const content = document.getElementById("eventContent").value.trim();
+    // Get form data
+    const imageFile = document.getElementById("imageUpload").files[0];
+    const selectedCategory = document.querySelector("input[name='category']:checked")?.value;
+    const title = document.getElementById("eventTitle").value.trim();
+    const content = document.getElementById("eventContent").value.trim();
 
-        // Validate form data
-        if (!selectedCategory) {
-            displayFormErrorMessage("Please select a category");
-            return;
-        }
-        if (!title) {
-            displayFormErrorMessage("Please enter a title");
-            return;
-        }
-        if (!content) {
-            displayFormErrorMessage("Please enter a description");
-            return;
-        }
-        if (!selectedMarkerPosition) {
-            displayFormErrorMessage("Please select a location on the map");
-            return;
-        }
-        if (!imageFile && !submitCreateEventBtn.hasAttribute('data-edit-id')) {
-            displayFormErrorMessage("Please upload an image");
-            return;
-        }
+    // Validate form data
+    if (!selectedCategory) { 
+        displayFormErrorMessage("Please select a category");
+        return; 
+    }
+    if (!title) { 
+        displayFormErrorMessage("Please enter a title");
+        return; 
+    }
+    if (!content) { 
+        displayFormErrorMessage("Please enter a description");
+        return; 
+    }
+    if (!selectedMarkerPosition) { 
+        displayFormErrorMessage("Please select a location on the map");
+        return; 
+    }
+    if (!imageFile && !submitCreateEventBtn.hasAttribute('data-edit-id')) { 
+        displayFormErrorMessage("Please upload an image");
+        return; 
+    }
 
         // Show loading state
         submitCreateEventBtn.disabled = true;
         submitCreateEventBtn.textContent = "Processing...";
 
-        try {
-            let eventId;
-            const editEventId = submitCreateEventBtn.getAttribute('data-edit-id');
-
-            if (editEventId) {
-                // Edit mode - update existing event
-                eventId = await updateEvent(
-                    editEventId,
-                    imageFile,
-                    selectedCategory,
-                    title,
-                    content,
-                    selectedMarkerPosition
-                );
-            } else {
-                // Create mode - create new event
-                eventId = await createEvent(
-                    imageFile,
-                    selectedCategory,
-                    title,
-                    content,
-                    selectedMarkerPosition
-                );
-            }
+    try {
+        let eventId;
+        const editEventId = submitCreateEventBtn.getAttribute('data-edit-id');
+        
+        if (editEventId) {
+            // Edit mode - update existing event
+            eventId = await updateEvent(
+                editEventId,
+                imageFile,
+                selectedCategory,
+                title,
+                content,
+                selectedMarkerPosition
+            );
+        } else {
+            // Create mode - create new event
+            eventId = await createEvent(
+                imageFile, 
+                selectedCategory, 
+                title, 
+                content, 
+                selectedMarkerPosition
+            );
+        }
 
             if (eventId) {
                 displayFormSuccessMessage(editEventId ? "Event updated successfully!" : "Event created successfully!");
@@ -397,30 +404,29 @@ if (submitCreateEventBtn) {
     });
 }
 
-// Image preview
 const imageUpload = document.getElementById("imageUpload");
 if (imageUpload) {
-    imageUpload.addEventListener("change", function (e) {
-        console.log("Image selected for upload:", this.files[0]?.name);
-        const file = this.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = function (e) {
-                const uploadPlaceholder = document.querySelector(".upload-placeholder");
-                if (uploadPlaceholder) {
-                    // Clear the placeholder and add the image preview
-                    uploadPlaceholder.innerHTML = '';
-                    const previewImg = document.createElement("img");
-                    previewImg.src = e.target.result;
-                    previewImg.className = "image-preview";
-                    previewImg.style.maxWidth = "100%";
-                    previewImg.style.maxHeight = "200px";
-                    previewImg.style.objectFit = "contain";
-                    uploadPlaceholder.appendChild(previewImg);
-                }
-            };
-            reader.readAsDataURL(file);
-        }
+    imageUpload.addEventListener("change", function(e) {
+    console.log("Image selected for upload:", this.files[0]?.name);
+    const file = this.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const uploadPlaceholder = document.querySelector(".upload-placeholder");
+            if (uploadPlaceholder) {
+                // Clear the placeholder and add the image preview
+                uploadPlaceholder.innerHTML = '';
+                const previewImg = document.createElement("img");
+                previewImg.src = e.target.result;
+                previewImg.className = "image-preview";
+                previewImg.style.maxWidth = "100%";
+                previewImg.style.maxHeight = "200px";
+                previewImg.style.objectFit = "contain";
+                uploadPlaceholder.appendChild(previewImg);
+            }
+        };
+        reader.readAsDataURL(file);
+    }
     });
 }
 

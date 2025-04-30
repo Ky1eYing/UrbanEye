@@ -1337,35 +1337,38 @@ section {
     box-shadow: 0 0 0 1px var(--primary-blue-light);
 }
 
-/* 文件上传容器 */
 .upload-container {
     position: relative;
+
     border: 2px dashed var(--gray-light);
     border-radius: var(--radius);
-    padding: 20px;
     text-align: center;
     transition: border-color 0.3s;
     cursor: pointer;
+    overflow: hidden;
 }
+
+#eventPhoto {
+    width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+    border-radius: 12px;
+    object-fit: cover;
+  }
 
 .upload-container:hover {
     border-color: var(--primary-blue-light);
-}
-
-.upload-container input[type="file"] {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    top: 0;
-    left: 0;
-    opacity: 0;
-    cursor: pointer;
 }
 
 .upload-placeholder {
     display: flex;
     flex-direction: column;
     align-items: center;
+    margin: 20px;
     gap: 10px;
     color: var(--gray-dark);
 }
