@@ -52,7 +52,7 @@ const getAllEventsByFilter = async (params = {}) => {
 	const {
 		titlelike = "", // title fuzzy matching
 		distance = "1miles", // default 1 miles, optional "3miles","5miles","10miles"
-		sortBy = "newest", // default newest, optional "views"
+		sortBy = "views", // default newest, optional "views"
 		category = "all", // default all, optional specific categories
 		timeRange = "all", // default all, optional "1day","7days","30days"
 		userLocation = null, // { latitude, longitude }
@@ -78,16 +78,16 @@ const getAllEventsByFilter = async (params = {}) => {
 		const now = new Date();
 		let dateFilter = new Date(now);
 		switch (timeRange) {
-			case "1day":
+			case "1":
 				dateFilter.setDate(now.getDate() - 1);
 				break;
-			case "7days":
+			case "7":
 				dateFilter.setDate(now.getDate() - 7);
 				break;
-			case "30days":
+			case "30":
 				dateFilter.setDate(now.getDate() - 30);
 				break;
-			case "1year":
+			case "365":
 				dateFilter.setFullYear(now.getFullYear() - 1);
 				break;
 		}

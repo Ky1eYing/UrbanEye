@@ -345,7 +345,7 @@ if (submitCreateEventBtn) {
             return;
         }
         if (!content) {
-            displayFormErrorMessage("Please enter a description");
+            displayFormErrorMessage("Please enter a content");
             return;
         }
         if (!selectedMarkerPosition) {
