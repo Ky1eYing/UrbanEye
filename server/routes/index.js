@@ -67,12 +67,32 @@ const constructorMethod = (app) => {
   app.get("/logout", (req, res) => {
     res.render("logout", {
       title: "Log Out",
+      user: req.user,
     });
   });
 
   app.get("/profile", redirectLogin, attachUser, (req, res) => {
     res.render("profile", {
       title: "Profile",
+      user: req.user,
+    });
+  });
+
+  app.get("/profile/myevents", redirectLogin, attachUser, (req, res) => {
+    res.render("profile_myevents", {
+      title: "My Events",
+      user: req.user,
+    });
+  });
+  app.get("/profile/mylikes", redirectLogin, attachUser, (req, res) => {
+    res.render("profile_mylikes", {
+      title: "My Likes",
+      user: req.user,
+    });
+  });
+  app.get("/profile/mycomments", redirectLogin, attachUser, (req, res) => {
+    res.render("profile_mycomments", {
+      title: "My Comments",
       user: req.user,
     });
   });

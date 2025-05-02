@@ -1,0 +1,77 @@
+<div class="profile-content">
+    <div class="profile-view my-events" id="myEvents">
+        <div class="profile-section dashboard-card">
+            <div class="edit-header">
+                <button class="back-button" id="backToProfileBtn"><i class="fas fa-angle-left"></i></button>
+                <h3>My Events</h3>
+            </div>
+        </div>
+        <div class="profile-section dashboard-card">
+            <div class="search-filter">
+                <input type="text" placeholder="Search" class="search-bar">
+            </div>
+            <div class="event-list">
+                <div class="event-item" data-event-id="${event._id}">
+                    <div class="event-image">
+                        <img src="https://images.unsplash.com/photo-1503179008861-d1e2b41f8bec?q=80&w=3869&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                            alt="Event Image"
+                            onerror="this.src='https://images.unsplash.com/photo-1503179008861-d1e2b41f8bec?q=80&w=3869&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'">
+                    </div>
+                    <div class="event-details">
+                        <h3>Untitled Event</h3>
+                        <div class="event-meta">
+                            <span class="event-location">Unknown Location</span>
+                            <div class="event-distance-time-ago">
+                                <span class="event-distance">Unknown distance</span>
+                                <span>&nbsp;· &nbsp;</span>
+                                <span class="event-time-ago">Unknown time</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="event-actions">
+                        <button class="edit-btn"><i class="fa-solid fa-pen-to-square"></i></button>
+                        <button class="delete-btn"><i class="fa-solid fa-trash-can"></i></button>
+                    </div>
+                </div>
+                <div class="event-item" data-event-id="${event._id}">
+                    <div class="event-image">
+                        <img src="https://images.unsplash.com/photo-1503179008861-d1e2b41f8bec?q=80&w=3869&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                            alt="Event Image"
+                            onerror="this.src='https://images.unsplash.com/photo-1503179008861-d1e2b41f8bec?q=80&w=3869&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'">
+                    </div>
+                    <div class="event-details">
+                        <h3>Untitled Event</h3>
+                        <div class="event-meta">
+                            <span class="event-location">Unknown Location</span>
+                            <div class="event-distance-time-ago">
+                                <span class="event-distance">Unknown distance</span>
+                                <span>&nbsp;· &nbsp;</span>
+                                <span class="event-time-ago">Unknown time</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+
+
+</div>
+
+<script>
+    const isLoggedIn = {{#if user}} true {{else}} false {{/if}};
+    console.log('isLoggedIn: ', isLoggedIn);
+
+    {{#if user}}
+    const userInfo = {{{json user}}};
+    console.log('userInfo: {_id: "", userName: "", name: ""}: ', userInfo);
+    {{/if}}
+</script>
+
+<script src="/js/profile_myevents.js"></script>
+<script src="/js/profile_api.js"></script>
+
+

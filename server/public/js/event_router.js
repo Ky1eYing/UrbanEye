@@ -24,10 +24,16 @@ window.addEventListener('popstate', async () => {
     // Get event _id
     const eventId = getEventIdFromURL();
 
-    if (eventId) {
-        await showEventDetail();
+    if (location.pathname === '/event'){
+        if (eventId) {
+            await showEventDetail();
+        } else {
+            // await showEventList();
+            applyFilters();
+        }
     } else {
-        // await showEventList();
-        applyFilters();
+        // If history is not on the event page, we can just reload the page
+        location.reload();
     }
+    
 });

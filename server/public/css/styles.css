@@ -26,23 +26,23 @@
 
 /*  main.handlebars  */
 
-h1{
+h1 {
     font-size: 2.5rem;
 }
 
-h2{
+h2 {
     font-size: 2rem;
-}   
+}
 
-h3{
+h3 {
     font-size: 1.5rem;
 }
 
-h4{
+h4 {
     font-size: 1.2rem;
 }
 
-h5{
+h5 {
     font-size: 1rem;
 }
 
@@ -146,9 +146,9 @@ header .container {
 /* 右侧菜单区域 */
 
 
-.login-button button{
+.login-button button {
     background-color: var(--primary-blue-light);
-    color: var(--white) ;
+    color: var(--white);
     padding: var(--spacing-sm) var(--spacing-lg);
     border: none;
     border-radius: var(--radius);
@@ -253,69 +253,67 @@ header .container {
     border-radius: 5px;
 } */
 
-/* 容器横向并列 */
+
 .search-filter {
     display: flex;
-    gap: 8px; /* 输入框和下拉框之间留点空隙 */
-  }
+    gap: 8px;
+    margin-bottom: 10px;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 10px;
+}
 
-  /* 输入框 & 自定义下拉容器 各占一半 */
-  .search-filter .search-bar,
-  .search-filter .choices {
+
+.search-filter .search-bar,
+.search-filter .choices {
     width: 50%;
-  }
+}
 
-  /* 输入框样式 */
-  .search-filter .search-bar {
+
+.search-filter .search-bar {
     margin-right: 10px;
     padding: var(--spacing-sm) var(--spacing-md);
     border: 1px solid var(--gray-light);
     border-radius: var(--radius);
-  }
-  .search-filter .search-bar:focus {
+}
+
+.search-filter .search-bar:focus {
     outline: none;
     border-color: var(--primary-blue-light);
-  }
+}
 
-
-
-
-  /* 覆盖 Choices.js 容器背景为纯白 */
-  .choices .choices__inner {
+.choices .choices__inner {
     background-color: var(--white);
     border: 1px solid var(--gray-light) !important;
     border-radius: var(--radius);
     padding: 1px 8px !important;
-    min-height: 0 !important;   
-  }
+    min-height: 0 !important;
+}
 
-  .choices.is-open .choices__inner {
+.choices.is-open .choices__inner {
     border-color: var(--primary-blue-light) !important;
     /* border-radius: var(--radius) var(--radius) 0 0 ; */
-    border-radius: var(--radius)  !important;
+    border-radius: var(--radius) !important;
     /* padding: 1px !important; */
-  }
+}
 
-  .choices__list--dropdown{
+.choices__list--dropdown {
     background-color: var(--white);
     /* border-radius: 0 0 var(--radius) var(--radius)  !important; */
-    border-radius: var(--radius)  !important;
+    border-radius: var(--radius) !important;
     line-height: 1.2;
     border-color: var(--primary-blue-light) !important;
-  }
+}
 
 
 
-  
+
 .event-list {
     display: flex;
     flex-direction: column;
     gap: 10px;
-    margin-top: 10px;
-    border-top: 1px solid var(--border-color);
-    padding-top: 10px;
-    max-height: calc(100vh - 200px);  /* 设置最大高度，减去顶部按钮和搜索栏的高度 */
-    overflow-y: auto; /* 启用垂直滚动 */
+
+    max-height: calc(100vh - 200px);
+    overflow-y: auto;
     /* padding-right: 15px; */
 }
 
@@ -487,21 +485,26 @@ header .container {
 .landing-content {
     display: flex;
     width: 100%;
-    flex-direction: column; /* 确保纵向排列 */
-  }
+    flex-direction: column;
+    /* 确保纵向排列 */
+}
 
 .landing-content section {
-    height: calc(100vh - 70px); /* vh 是相对于视口高度的单位，100vh 就是一整屏 */
+    height: calc(100vh - 70px);
+    /* vh 是相对于视口高度的单位，100vh 就是一整屏 */
     width: 100%;
     display: flex;
-    align-items: center;     /* 垂直居中 */
-    justify-content: center; /* 水平居中 */
+    align-items: center;
+    /* 垂直居中 */
+    justify-content: center;
+    /* 水平居中 */
     text-align: center;
-    padding: 40px 20px;      /* 为小屏幕留出内边距 */
+    padding: 40px 20px;
+    /* 为小屏幕留出内边距 */
     box-sizing: border-box;
 }
 
-  .hero-section {
+.hero-section {
     background-color: var(--primary-blue-light);
     color: var(--white);
     text-align: center;
@@ -769,8 +772,10 @@ header .container {
     min-height: 450px;
     display: flex;
     flex-direction: column;
-    align-items: center;     /* 垂直居中 */
-    justify-content: center; /* 水平居中 */
+    align-items: center;
+    /* 垂直居中 */
+    justify-content: center;
+    /* 水平居中 */
     text-align: center;
 }
 
@@ -892,7 +897,7 @@ header .container {
     display: flex;
     flex-direction: column;
     gap: 30px;
-    
+
 }
 
 .profile-section {
@@ -981,7 +986,7 @@ header .container {
 
 .user-detail {
     display: flex;
-    
+
 
 }
 
@@ -1350,15 +1355,15 @@ section {
 
 #eventPhoto {
     width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
+    height: 100%;
+    object-fit: cover;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
     border-radius: 12px;
     object-fit: cover;
-  }
+}
 
 .upload-container:hover {
     border-color: var(--primary-blue-light);
@@ -1397,12 +1402,18 @@ section {
     font-size: 14px;
     font-weight: normal;
     color: var(--black);
-    width: calc(25% - 10px); /* 每行显示5个，考虑到间隙 */
-    min-width: 100px; /* 设置最小宽度 */
-    text-align: center; /* 文本居中 */
-    white-space: nowrap; /* 防止文本换行 */
-    overflow: hidden; /* 防止内容溢出 */
-    text-overflow: ellipsis; /* 溢出时显示省略号 */
+    width: calc(25% - 10px);
+    /* 每行显示5个，考虑到间隙 */
+    min-width: 100px;
+    /* 设置最小宽度 */
+    text-align: center;
+    /* 文本居中 */
+    white-space: nowrap;
+    /* 防止文本换行 */
+    overflow: hidden;
+    /* 防止内容溢出 */
+    text-overflow: ellipsis;
+    /* 溢出时显示省略号 */
     transition: all 0.3s;
 }
 
@@ -1515,7 +1526,7 @@ section {
 #event-detail-container {
     display: flex;
     flex-direction: column;
-    padding: var(--spacing-md) 0 0 var(--spacing-md) ;
+    padding: var(--spacing-md) 0 0 var(--spacing-md);
 }
 
 .detail-header {
@@ -1614,60 +1625,62 @@ section {
 
 .comment-item {
     display: flex;
-    gap: var(--spacing-sm); /* 元素之间间距 */
+    gap: var(--spacing-sm);
+    /* 元素之间间距 */
     padding: var(--spacing-sm) 2px var(--spacing-sm) 2px;
     border-radius: var(--radius);
     transition: all 0.3s ease;
-  }
-  
-  .comment-item:hover {
+}
+
+.comment-item:hover {
     background-color: var(--background-light);
-  }
-  
-  .comment-useravator {
+}
+
+.comment-useravator {
     width: 36px;
     height: 36px;
     border-radius: 50%;
     overflow: hidden;
-    flex-shrink: 0; /* NO zip */
+    flex-shrink: 0;
+    /* NO zip */
     border: 2px solid white;
     /* box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); */
-  }
-  
-  .comment-useravator img {
+}
+
+.comment-useravator img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-  }
-  
-  .comment-body {
+}
+
+.comment-body {
     display: flex;
     flex-direction: column;
     flex: 1;
-  }
-  
-  .comment-header {
+}
+
+.comment-header {
     display: flex;
     align-items: center;
     gap: 6px;
     margin-bottom: 2px;
     line-height: 1.2;
-  }
-  
-  .comment-username {
+}
+
+.comment-username {
     font-weight: 600;
-  }
-  
-  .comment-time {
+}
+
+.comment-time {
     color: var(--gray-dark);
     font-size: 0.85em;
-  }
-  
-  .comment-content {
+}
+
+.comment-content {
     line-height: 1.2;
     /* word-break: break-word; */
-  }
-  
+}
+
 
 .comment-form {
     display: flex;
@@ -1771,7 +1784,7 @@ section {
     gap: var(--spacing-sm);
 }
 
-.edit-password-fields label{
+.edit-password-fields label {
     width: 200px;
 }
 
@@ -1782,13 +1795,13 @@ section {
     font-size: 1rem;
 }
 
-.edit-field input{
+.edit-field input {
     flex: 1;
     margin-right: var(--spacing-md);
 }
 
 
-.edit-field .choices{
+.edit-field .choices {
     flex: 1;
     margin-right: var(--spacing-md);
     margin-bottom: 0;
@@ -1878,3 +1891,62 @@ section {
 } */
 
 
+.my-events .search-bar {
+    width: 100%;
+    margin-right: 0;
+}
+
+.my-events .event-item {
+    position: relative;
+    cursor: default;
+}
+
+.event-actions {
+    position: absolute;
+    bottom: 12px;
+    right: 12px;
+    display: flex;
+    gap: 12px;
+    padding: 4px 8px;
+
+}
+
+.event-actions button {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--border-color);
+    background-color: var(--white);
+    box-shadow: var(--shadow-color) 2px 3px 4px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 0.8rem;
+}
+
+.event-actions i {
+    font-size: 0.8rem;
+}
+
+
+.edit-btn {
+    color: var(--primary-blue-light);
+}
+
+.edit-btn:hover {
+    background-color: var(--primary-blue-light);
+    color: var(--white);
+    transform: translateY(-2px);
+}
+
+.delete-btn {
+    color: var(--accent-red);
+}
+
+.delete-btn:hover {
+    background-color: var(--accent-red);
+    color: var(--white);
+    transform: translateY(-2px);
+}

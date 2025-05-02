@@ -14,9 +14,11 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (!eventId) return;
 
         // history.pushState({ _id: eventId } => it give the _id
-        if (history.state && history.state._id) {
-            // Come from any page in this cite, Go back (maybe from user profile page then event list page)
+        if (document.referrer && document.referrer !== location.href) {
+            // Come from any page in this cite, Go back (such user profile page then event list page)
             history.back();
+            // setTimeout(() => location.reload(), 10);
+            
         } else {
             // user directly visit '/event?_id=123', default back to event list page
             replaceToEventList(eventId);
