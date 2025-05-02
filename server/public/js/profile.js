@@ -4,7 +4,29 @@ document.addEventListener("DOMContentLoaded", () => {
     const editProfileBtn = document.getElementById("editProfileBtn");
     const signOutBtn = document.getElementById("signOutBtn");
     const backToProfileBtn = document.getElementById("backToProfileBtn");
+    // Go to edit profile button
+    if (editProfileBtn) {
+        editProfileBtn.addEventListener("click", () => {
+            profileView.style.display = "none";
+            editProfileView.style.display = "flex";
+        });
+    }
+    // Back to profile button
+    if (backToProfileBtn) {
+        backToProfileBtn.addEventListener('click', function () {
+            editProfileView.style.display = 'none';
+            profileView.style.display = 'flex';
+        });
+    }
+    // Sign out button
+    if (signOutBtn) {
+        signOutBtn.addEventListener('click', function () {
+            // Redirect to logout route
+            window.location.href = '/logout';
+        });
+    }
 
+    
     // get old user info
     const oldAvatar = document.getElementById("avatarDisplay").src;
     const oldName = document.getElementById("nameDisplay").textContent.trim();
@@ -13,8 +35,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const oldSex = document.getElementById("sexDisplay").textContent.trim();
     const oldEmail = document.getElementById("emailDisplay").textContent.trim();
     const oldPhone = document.getElementById("phoneDisplay").textContent.trim();
-    
-    
+
+
     document.getElementById("avatarPreview").src = oldAvatar;
     document.getElementById("editName").value = oldName;
     document.getElementById("editUsername").value = oldUsername;
@@ -31,63 +53,59 @@ document.addEventListener("DOMContentLoaded", () => {
             shouldSort: false,
             allowHTML: true
         });
-        
+
         // Set default value
         if (oldSex) {
             sexChoices.setChoiceByValue(oldSex);
         }
     }
 
-    // 切换到编辑资料视图
-    editProfileBtn.addEventListener("click", () => {
-        profileView.style.display = "none";
-        editProfileView.style.display = "flex";
-    });
+    
 
     // 监听所有 cancel/save 按钮
     const cancelBtns = document.querySelectorAll(".cancel-btn");
     const saveBtns = document.querySelectorAll(".save-btn");
 
-    cancelBtns.forEach(btn => {
-        btn.addEventListener("click", (e) => {
-            e.preventDefault();
-            const field = e.target.getAttribute("data-field");
-            if (field === "name" || field === "sex" || field === "email") {
-                // 对于这类字段，点 cancel 则恢复原值
-                revertField(field);
-            } else if (field === "password") {
-                // 清空密码输入
-                document.getElementById("oldPassword").value = "";
-                document.getElementById("newPassword").value = "";
-                document.getElementById("confirmPassword").value = "";
-            } else {
-                // 其他处理
-            }
-        });
-    });
+    // cancelBtns.forEach(btn => {
+    //     btn.addEventListener("click", (e) => {
+    //         e.preventDefault();
+    //         const field = e.target.getAttribute("data-field");
+    //         if (field === "name" || field === "sex" || field === "email") {
+    //             // 对于这类字段，点 cancel 则恢复原值
+    //             revertField(field);
+    //         } else if (field === "password") {
+    //             // 清空密码输入
+    //             document.getElementById("oldPassword").value = "";
+    //             document.getElementById("newPassword").value = "";
+    //             document.getElementById("confirmPassword").value = "";
+    //         } else {
+    //             // 其他处理
+    //         }
+    //     });
+    // });
 
-    saveBtns.forEach(btn => {
-        btn.addEventListener("click", async (e) => {
-            e.preventDefault();
-            const field = e.target.getAttribute("data-field");
-            if (field === "name") {
-                // 发送AJAX请求更新name
-                const newName = document.getElementById("editName").value.trim();
-                await updateProfileField("username", newName);
-            } else if (field === "sex") {
-                const newSex = document.getElementById("editSex").value;
-                await updateProfileField("sex", newSex);
-            } else if (field === "email") {
-                const newEmail = document.getElementById("editEmail").value.trim();
-                await updateProfileField("email", newEmail);
-            } else if (field === "password") {
-                const oldPwd = document.getElementById("oldPassword").value.trim();
-                const newPwd = document.getElementById("newPassword").value.trim();
-                const confirmPwd = document.getElementById("confirmPassword").value.trim();
-                await updatePassword(oldPwd, newPwd, confirmPwd);
-            }
-        });
-    });
+    // saveBtns.forEach(btn => {
+    //     btn.addEventListener("click", async (e) => {
+    //         e.preventDefault();
+    //         const field = e.target.getAttribute("data-field");
+    //         if (field === "name") {
+    //             // 发送AJAX请求更新name
+    //             const newName = document.getElementById("editName").value.trim();
+    //             await updateProfileField("username", newName);
+    //         } else if (field === "sex") {
+    //             const newSex = document.getElementById("editSex").value;
+    //             await updateProfileField("sex", newSex);
+    //         } else if (field === "email") {
+    //             const newEmail = document.getElementById("editEmail").value.trim();
+    //             await updateProfileField("email", newEmail);
+    //         } else if (field === "password") {
+    //             const oldPwd = document.getElementById("oldPassword").value.trim();
+    //             const newPwd = document.getElementById("newPassword").value.trim();
+    //             const confirmPwd = document.getElementById("confirmPassword").value.trim();
+    //             await updatePassword(oldPwd, newPwd, confirmPwd);
+    //         }
+    //     });
+    // });
 
     // 更新头像事件
     const avatarUpload = document.getElementById("avatarUpload");
@@ -103,21 +121,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // Back to profile button
-    if (backToProfileBtn) {
-        backToProfileBtn.addEventListener('click', function() {
-            editProfileView.style.display = 'none';
-            profileView.style.display = 'flex';
-        });
-    }
 
-    // Sign out button
-    if (signOutBtn) {
-        signOutBtn.addEventListener('click', function() {
-            // Redirect to logout route
-            window.location.href = '/logout';
-        });
-    }
 });
 
 /**

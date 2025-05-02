@@ -27,8 +27,10 @@
                     <h3 class="user-name" id="usernameDisplay"><i class="fa-solid fa-at"></i>jiaojh</h3>
                 </div>
                 <div class="user-detail">
-                    <span class="detail-value" id="introductionDisplay">Passionate about keeping my neighborhood safe and informed. Sharing real-time updates on traffic, events, and local alerts. Always on the lookout for the next community story.
-                         </span>
+                    <span class="detail-value" id="introductionDisplay">Passionate about keeping my neighborhood safe
+                        and informed. Sharing real-time updates on traffic, events, and local alerts. Always on the
+                        lookout for the next community story.
+                    </span>
                 </div>
                 <br>
                 <div class="user-detail">
@@ -50,25 +52,25 @@
             <h3 class="dashboard-title">Dashboard</h3>
             <div class="visibility-note">
                 <span class="eye-icon"><i class="fa-regular fa-eye"></i></span>
-                <span>only visible to you</span>
+                <span>Only visible to you</span>
             </div>
 
             <div class="dashboard-items">
                 <div class="dashboard-row">
                     <div class="dashboard-cell" id="events">
                         <i class="fa-regular fa-calendar-check"></i>
-                        <span class="item-text">events</span>
+                        <span class="item-text">Events</span>
                     </div>
                     <div class="dashboard-cell" id="likes">
                         <i class="fa-regular fa-heart"></i>
-                        <span class="item-text">likes</span>
+                        <span class="item-text">Likes</span>
 
                     </div>
                 </div>
                 <div class="dashboard-row">
                     <div class="dashboard-cell" id="comments">
                         <i class="fa-regular fa-comment-dots"></i>
-                        <span class="item-text">comments</span>
+                        <span class="item-text">Comments</span>
                     </div>
 
                 </div>
@@ -87,46 +89,49 @@
         <div class="profile-section dashboard-card">
             <div class="avatar-edit-section">
                 <img class="comment-useravator user-avatar-edit" id="avatarPreview" src="" alt="User Avatar">
-                <label for="avatarUpload" class="submit-button">Upload</label>
-                <input type="file" id="avatarUpload" accept="image/*" style="display: none;">
+                <label for="avatarUpload" hidden>Avatar</label>
+                <input type="file" id="avatarUpload" accept="image/*" hidden>
+                <button for="avatarUpload" class="submit-button">Upload</button>
+                <span class="error-message" id="errorMessage">
+                    <i class="fas fa-triangle-exclamation"></i>
+                    Demo Error Message!
+                </span>
             </div>
         </div>
         <div class="profile-section dashboard-card">
-            <h4>introduction</h4>
+            <h4>Introduction</h4>
             <div class="edit-fields">
                 <div class="edit-field">
+                    <label style="display: none;"><i class="fa-solid fa-comment-dots"></i> Introduction: </label>
                     <textarea id="editIntroduction" class="form-input" rows="5"
                         placeholder="Introduce yourself ..."></textarea>
                 </div>
+                <div class="field-actions">
+                    <span class="error-message" id="errorMessage" data-field="introduction">
+                        <i class="fas fa-triangle-exclamation"></i>
+                        Demo Error Message!
+                    </span>
+                    <button class="submit-button cancel-btn" data-field="introduction">Cancel</button>
+                    <button class="submit-button" data-field="introduction">Save</button>
+                </div>
             </div>
-            <div class="field-actions password-actions">
-                <button class="submit-button cancel-btn" data-field="introduction">Cancel</button>
-                <button class="submit-button" data-field="introduction">Save</button>
-            </div>
+
         </div>
         <div class="profile-section dashboard-card">
             <h4>Profile</h4>
             <div class="edit-fields">
                 <div class="edit-field">
                     <label><i class="fa-regular fa-user"></i> Username: </label>
-                    <input type="text" id="editUsername" class="form-input">
-                    <div class="field-actions">
-                        <button class="submit-button cancel-btn" data-field="username">Cancel</button>
-                        <button class="submit-button" data-field="username">Save</button>
-                    </div>
+                    <input type="text" id="editUsername" class="form-input" placeholder="Username ...">
                 </div>
                 <div class="edit-field">
                     <label><i class="fa-solid fa-signature"></i> Name: </label>
-                    <input type="text" id="editName" class="form-input">
-                    <div class="field-actions">
-                        <button class="submit-button cancel-btn" data-field="name">Cancel</button>
-                        <button class="submit-button" data-field="name">Save</button>
-                    </div>
+                    <input type="text" id="editName" class="form-input" placeholder="Name ...">
                 </div>
                 <div class="edit-field">
                     <label><i class="fa-solid fa-venus-mars"></i> Sex: </label>
                     <select class="editSex" id="editSex">
-                        <option value="">&nbsp;</option>
+                        <option value="">Sex ...</option>
                         <option value="Male">Male</option>
                         <option value="Female">Female</option>
                         <option value="Transgender Male">Transgender Male</option>
@@ -141,26 +146,22 @@
                         <option value="I don't know">I don't know</option>
                         <option value="Prefer not to say">Prefer not to say</option>
                     </select>
-                    <div class="field-actions">
-                        <button class="submit-button cancel-btn" data-field="sex">Cancel</button>
-                        <button class="submit-button" data-field="sex">Save</button>
-                    </div>
                 </div>
                 <div class="edit-field">
                     <label><i class="fa-regular fa-envelope"></i> Email: </label>
-                    <input type="text" id="editEmail" class="form-input">
-                    <div class="field-actions">
-                        <button class="submit-button cancel-btn" data-field="email">Cancel</button>
-                        <button class="submit-button" data-field="email">Save</button>
-                    </div>
+                    <input type="text" id="editEmail" class="form-input" placeholder="Email ...">
                 </div>
                 <div class="edit-field">
                     <label><i class="fa-solid fa-mobile-screen-button"></i> Phone: </label>
-                    <input type="text" id="editPhone" class="form-input">
-                    <div class="field-actions">
-                        <button class="submit-button cancel-btn" data-field="phone">Cancel</button>
-                        <button class="submit-button" data-field="phone">Save</button>
-                    </div>
+                    <input type="text" id="editPhone" class="form-input" placeholder="Phone ...">
+                </div>
+                <div class="field-actions">
+                    <span class="error-message" id="errorMessage" data-field="profile">
+                        <i class="fas fa-triangle-exclamation"></i>
+                        Demo Error Message!
+                    </span>
+                    <button class="submit-button cancel-btn" data-field="profile">Cancel</button>
+                    <button class="submit-button" data-field="profile">Save</button>
                 </div>
             </div>
         </div>
@@ -170,17 +171,21 @@
             <div class="edit-fields edit-password-fields">
                 <div class="edit-field">
                     <label><i class="fa-solid fa-lock"></i> Old password: </label>
-                    <input type="password" id="oldPassword" class="form-input">
+                    <input type="password" id="oldPassword" class="form-input" placeholder="Old password ...">
                 </div>
                 <div class="edit-field">
                     <label><i class="fa-solid fa-key"></i> New password: </label>
-                    <input type="password" id="newPassword" class="form-input">
+                    <input type="password" id="newPassword" class="form-input" placeholder="New password ...">
                 </div>
                 <div class="edit-field">
                     <label><i class="fa-solid fa-check-double"></i> Confirm password: </label>
-                    <input type="password" id="confirmPassword" class="form-input">
+                    <input type="password" id="confirmPassword" class="form-input" placeholder="Confirm password ...">
                 </div>
-                <div class="field-actions password-actions">
+                <div class="field-actions">
+                    <span class="error-message" id="errorMessage" data-field="password">
+                        <i class="fas fa-triangle-exclamation"></i>
+                        Demo Error Message!
+                    </span>
                     <button class="submit-button cancel-btn" data-field="password">Cancel</button>
                     <button class="submit-button" data-field="password">Save</button>
                 </div>

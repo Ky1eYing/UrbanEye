@@ -2,32 +2,33 @@
 /* exported formatTimeAgo, formatDistanceAway */
 
 
+
 // Format `__ time ago`
 function formatTimeAgo(date) {
-    const now = new Date();
-    const diffInSeconds = Math.floor((now - date) / 1000);
+	const now = new Date();
+	const diffInSeconds = Math.floor((now - date) / 1000);
 
-    if (diffInSeconds < 60) {
-        return `${diffInSeconds} seconds ago`;
-    } else if (diffInSeconds < 3600) {
-        const minutes = Math.floor(diffInSeconds / 60);
-        return `${minutes} minutes ago`;
-    } else if (diffInSeconds < 86400) {
-        const hours = Math.floor(diffInSeconds / 3600);
-        return `${hours} hours ago`;
-    } else {
-        const days = Math.floor(diffInSeconds / 86400);
-        return `${days} days ago`;
-    }
-} 
+	if (diffInSeconds < 60) {
+		return `${diffInSeconds} seconds ago`;
+	} else if (diffInSeconds < 3600) {
+		const minutes = Math.floor(diffInSeconds / 60);
+		return `${minutes} minutes ago`;
+	} else if (diffInSeconds < 86400) {
+		const hours = Math.floor(diffInSeconds / 3600);
+		return `${hours} hours ago`;
+	} else {
+		const days = Math.floor(diffInSeconds / 86400);
+		return `${days} days ago`;
+	}
+}
 
 // Format `__ miles away`
 function formatDistanceAway(latitude, longitude) {
-    if (!latitude || !longitude) {
-        return;
-    }
-    let distance = Math.abs(parseFloat(latitude) - parseFloat(longitude)).toFixed(1)
-    return `${distance} miles`;
+	if (!latitude || !longitude) {
+		return;
+	}
+	let distance = Math.abs(parseFloat(latitude) - parseFloat(longitude)).toFixed(1)
+	return `${distance} miles`;
 }
 
 //same as utils/helpers.js but no id check(how to import?)

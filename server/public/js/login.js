@@ -1,44 +1,38 @@
 document.addEventListener("DOMContentLoaded", () => {
     const loginForm = document.querySelector(".login-form");
-    
+
+
+
     if (loginForm) {
         const usernameInput = document.querySelector(".username-input");
         const passwordInput = document.querySelector(".password-input");
         const loginButton = document.querySelector(".login-submit-btn");
         const errorMessage = document.querySelector("#errorMessage");
-        
-        // Clear previous errors
-        errorMessage.textContent = "";
-        errorMessage.style.display = "none";
+
+        hideErrorMessage();
 
         loginButton.addEventListener("click", async (e) => {
             e.preventDefault();
-            
-            // Clear previous errors
-            errorMessage.textContent = "";
-            errorMessage.style.display = "none";
-            
+
+            hideErrorMessage();
+
             // Get form data
             const username = usernameInput.value.trim();
             const password = passwordInput.value.trim();
-            
-            // Form validation
+
+            // TODO: Form validation
             let isValid = true;
-            
+
             if (!username) {
                 isValid = false;
-                // usernameInput.nextElementSibling.textContent = "Username is required";
-                errorMessage.innerHTML = "<i class='fas fa-triangle-exclamation'></i>" + "Password is required";
-                errorMessage.style.display = "flex";
+                return showErrorMessage("Username is required");
             }
-            
+
             if (!password) {
                 isValid = false;
-                // passwordInput.nextElementSibling.textContent = "Password is required";
-                errorMessage.innerHTML = "<i class='fas fa-triangle-exclamation'></i>" + "Password is required";
-                errorMessage.style.display = "flex";
+                return showErrorMessage("Password is required");
             }
-            
+
             // Submit form if valid
             if (isValid) {
                 try {
@@ -52,24 +46,36 @@ document.addEventListener("DOMContentLoaded", () => {
                             password: password
                         })
                     });
-                    
+
                     const data = await response.json();
-                    
+
                     if (response.ok) {
                         // Login successful, redirect to events page
                         window.location.href = "/event";
                     } else {
                         // Display error from server
-                        console.error("Login error:", data.message || "Invalid username or password");
-                        errorMessage.innerHTML = "<i class='fas fa-triangle-exclamation'></i>" + data.message || "Invalid username or password";
-                        errorMessage.style.display = "flex";
+                        let message = data.message || "Invalid username or password";
+                        console.error("Login error:", message);
+                        showErrorMessage(message);
                     }
                 } catch (error) {
-                    console.error("Login error:", error);
-                    errorMessage.innerHTML = "<i class='fas fa-triangle-exclamation'></i>" + "An error occurred. Please try again later.";
-                    errorMessage.style.display = "flex";
+                    let message = data.message || "An error occurred. Please try again later.";
+                    console.error("Login error:", message);
+                    showErrorMessage(message);
                 }
             }
         });
     }
 });
+
+function showErrorMessage(msg) {
+	const errorMessage = document.getElementById('errorMessage');
+	errorMessage.innerHTML = `<i class="fas fa-triangle-exclamation"></i> ${msg}`;
+	errorMessage.style.display = 'flex';
+}
+
+function hideErrorMessage() {
+	const errorMessage = document.getElementById('errorMessage');
+	errorMessage.style.display = 'flex';
+	errorMessage.innerHTML = '';
+}
