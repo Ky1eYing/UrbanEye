@@ -189,7 +189,7 @@ const updateEvent = async (event_id, title, content, location, category, photoUr
 		user_id: event.user_id,
 		title: checked_title,
 		content: checked_content,
-		created_at: new Date(),
+		created_at: event.created_at,
 		location: checked_location,
 		category: checked_category,
 		click_time: event.click_time,
