@@ -26,10 +26,12 @@ if (openCreateEventModalBtn) {
 
 // close create event modal
 closeCreateEventModalBtn.addEventListener("click", () => {
+    document.body.style.overflow = '';
     createEventModal.style.display = "none";
 });
 createEventModal.addEventListener("click", event => {
     if (event.target === createEventModal) {
+        document.body.style.overflow = '';
         createEventModal.style.display = "none";
     }
 });
@@ -40,6 +42,7 @@ function showCreateEventModal(eventId) {
     //  eventId = '680bc0d81cb1ed54b36c0152';
 
     // Show the modal
+    document.body.style.overflow = 'hidden';
     createEventModal.style.display = "flex";
 
     // Clear any existing error or success messages
@@ -352,7 +355,7 @@ if (submitCreateEventBtn) {
             displayFormErrorMessage("Please select a location on the map");
             return;
         }
-        
+
         // if (!imageFile && !submitCreateEventBtn.hasAttribute('data-edit-id')) {
         //     displayFormErrorMessage("Please upload an image");
         //     return;
@@ -390,13 +393,22 @@ if (submitCreateEventBtn) {
             }
 
             if (eventId) {
-                displayFormSuccessMessage(editEventId ? "Event updated successfully!" : "Event created successfully!");
-                setTimeout(() => {
-                    createEventModal.style.display = "none";
+                if (editEventId) {
+                    displayFormSuccessMessage("Event edited successfully!");
+                    setTimeout(() => {
+                        createEventModal.style.display = "none";
+                        location.reload();
+                    }, 500);
+                    
+                } else {
+                    displayFormSuccessMessage("Event created successfully!");
+                    setTimeout(() => {
+                        createEventModal.style.display = "none";
 
-                    pushEventDetail(eventId);
-                    showEventDetail();
-                }, 1000);
+                        pushEventDetail(eventId);
+                        showEventDetail();
+                    }, 500);
+                }
             } else {
                 displayFormErrorMessage(editEventId ? "Failed to update event. Please try again." : "Failed to create event. Please try again.");
             }
