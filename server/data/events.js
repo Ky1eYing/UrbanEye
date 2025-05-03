@@ -119,7 +119,7 @@ const getAllEventsByFilter = async (params = {}) => {
 		.toArray();
 
 	// 4. distance filtering
-	let filtered;
+	let filtered = candidates;
 	if (
 		distance !== "all" &&
 		userLocation &&

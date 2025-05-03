@@ -22,14 +22,16 @@ router
       sortBy,
       category,
       timeRange,
-      skip
+      skip,
+      latitude,
+      longitude
     } = req.query;
 
     let userLocation = null;
-    if (req.query.latitude && req.query.longitude) {
+    if (latitude && longitude) {
       userLocation = {
-        latitude: req.query.latitude,
-        longitude: req.query.longitude
+        latitude: latitude,
+        longitude: longitude
       };
     }
 

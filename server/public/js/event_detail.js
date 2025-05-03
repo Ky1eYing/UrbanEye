@@ -316,6 +316,9 @@ async function showEventDetail() {
     const eventDetailContainer = document.getElementById("event-detail-container");
     if (eventListContainer) eventListContainer.style.display = "none";
     if (eventDetailContainer) eventDetailContainer.style.display = "block";
+
+    // load events you may like
+    await loadNearbyPopularEvents(eventData);
 }
 
 /**
@@ -379,5 +382,106 @@ async function loadComments(eventId) {
     } catch (error) {
         console.error("Failed to load comments:", error);
         commentsList.innerHTML = '<div class="no-comments">No comments yet. Be the first to comment!</div>';
+    }
+}
+
+/**
+ * load nearby events you may like
+ */
+async function loadNearbyPopularEvents(currentEvent) {
+    // check current event location
+    if (!currentEvent || !currentEvent.location || !currentEvent.location.latitude || !currentEvent.location.longitude) {
+        console.log("can't load this event, event location missing");
+        return;
+    }
+
+    try {
+        const latitude = currentEvent.location.latitude;
+        const longitude = currentEvent.location.longitude;
+
+        const distanceOptions = ["1miles", "3miles", "5miles", "10miles", "all"];
+        let nearbyEvents = [];
+        let currentDistanceIndex = 0;
+
+        // try different radius until nearby evnets length greater than 3
+        while (nearbyEvents.length < 3 && currentDistanceIndex < distanceOptions.length) {
+            const currentDistance = distanceOptions[currentDistanceIndex];
+            const apiUrl = `/api/events/filter?distance=${currentDistance}&sortBy=views&skip=10&latitude=${encodeURIComponent(latitude)}&longitude=${encodeURIComponent(longitude)}`;
+            const response = await fetch(apiUrl);
+
+            if (!response.ok) {
+                throw new Error(`get nearby events failed: ${response.status}`);
+            }
+
+            const data = await response.json();
+            if (data.code === 200 && data.data) {
+                // drop current event
+                const filteredEvents = data.data.filter(event => event._id !== currentEvent._id);
+                nearbyEvents = [...filteredEvents];
+
+                // if nearbyEvents.length greater than 3
+                if (nearbyEvents.length >= 3) {
+                    break;
+                }
+            }
+
+            currentDistanceIndex++;
+        }
+
+        if (nearbyEvents.length === 0) {
+            console.log("no nearby events near this event");
+            return;
+        }
+
+        const relatedEventsList = document.getElementById("related-events-list");
+
+        if (relatedEventsList) {
+            relatedEventsList.innerHTML = '';
+            // only show 3 events
+            nearbyEvents.slice(0, 3).forEach(event => {
+                const eventItemHTML = `
+                    <div class="event-item" data-event-id="${event._id}">
+                        <div class="event-image">
+                            <img src="${event.photoUrl || 'https://images.unsplash.com/photo-1503179008861-d1e2b41f8bec?q=80&w=3869&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'}" 
+                                 alt="${event.title || 'Event Image'}"
+                                 onerror="this.src='https://images.unsplash.com/photo-1503179008861-d1e2b41f8bec?q=80&w=3869&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'">
+                        </div>
+                        <div class="event-details">
+                            <h3>${event.title || 'Untitled Event'}</h3>
+                            <div class="event-meta">
+                                <span class="event-location">${event.location?.address || 'Unknown Location'}</span>
+                                <div class="event-distance-time-ago">
+                                    <span class="event-distance">${formatDistanceAway(event.location?.latitude, event.location?.longitude) || 'Unknown distance'}</span>
+                                    <span>&nbsp;· &nbsp;</span>
+                                    <span class="event-time-ago">${formatTimeAgo(new Date(event.created_at)) || 'Unknown time'}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                relatedEventsList.insertAdjacentHTML('beforeend', eventItemHTML);
+            });
+
+            // listen click 
+            const eventItems = relatedEventsList.querySelectorAll(".event-item");
+            eventItems.forEach(item => {
+                item.addEventListener('click', async (event) => {
+                    const eventId = item.getAttribute('data-event-id');
+
+                    // focusMapOnEvent
+                    if (typeof window.focusMapOnEvent === 'function') {
+                        window.focusMapOnEvent(eventId);
+                    }
+
+                    // jump to event detail 
+                    pushEventDetail(eventId);
+                    await showEventDetail();
+                });
+            });
+        }
+
+    } catch (error) {
+        console.error("failed to load nearby events:", error);
     }
 }
