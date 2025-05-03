@@ -47,6 +47,19 @@ const createEvent = async (user_id, title, content, location, category, photoUrl
 	return event;
 };
 
+function haversineDistanceKm(lat1, lon1, lat2, lon2) {
+	const toRad = v => (v * Math.PI) / 180;
+	const R = 6371;
+	const dLat = toRad(lat2 - lat1);
+	const dLon = toRad(lon2 - lon1);
+	const a =
+		Math.sin(dLat / 2) ** 2 +
+		Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
+		Math.sin(dLon / 2) ** 2;
+	const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+	return R * c;
+}
+
 // get all events by filter
 const getAllEventsByFilter = async (params = {}) => {
 	const {
@@ -94,28 +107,49 @@ const getAllEventsByFilter = async (params = {}) => {
 		query.created_at = { $gte: dateFilter };
 	}
 
-	// 3. distance filtering
-	if (distance !== "all" && userLocation && userLocation.latitude && userLocation.longitude) {
-		const lat = parseFloat(userLocation.latitude);
-		const lon = parseFloat(userLocation.longitude);
-		const miles = parseInt(distance.replace("miles", ""));
-		const radius = miles / 3958.8;
-		query.location = {
-			$geoWithin: {
-				$centerSphere: [[lon, lat], radius]
+	// 3. sort
+	const sortOption = sortBy === "views"
+		? { click_time: -1 }
+		: { created_at: -1 };
+
+	// do first filter
+	const candidates = await eventsCollection
+		.find(query)
+		.sort(sortOption)
+		.toArray();
+
+	// 4. distance filtering
+	let filtered;
+	if (
+		distance !== "all" &&
+		userLocation &&
+		userLocation.latitude &&
+		userLocation.longitude
+	) {
+		const miles = parseFloat(distance.replace("miles", ""), 10);
+		const maxKm = miles * 1.60934;
+		const lat1 = parseFloat(userLocation.latitude);
+		const lon1 = parseFloat(userLocation.longitude);
+
+		filtered = candidates.filter(evt => {
+			if (!evt.location || !evt.location.latitude || !evt.location.longitude) {
+				return false;
 			}
-		};
+			const lat2 = parseFloat(evt.location.latitude);
+			const lon2 = parseFloat(evt.location.longitude);
+			const d = haversineDistanceKm(lat1, lon1, lat2, lon2);
+			evt._distance = d;
+			return d <= maxKm;
+		});
 	}
 
-	// 4. sort
-	const sortOption = sortBy === "views" ? { click_time: -1 } : { created_at: -1 };
+	// 5. skip count
+	const results = filtered.slice(0, parseInt(skip, 10));
 
-	const eventSorted = eventsCollection.find(query).sort(sortOption).limit(skip);
-
-	const results = await eventSorted.toArray();
 	return results.map(evt => {
-		evt._id = evt._id.toString();
-		return evt;
+		const { _distance, ...rest } = evt;
+		rest._id = rest._id.toString();
+		return rest;
 	});
 };
 
