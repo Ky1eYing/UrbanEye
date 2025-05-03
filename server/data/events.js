@@ -51,10 +51,10 @@ const createEvent = async (user_id, title, content, location, category, photoUrl
 const getAllEventsByFilter = async (params = {}) => {
 	const {
 		titlelike = "", // title fuzzy matching
-		distance = "1miles", // default 1 miles, optional "3miles","5miles","10miles"
-		sortBy = "views", // default newest, optional "views"
+		distance = "all", // default all, optional "1miles","3miles","5miles","10miles"
+		sortBy = "views", // default views, optional "newest"
 		category = "all", // default all, optional specific categories
-		timeRange = "all", // default all, optional "1day","7days","30days"
+		timeRange = "all", // default all, optional "1","7","30","365"
 		userLocation = null, // { latitude, longitude }
 		skip = 200 // events per page
 	} = params;
@@ -95,7 +95,7 @@ const getAllEventsByFilter = async (params = {}) => {
 	}
 
 	// 3. distance filtering
-	if (userLocation && userLocation.latitude && userLocation.longitude) {
+	if (distance !== "all" && userLocation && userLocation.latitude && userLocation.longitude) {
 		const lat = parseFloat(userLocation.latitude);
 		const lon = parseFloat(userLocation.longitude);
 		const miles = parseInt(distance.replace("miles", ""));
