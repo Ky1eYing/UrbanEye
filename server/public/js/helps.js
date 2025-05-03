@@ -1,4 +1,3 @@
-
 /* exported formatTimeAgo, formatDistanceAway */
 
 
@@ -24,11 +23,29 @@ function formatTimeAgo(date) {
 
 // Format `__ miles away`
 function formatDistanceAway(latitude, longitude) {
-	if (!latitude || !longitude) {
-		return;
+	if (!latitude || !longitude || !window.preFetchedPosition) {
+		return "Unknown distance";
 	}
-	let distance = Math.abs(parseFloat(latitude) - parseFloat(longitude)).toFixed(1)
-	return `${distance} miles`;
+
+	// use haversine
+	const toRad = x => x * Math.PI / 180;
+	const R = 6371;
+
+	const lat1 = toRad(window.preFetchedPosition.lat);
+	const lat2 = toRad(parseFloat(latitude));
+	const deltaLat = toRad(parseFloat(latitude) - window.preFetchedPosition.lat);
+	const deltaLng = toRad(parseFloat(longitude) - window.preFetchedPosition.lng);
+
+	const a = Math.sin(deltaLat / 2) * Math.sin(deltaLat / 2) +
+		Math.cos(lat1) * Math.cos(lat2) *
+		Math.sin(deltaLng / 2) * Math.sin(deltaLng / 2);
+	const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+	const distance = R * c;
+
+	const distanceMiles = (distance * 0.621371).toFixed(1);
+
+	return `${distanceMiles} miles`;
 }
 
 //same as utils/helpers.js but no id check(how to import?)
