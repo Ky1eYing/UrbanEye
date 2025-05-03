@@ -19,7 +19,7 @@ async function showMyEventsList() {
 
     // Get event list container
     const eventList = document.querySelector('.event-list');
-    
+
 
     if (!eventList) return;
 
@@ -28,8 +28,8 @@ async function showMyEventsList() {
     eventList.innerHTML = '<div class="loading"><p>Loading ...</p></div>';
 
     // Fetch events from backend using our new function
-    allEvents = await getUserEvents(userId) || [];
-    console.log("Events fetched:", allEvents ? allEvents.length : 0);
+    allEvents = await getUserLikes(userId) || [];
+    console.log("Events fetched:", allEvents ? allEvents : 0);
 
     renderEvents(allEvents);
     console.log("Event list displayed successfully");
@@ -83,8 +83,8 @@ function renderEvents(events) {
                     </div>
                 </div>
                 <div class="event-actions">
-                    <button class="edit-btn"><i class="fa-solid fa-pen-to-square"></i></button>
-                    <button class="delete-btn"><i class="fa-solid fa-trash-can"></i></button>
+                    <i class="fas fa-heart liked"></i>
+                    <span>${new Date(event.liked_at).toLocaleString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hour12: true }) || 'Unknown time'}</span>
                 </div>
             </div>
         `;
@@ -105,41 +105,13 @@ function renderEvents(events) {
             // jump to event detail page
             window.location.href = `/event?_id=${eventId}`;
         });
-
-        const editBtn = item.querySelector('.edit-btn');
-        editBtn.addEventListener('click', (e) => {
-            e.stopPropagation(); // Prevent the click event from bubbling up to the item
-            console.log(`Edit clicked for event ${eventId}`);
-            showCreateEventModal(eventId);
-        });
-
-        const deleteBtn = item.querySelector('.delete-btn');
-        deleteBtn.addEventListener('click', async (e) => {
-            e.stopPropagation(); // Prevent the click event from bubbling up to the item
-
-            console.log(`Delete clicked for event ${eventId}`);
-
-            if (!eventId) {
-                console.error('Missing eventId on item');
-                return;
-            }
-
-            // Show confirmation modal
-            const confirmed = await showConfirmModal(
-                'Delete?',
-                'Are you sure you want to delete this event?',
-                'Delete',
-                'Cancel'
-            );
-            if (!confirmed) return;
-
-            const success = await deleteUserEvent(eventId);
-            if (success) {
-                item.remove(); // Remove the event item from the list
-            } else {
-                alert('Failed to delete the event. Please try again.');
-            }
-        });
-
     });
 }
+
+window.addEventListener('pageshow', e => {
+    // event.persisted is true if the page was loaded from the cache
+    // refresh the page to show the latest data
+    if (e.persisted) {
+      showMyEventsList();
+    }
+  });

@@ -1759,7 +1759,7 @@ section {
     color: #2ab5a5;
 }
 
-.action-btn.liked {
+.liked {
     color: var(--accent-red);
     font-weight: 400;
 }
@@ -1923,12 +1923,12 @@ section {
 } */
 
 
-.my-events .search-bar {
+.my .search-bar {
     width: 100%;
     margin-right: 0;
 }
 
-.my-events .event-item {
+.my .event-item {
     position: relative;
     cursor: default;
 }
@@ -1940,6 +1940,7 @@ section {
     display: flex;
     gap: 12px;
     padding: 4px 8px;
+    align-items: center;
 
     opacity: 0;
     pointer-events: none; /* No mouse click when not show */
@@ -1952,6 +1953,27 @@ section {
     opacity: 1;
     pointer-events: auto;
     transform: translateY(0);
+}
+
+.my-likes .event-actions{
+    opacity: 1;
+    transform: translateY(4px);
+    border: var(--border-color) 0px solid;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-color) 2px 2px 3px;
+    padding: 2px 10px;
+    font-size: 0.7rem;
+    /* color: var(--gray-dark); */
+}
+
+.my-likes .event-item:hover .event-actions {
+    transform: translateY(0);
+}
+
+.my-likes .event-actions i,
+.my-likes .event-actions span{
+    font-size: 0.7rem;
+    /* color: var(--gray-dark); */
 }
 
 .event-actions button {

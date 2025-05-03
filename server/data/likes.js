@@ -102,10 +102,15 @@ const getLikeByUserId = async (user_id) => {
     );
 
     return {
-      event_id: event._id.toString(),
-      event_title: event.title,
-      like_id: userLike._id.toString(),
-      liked_at: userLike.liked_at,
+      _id:   event._id,
+      title:      event.title,
+      content:    event.content,
+      location:   event.location,
+      category:   event.category,
+      created_at: event.created_at,
+      photoUrl:   event.photoUrl,
+      like_id: userLike._id,
+      liked_at:   userLike.liked_at
     };
   });
 
