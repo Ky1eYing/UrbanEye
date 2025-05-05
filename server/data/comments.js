@@ -95,9 +95,9 @@ const getAllCommentsByUserId = async (userId) => {
     e.comments
       .filter((c) => c.user_id.toString() === userId)
       .map((comment) => ({
-        ...comment,
-        event_id: e._id.toString(),
-        event_title: e.title,
+        comment: comment,
+        _id: e._id.toString(),
+        title: e.title,
       }))
   );
 

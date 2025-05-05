@@ -319,6 +319,36 @@ async function addUserComment(userId, eventId, content) {
     }
 }
 
+async function getCommentbyId(commentId) {
+    try {
+        if (!commentId) {
+            console.error('Error: Comment ID is required');
+            return null;
+        }
+        
+        const response = await fetch(`/api/comments/${commentId}`);
+        
+        if (!response.ok) {
+            console.error(`Error fetching comment (${response.status}): ${response.statusText}`);
+            return null;
+        }
+        
+        const data = await response.json();
+        
+        if (data.code === 200 && data.data) {
+            console.log('Comment fetched successfully:', data.data);
+            return data.data;
+        } else {
+            console.error('Error in API response:', data.message || 'Unknown error');
+            return null;
+        }
+    } catch (error) {
+        console.error('Network error when fetching comment:', error);
+        return null;
+    }
+    
+}
+
 /**
  * Update a user's comment
  */

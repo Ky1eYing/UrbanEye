@@ -36,6 +36,7 @@ createEventModal.addEventListener("click", event => {
     }
 });
 
+
 // Show create event modal
 function showCreateEventModal(eventId) {
 
@@ -86,19 +87,22 @@ function showCreateEventModal(eventId) {
                     categoryRadio.checked = true;
                 }
 
-                // Set location data for the map
                 if (eventData.location) {
                     geolocationCenter = {
                         lat: parseFloat(eventData.location.latitude),
                         lng: parseFloat(eventData.location.longitude)
                     };
                     selectedMarkerPosition = { ...geolocationCenter };
-
-                    // Update address display
-                    const addressOfMap = document.getElementById("addressOfMap");
-                    if (addressOfMap) {
-                        addressOfMap.innerHTML = `<i class="fas fa-map-marker-alt"></i>${eventData.location.address || 'Selected location'}`;
-                    }
+                
+                    setTimeout(() => {
+                        if (createMap && selectedMarker) {
+                            createMap.setCenter(geolocationCenter);
+                            selectedMarker.setPosition(geolocationCenter);
+                            selectedMarkerPosition = geolocationCenter;
+                
+                            updateAddressDisplay(selectedMarkerPosition);
+                        }
+                    }, 300); // Delay to ensure map is initialized
                 }
 
                 if (submitCreateEventBtn) {
@@ -399,7 +403,7 @@ if (submitCreateEventBtn) {
                         createEventModal.style.display = "none";
                         location.reload();
                     }, 500);
-                    
+
                 } else {
                     displayFormSuccessMessage("Event created successfully!");
                     setTimeout(() => {

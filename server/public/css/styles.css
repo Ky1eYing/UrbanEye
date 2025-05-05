@@ -1270,6 +1270,7 @@ section {
     box-shadow: 0 4px 15px var(--shadow-color);
     display: flex;
     flex-direction: column;
+    
 }
 
 .alert-modal{
@@ -1294,7 +1295,7 @@ section {
     gap: 0;
     width: auto;
     min-width: auto;
-
+    overflow-y: auto;
     animation: popupIn 0.3s ease forwards;
 }
 
@@ -1311,7 +1312,11 @@ section {
 
 .modal-content h2 {
     color: var(--primary-blue-light);
-    /* margin-bottom: var(--spacing-md); */
+    margin-bottom: var(--spacing-md);
+    text-align: center;
+}
+
+.modal-content h4 {
     text-align: center;
 }
 
@@ -1710,7 +1715,7 @@ section {
 
 .comment-content {
     line-height: 1.2;
-    /* word-break: break-word; */
+    word-break: break-word;
 }
 
 
@@ -1931,6 +1936,7 @@ section {
 .my .event-item {
     position: relative;
     cursor: default;
+    /* align-items: center; */
 }
 
 .event-actions {
@@ -1948,7 +1954,7 @@ section {
     transition: all 0.3s ease;
 
 }
-
+.my-comments .event-item:hover .event-actions,
 .my-events .event-item:hover .event-actions {
     opacity: 1;
     pointer-events: auto;
@@ -2014,4 +2020,26 @@ section {
     background-color: var(--accent-red);
     color: var(--white);
     transform: translateY(-2px);
+}
+
+.my-comments .event-item:hover .quote {
+    border-left: 5px solid var(--primary-blue-dark);
+}
+
+.quote {
+    border-left: 3px solid var(--primary-blue-light);
+    border-radius: 4px;
+    margin: 6px 2px;
+    padding-left: 10px;
+    color: #333;
+  }
+
+  .quote  .comment-time{
+    margin: 6px 0px;
+  }
+
+#commentInput{
+    width: 500px;
+    margin-top: var(--spacing-md);
+    margin-bottom: var(--spacing-sm);
 }

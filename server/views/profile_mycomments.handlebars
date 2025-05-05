@@ -1,0 +1,69 @@
+<div class="profile-content">
+    <div class="profile-view my my-comments" id="myComments">
+        <div class="profile-section dashboard-card">
+            <div class="edit-header">
+                <button class="back-button" id="backToProfileBtn"><i class="fas fa-angle-left"></i></button>
+                <h3>My Comments</h3>
+            </div>
+        </div>
+        <div class="profile-section dashboard-card">
+            <div class="search-filter">
+                <input type="text" placeholder="Search for event title and comment content ..." class="search-bar">
+            </div>
+            <div class="event-list">
+                <div class="event-item" data-event-id="${event._id}">
+                    <div class="event-details">
+                        <h3>Untitled Event</h3>
+                        <div class="event-meta">
+                            <blockquote class="quote">
+                                <div class="comment-content">
+                                    The only limit to our realization of tomorrow is our doubts of today. The only limit to our realization of tomorrow is our doubts of today.
+                                </div>
+                                <div class="comment-time">Apr 10, 17:37</div>
+                            </blockquote>
+                        </div>
+                    </div>
+                    <div class="event-actions">
+                        <button class="edit-btn"><i class="fa-solid fa-pen-to-square"></i></button>
+                        <button class="delete-btn"><i class="fa-solid fa-trash-can"></i></button>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+
+    </div>
+
+
+
+</div>
+
+
+<div id="commentModal" class="alert-modal modal-overlay">
+    <div class="modal-content">
+        <h2 id="commentTitle">Edit Comment</h3>
+        <h4 id="commentText">Edit yout existing comment</h4>
+        <input type="text" class="form-input" id="commentInput" placeholder="Add your comment..." />
+        <div class="modal-actions">
+            <button id="commentNo" class="submit-button cancel-btn">Cancel</button>
+            <button id="postCommentBtn" class="submit-button">Update</button>
+        </div>
+    </div>
+</div>
+
+
+
+
+<script>
+    const isLoggedIn = {{#if user}} true {{else}} false {{/if}};
+    console.log('isLoggedIn: ', isLoggedIn);
+
+    {{#if user}}
+    const userInfo = {{{json user}}};
+    console.log('userInfo: {_id: "", userName: "", name: ""}: ', userInfo);
+    {{/if}}
+</script>
+
+<script src="/js/profile_mycomments.js"></script>
+<script src="/js/profile_api.js"></script>
