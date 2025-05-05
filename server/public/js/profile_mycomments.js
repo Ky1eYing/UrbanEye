@@ -165,7 +165,7 @@ function showEditCommentModal(commentId) {
     // Edit comment
     const postCommentBtn = document.getElementById("postCommentBtn");
     if (postCommentBtn && commentInput) {
-        postCommentBtn.addEventListener("click", async () => {
+        postCommentBtn.onclick = async () => {
             const commentText = commentInput.value.trim();
 
             if (!commentText) {
@@ -201,7 +201,7 @@ function showEditCommentModal(commentId) {
             modal.style.display = 'none';
             location.reload();
             resolve(true);
-        });
+        };
 
         // Add enter key support for posting comments
         commentInput.addEventListener("keypress", (e) => {
