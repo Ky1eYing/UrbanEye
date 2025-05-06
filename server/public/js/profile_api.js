@@ -428,11 +428,6 @@ async function deleteUserComment(commentId) {
  */
 async function updateUserProfile(userId, profileData) {
     try {
-        if (!userId || !profileData) {
-            console.error('Error: User ID and profile data are required');
-            return { success: false, message: 'User ID and profile data are required' };
-        }
-        
         const response = await fetch(`/api/users/${userId}`, {
             method: 'PUT',
             headers: {
@@ -441,22 +436,19 @@ async function updateUserProfile(userId, profileData) {
             body: JSON.stringify(profileData)
         });
         
-        if (!response.ok) {
-            console.error(`Error updating profile (${response.status}): ${response.statusText}`);
-            return { success: false, message: 'Failed to update profile' };
-        }
-        
         const data = await response.json();
         
-        if (data.code === 200) {
+        if (response.ok) {
             console.log('Profile updated successfully');
-            return { success: true, message: 'Profile updated successfully', data: data.data };
-        } else {
-            console.error('Error updating profile:', data.message || 'Unknown error');
-            return { success: false, message: data.message || 'Unknown error' };
         }
+        
+        return { 
+            success: response.ok, 
+            message: data.message || (response.ok ? 'Profile updated successfully' : 'Failed to update profile'),
+            data: data.data
+        };
     } catch (error) {
-        console.error('Network error when updating profile:', error);
+        console.error('Error updating profile:', error);
         return { success: false, message: 'Network error when updating profile' };
     }
 }

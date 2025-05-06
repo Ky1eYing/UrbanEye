@@ -211,6 +211,12 @@
 </div> --}}
 
 
-
-
+<script>
+  console.log("User data from template:", {{{json user}}});
+</script>
+<script>
+  // Make user info available to JS
+  const userInfo = {{{json user}}};
+</script>
+<script src="/js/profile_api.js"></script>
 <script src="/js/profile.js"></script>

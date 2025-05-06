@@ -1,4 +1,35 @@
-document.addEventListener("DOMContentLoaded", () => {
+let sexChoices;
+
+document.addEventListener("DOMContentLoaded", async () => {
+    // Fetch complete user data from API
+    if (userInfo && userInfo._id) {
+        try {
+            const response = await fetch(`/api/users/${userInfo._id}`);
+            if (response.ok) {
+                const data = await response.json();
+                if (data.code === 200 && data.data) {
+                    const completeUserInfo = data.data;
+                    
+                    // Update userInfo
+                    userInfo.name = completeUserInfo.name || userInfo.name;
+                    userInfo.introduction = completeUserInfo.introduction || "";
+                    userInfo.sex = completeUserInfo.sex || "";
+                    userInfo.email = completeUserInfo.email || "";
+                    userInfo.phone = completeUserInfo.phone || "";
+                    
+                    document.getElementById("nameDisplay").textContent = userInfo.name;
+                    document.getElementById("usernameDisplay").textContent = `@${userInfo.userName}`;
+                    document.getElementById("introductionDisplay").textContent = userInfo.introduction || "No introduction provided";
+                    document.getElementById("sexDisplay").textContent = userInfo.sex || "Not specified";
+                    document.getElementById("emailDisplay").textContent = userInfo.email || "No email provided";
+                    document.getElementById("phoneDisplay").textContent = userInfo.phone || "No phone provided";                    
+                }
+            }
+        } catch (error) {
+            console.error("Error fetching complete user data:", error);
+        }
+    }
+    
     const profileView = document.getElementById("profileView");
     const editProfileView = document.getElementById("editProfileView");
     const editProfileBtn = document.getElementById("editProfileBtn");
@@ -44,8 +75,12 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("editEmail").value = oldEmail;
     document.getElementById("editPhone").value = oldPhone;
 
+    // disable username editing
+    document.getElementById("editUsername").disabled = true;
+    document.getElementById("editUsername").style.opacity = "0.7";
+
     const sexSelect = document.getElementById("editSex");
-    let sexChoices;
+    //let sexChoices;
     if (sexSelect) {
         sexChoices = new Choices(sexSelect, {
             searchEnabled: false,
@@ -66,47 +101,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const cancelBtns = document.querySelectorAll(".cancel-btn");
     const saveBtns = document.querySelectorAll(".save-btn");
 
-    // cancelBtns.forEach(btn => {
-    //     btn.addEventListener("click", (e) => {
-    //         e.preventDefault();
-    //         const field = e.target.getAttribute("data-field");
-    //         if (field === "name" || field === "sex" || field === "email") {
-    //             // 对于这类字段，点 cancel 则恢复原值
-    //             revertField(field);
-    //         } else if (field === "password") {
-    //             // 清空密码输入
-    //             document.getElementById("oldPassword").value = "";
-    //             document.getElementById("newPassword").value = "";
-    //             document.getElementById("confirmPassword").value = "";
-    //         } else {
-    //             // 其他处理
-    //         }
-    //     });
-    // });
-
-    // saveBtns.forEach(btn => {
-    //     btn.addEventListener("click", async (e) => {
-    //         e.preventDefault();
-    //         const field = e.target.getAttribute("data-field");
-    //         if (field === "name") {
-    //             // 发送AJAX请求更新name
-    //             const newName = document.getElementById("editName").value.trim();
-    //             await updateProfileField("username", newName);
-    //         } else if (field === "sex") {
-    //             const newSex = document.getElementById("editSex").value;
-    //             await updateProfileField("sex", newSex);
-    //         } else if (field === "email") {
-    //             const newEmail = document.getElementById("editEmail").value.trim();
-    //             await updateProfileField("email", newEmail);
-    //         } else if (field === "password") {
-    //             const oldPwd = document.getElementById("oldPassword").value.trim();
-    //             const newPwd = document.getElementById("newPassword").value.trim();
-    //             const confirmPwd = document.getElementById("confirmPassword").value.trim();
-    //             await updatePassword(oldPwd, newPwd, confirmPwd);
-    //         }
-    //     });
-    // });
-
     // 更新头像事件
     const avatarUpload = document.getElementById("avatarUpload");
     if (avatarUpload) {
@@ -121,6 +115,8 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
+    // form submission handlers for profile updates
+    setupFormSubmitHandlers();
 
 });
 
@@ -130,7 +126,7 @@ document.addEventListener("DOMContentLoaded", () => {
 function revertField(field) {
     // 例如从DOM中获取旧值
     if (field === "name") {
-        const oldName = document.getElementById("usernameDisplay").textContent;
+        const oldName = document.getElementById("nameDisplay").textContent.trim();
         document.getElementById("editName").value = oldName;
     } else if (field === "sex") {
         const oldSex = document.getElementById("sexDisplay").textContent;
@@ -138,6 +134,9 @@ function revertField(field) {
     } else if (field === "email") {
         const oldEmail = document.getElementById("emailDisplay").textContent;
         document.getElementById("editEmail").value = oldEmail;
+    } else if (field === "phone") {
+        const oldPhone = document.getElementById("phoneDisplay").textContent.trim();
+        document.getElementById("editPhone").value = oldPhone;
     }
 }
 
@@ -213,3 +212,275 @@ function previewAvatar(file) {
     };
     reader.readAsDataURL(file);
 } 
+
+function setupFormSubmitHandlers() {
+    // save buttons
+    const introSaveBtn = document.querySelector('button.submit-button[data-field="introduction"]:not(.cancel-btn)');
+    const profileSaveBtn = document.querySelector('button.submit-button[data-field="profile"]:not(.cancel-btn)');
+    const passwordSaveBtn = document.querySelector('button.submit-button[data-field="password"]:not(.cancel-btn)');
+    
+    if (introSaveBtn) {
+        introSaveBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            saveIntroduction();
+        });
+    }
+    
+    if (profileSaveBtn) {
+        profileSaveBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            saveProfileInfo();
+        });
+    }
+    
+    if (passwordSaveBtn) {
+        passwordSaveBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            savePassword();
+        });
+    }
+    
+    // Cancel button handlers
+    const cancelBtns = document.querySelectorAll('.cancel-btn');
+    cancelBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+            const field = this.getAttribute('data-field');
+            
+            const errorMsg = document.querySelector(`[data-field="${field}"]#errorMessage`);
+            if (errorMsg) {
+                errorMsg.style.display = 'none';
+            }
+            
+            if (field === "name" || field === "sex" || field === "email") {
+                revertField(field);
+            } else if (field === "introduction") {
+                document.getElementById("editIntroduction").value = document.getElementById("introductionDisplay").textContent.trim();
+            } else if (field === "profile") {
+                revertField("name");
+                revertField("email");
+                revertField("phone");
+                
+                const oldSex = document.getElementById("sexDisplay").textContent.trim();
+                const sexSelect = document.getElementById("editSex");
+                
+                // Destroy and recreate the Choices instance
+                if (sexSelect && typeof Choices !== 'undefined') {
+                    if (sexChoices) {
+                        sexChoices.destroy();
+                    }
+                    
+                    sexSelect.value = oldSex;
+                    
+                    sexChoices = new Choices(sexSelect, {
+                        searchEnabled: false,
+                        itemSelectText: '',
+                        shouldSort: false,
+                        allowHTML: true
+                    });
+                    
+                    if (oldSex) {
+                        sexChoices.setChoiceByValue(oldSex);
+                    }
+                }
+            } else if (field === "password") {
+                document.getElementById("oldPassword").value = "";
+                document.getElementById("newPassword").value = "";
+                document.getElementById("confirmPassword").value = "";
+            }
+        });
+    });
+}
+
+// Save introduction
+function saveIntroduction() {
+    const introduction = document.getElementById("editIntroduction").value.trim();
+    
+    clearErrorMessage("introduction");
+    
+    // Validate introduction (max 200 characters)
+    if (introduction && introduction.length > 200) {
+        showErrorMessage("introduction", "Introduction must be less than 200 characters");
+        return;
+    }
+    
+    if (userInfo && userInfo._id) {
+        // Get current values for other fields to include in the update
+        updateUserProfile(userInfo._id, {
+            name: document.getElementById("editName").value.trim(),
+            introduction: introduction,
+            sex: document.getElementById("editSex").value,
+            email: document.getElementById("editEmail").value.trim(),
+            phone: document.getElementById("editPhone").value.trim()
+        }).then(result => {
+            if (result.success) {
+                document.getElementById("introductionDisplay").textContent = introduction;
+                
+                userInfo.introduction = introduction;
+                
+                showSuccessMessage("introduction", "Introduction updated successfully");
+                
+                setTimeout(() => {
+                    editProfileView.style.display = 'none';
+                    profileView.style.display = 'flex';
+                }, 1500);
+            } else {
+                showErrorMessage("introduction", result.message || "Failed to update introduction");
+            }
+        }).catch(error => {
+            console.error("Error updating introduction:", error);
+            showErrorMessage("introduction", "An error occurred. Please try again later.");
+        });
+    }
+}
+
+// Save profile information
+function saveProfileInfo() {
+    const name = document.getElementById("editName").value.trim();
+    const sex = document.getElementById("editSex").value;
+    const email = document.getElementById("editEmail").value.trim();
+    const phone = document.getElementById("editPhone").value.trim();
+    
+    clearErrorMessage("profile");
+    
+    if (!name) {
+        showErrorMessage("profile", "Name is required");
+        return;
+    }
+    
+    if (email && !isValidEmail(email)) {
+        showErrorMessage("profile", "Invalid email format");
+        return;
+    }
+    
+    if (phone && !isValidPhone(phone)) {
+        showErrorMessage("profile", "Phone number must contain only digits and an optional leading '+', and be 7 to 15 characters long");
+        return;
+    }
+    
+    if (sex && sex.length > 20) {
+        showErrorMessage("profile", "Sex must be less than 20 characters");
+        return;
+    }
+    
+    // Save profile information
+    if (userInfo && userInfo._id) {
+        const updatedData = {
+            name: name,
+            introduction: document.getElementById("editIntroduction").value.trim(),
+            sex: sex,
+            email: email,
+            phone: phone
+        };
+        
+        updateUserProfile(userInfo._id, updatedData).then(result => {
+            if (result.success) {
+                // Update the display elements with the new values
+                document.getElementById("nameDisplay").textContent = name;
+                document.getElementById("sexDisplay").textContent = sex || "Not specified";
+                document.getElementById("emailDisplay").textContent = email || "No email provided";
+                document.getElementById("phoneDisplay").textContent = phone || "No phone provided";
+                document.getElementById("introductionDisplay").textContent = updatedData.introduction || "No introduction provided";
+                
+                userInfo.name = name;
+                userInfo.sex = sex;
+                userInfo.email = email;
+                userInfo.phone = phone;
+                userInfo.introduction = updatedData.introduction;
+                
+                showSuccessMessage("profile", "Profile updated successfully");
+                
+                setTimeout(() => {
+                    editProfileView.style.display = 'none';
+                    profileView.style.display = 'flex';
+                }, 1500);
+            } else {
+                showErrorMessage("profile", result.message || "Failed to update profile");
+            }
+        }).catch(error => {
+            console.error("Error updating profile:", error);
+            showErrorMessage("profile", "An error occurred. Please try again later.");
+        });
+    }
+}
+
+// Save password
+function savePassword() {
+    const oldPassword = document.getElementById("oldPassword").value.trim();
+    const newPassword = document.getElementById("newPassword").value.trim();
+    const confirmPassword = document.getElementById("confirmPassword").value.trim();
+    
+    clearErrorMessage("password");
+    
+    // Validate passwords
+    if (!oldPassword) {
+        showErrorMessage("password", "Current password is required");
+        return;
+    }
+    
+    if (!newPassword) {
+        showErrorMessage("password", "New password is required");
+        return;
+    }
+    
+    if (newPassword !== confirmPassword) {
+        showErrorMessage("password", "Passwords do not match");
+        return;
+    }
+    
+    if (userInfo && userInfo._id) {
+        updateUserPassword(userInfo._id, oldPassword, newPassword)
+            .then(result => {
+                if (result.success) {
+                    document.getElementById("oldPassword").value = "";
+                    document.getElementById("newPassword").value = "";
+                    document.getElementById("confirmPassword").value = "";
+                    
+                    showSuccessMessage("password", "Password updated successfully");
+                    
+                    setTimeout(() => {
+                        window.location.href = "/login";
+                    }, 1500);
+                } else {
+                    showErrorMessage("password", result.message || "Failed to update password");
+                }
+            })
+            .catch(error => {
+                console.error("Error updating password:", error);
+                showErrorMessage("password", "An error occurred. Please try again later.");
+            });
+    }
+}
+
+// Helper functions for validation
+function isValidEmail(email) {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+}
+
+function isValidPhone(phone) {
+    const phoneRegex = /^\+?\d{7,15}$/;
+    return phoneRegex.test(phone);
+}
+
+function showErrorMessage(field, message) {
+    const errorElement = document.querySelector(`[data-field="${field}"]#errorMessage`);
+    if (errorElement) {
+        errorElement.innerHTML = `<i class="fas fa-triangle-exclamation"></i> ${message}`;
+        errorElement.style.display = "flex";
+    }
+}
+
+function showSuccessMessage(field, message) {
+    const errorElement = document.querySelector(`[data-field="${field}"]#errorMessage`);
+    if (errorElement) {
+        errorElement.innerHTML = `<i class="fas fa-check-circle"></i> ${message}`;
+        errorElement.style.display = "flex";
+    }
+}
+
+function clearErrorMessage(field) {
+    const errorElement = document.querySelector(`[data-field="${field}"]#errorMessage`);
+    if (errorElement) {
+        errorElement.style.display = "none";
+    }
+}
