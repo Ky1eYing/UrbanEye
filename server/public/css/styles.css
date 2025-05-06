@@ -318,6 +318,15 @@ header .container {
     /* padding-right: 15px; */
 }
 
+.detail-section .event-list {
+
+
+    max-height: none;
+    overflow-y: fixed;
+    overscroll-behavior: none;
+    /* padding-right: 15px; */
+}
+
 
 /* 自定义滚动条样式 */
 /* .event-list::-webkit-scrollbar {
@@ -342,11 +351,11 @@ header .container {
 
 .event-item {
     display: flex;
-    min-height: 80px;
+    /* min-height: 80px; */
     min-width: 100px;
     border: 1px solid var(--border-color);
     border-radius: var(--radius);
-    overflow: hidden;
+    /* overflow: hidden; */
     padding: 10px;
     cursor: pointer;
     transition: background-color 0.3s ease, transform 0.2s ease;
@@ -377,6 +386,10 @@ header .container {
     flex-direction: column;
     justify-content: center;
     flex: 1;
+     /* white-space: nowrap; */
+  /* overflow: hidden; */
+  /* text-overflow: ellipsis; */ 
+    max-width: 100%;
 }
 
 .event-details h3 {
@@ -385,9 +398,10 @@ header .container {
     font-weight: 600;
     margin-bottom: 5px;
     max-width: 95%;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    
+    /* white-space: nowrap; */
+  /* overflow: hidden; */
+  /* text-overflow: ellipsis; */
 }
 
 .event-meta {
@@ -910,6 +924,9 @@ header .container {
     width: 40%;
     min-width: 600px;
     margin: 0 auto;
+    /* display: flex;
+    flex-direction: column;
+    overflow: hidden; */
 }
 
 .user-top {

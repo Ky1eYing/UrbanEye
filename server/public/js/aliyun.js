@@ -1,6 +1,6 @@
 const client = new OSS({
-    accessKeyId: 'LTAI5t7BjGAEmanrRyk1h7M6',
-    accessKeySecret: 'R8jVymAxExnns8xFXLa03za25Sbgvx',
+    accessKeyId: 'LTAI5tFHofvKn5NCYATVuqHA',
+    accessKeySecret: 'hHKHe4abvekRLB89ia7bytaw8yZb1w',
     region: 'oss-us-east-1',
     bucket: 'urban-eye'
   });
