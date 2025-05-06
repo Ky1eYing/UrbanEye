@@ -29,6 +29,12 @@ document.addEventListener("DOMContentLoaded", async () => {
             console.error("Error fetching complete user data:", error);
         }
     }
+
+    // Hide all error messages on page load
+    const errorMessages = document.querySelectorAll('[id="errorMessage"]');
+    errorMessages.forEach(element => {
+        element.style.display = 'none';
+    });
     
     const profileView = document.getElementById("profileView");
     const editProfileView = document.getElementById("editProfileView");
@@ -319,10 +325,6 @@ function saveIntroduction() {
                 
                 showSuccessMessage("introduction", "Introduction updated successfully");
                 
-                setTimeout(() => {
-                    editProfileView.style.display = 'none';
-                    profileView.style.display = 'flex';
-                }, 1500);
             } else {
                 showErrorMessage("introduction", result.message || "Failed to update introduction");
             }
@@ -388,11 +390,6 @@ function saveProfileInfo() {
                 userInfo.introduction = updatedData.introduction;
                 
                 showSuccessMessage("profile", "Profile updated successfully");
-                
-                setTimeout(() => {
-                    editProfileView.style.display = 'none';
-                    profileView.style.display = 'flex';
-                }, 1500);
             } else {
                 showErrorMessage("profile", result.message || "Failed to update profile");
             }
