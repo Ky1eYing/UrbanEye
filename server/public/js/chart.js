@@ -218,7 +218,7 @@ function drawPieChart(categoryDataMap) {
         },
         series: [
             {
-                name: 'Access From',
+                // name: 'Events in Category',
                 type: 'pie',
                 radius: ['40%', '70%'],
                 center: ['50%', '63%'],

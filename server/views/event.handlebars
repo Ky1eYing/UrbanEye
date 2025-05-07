@@ -7,20 +7,38 @@
                 <button id="openCreateEventModal">C R E A T E&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;E V E N T</button>
             </div>
             <div class="search-filter">
-                <input type="text" placeholder="Search" class="search-bar">
-                <select class="category-filter">
-                    <option value="">All Categories</option>
-                    <option value="gun shot">Gun Shot</option>
-                    <option value="fight">Fight</option>
-                    <option value="stealing">Stealing</option>
-                    <option value="assaulting">Assaulting</option>
-                    <option value="traffic jam">Traffic Jam</option>
-                    <option value="road closed">Road Closed</option>
-                    <option value="accident">Accident</option>
-                    <option value="performance">Performance</option>
-                    <option value="food truck">Food Truck</option>
-                    <option value="parade">Parade</option>
-                </select>
+                <div class="search-grid">
+                    <div class="search-bar-container">
+                        <input type="text" placeholder="Search" class="search-bar">
+                    </div>
+                    <select class="category-filter">
+                        <option value="">All Categories</option>
+                        <option value="gun shot">Gun Shot</option>
+                        <option value="fight">Fight</option>
+                        <option value="stealing">Stealing</option>
+                        <option value="assaulting">Assaulting</option>
+                        <option value="traffic jam">Traffic Jam</option>
+                        <option value="road closed">Road Closed</option>
+                        <option value="accident">Accident</option>
+                        <option value="performance">Performance</option>
+                        <option value="food truck">Food Truck</option>
+                        <option value="parade">Parade</option>
+                    </select>
+                    <select class="timeRange-filter">
+                        <option value="">All timeRange</option>
+                        <option value="1">1 day</option>
+                        <option value="7">1 week</option>
+                        <option value="30">1 month</option>
+                        <option value="360">1 year</option>
+                    </select>
+                    <select class="distance-filter">
+                        <option value="">All distance</option>
+                        <option value="1 miles">1 miles</option>
+                        <option value="3miles">3miles</option>
+                        <option value="5miles">5miles</option>
+                        <option value="10miles">10miles</option>
+                    </select>
+                </div>
             </div>
             <div class="event-list">
                 <div class="event-item" data-event-id="fake-id-1">

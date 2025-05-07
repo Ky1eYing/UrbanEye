@@ -257,31 +257,35 @@ header .container {
 
 .search-filter {
     display: flex;
-    gap: 8px;
     margin-bottom: 10px;
     border-bottom: 1px solid var(--border-color);
     padding-bottom: 10px;
 }
 
-
-.search-filter .search-bar,
-.search-filter .choices {
-    width: 50%;
+.search-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    gap: 8px;
+    width: 100%;
 }
 
-
-.search-filter .search-bar {
-    margin-right: 10px;
+.search-grid .search-bar{
+    width: 100%;
     padding: var(--spacing-sm) var(--spacing-md);
     border: 1px solid var(--gray-light);
     border-radius: var(--radius);
+    transition: border-color 0.3s, box-shadow 0.3s;
 }
 
-.search-filter .search-bar:focus {
+.search-grid .search-bar:focus {
     outline: none;
     border-color: var(--primary-blue-light);
+    box-shadow: 0 0 0 1px var(--primary-blue-light);
 }
-
+.choices{
+    margin-bottom: 0px !important;
+}
 .choices .choices__inner {
     background-color: var(--white);
     border: 1px solid var(--gray-light) !important;
