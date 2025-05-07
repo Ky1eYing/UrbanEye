@@ -22,7 +22,18 @@ document.addEventListener("DOMContentLoaded", async () => {
                     document.getElementById("introductionDisplay").textContent = userInfo.introduction || "No introduction provided";
                     document.getElementById("sexDisplay").textContent = userInfo.sex || "Not specified";
                     document.getElementById("emailDisplay").textContent = userInfo.email || "No email provided";
-                    document.getElementById("phoneDisplay").textContent = userInfo.phone || "No phone provided";                    
+                    document.getElementById("phoneDisplay").textContent = userInfo.phone || "No phone provided";
+
+                    // Update the form fields for editing
+                    document.getElementById("editName").value = userInfo.name || "";
+                    document.getElementById("editIntroduction").value = userInfo.introduction || "";
+                    document.getElementById("editEmail").value = userInfo.email || "";
+                    document.getElementById("editPhone").value = userInfo.phone || "";
+
+                    const sexSelect = document.getElementById("editSex");
+                    if (sexSelect && sexChoices && userInfo.sex) {
+                        sexChoices.setChoiceByValue(userInfo.sex);
+                    }
                 }
             }
         } catch (error) {
@@ -64,22 +75,22 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     
-    // get old user info
+    // // get old user info
     const oldAvatar = document.getElementById("avatarDisplay").src;
-    const oldName = document.getElementById("nameDisplay").textContent.trim();
-    const oldUsername = document.getElementById("usernameDisplay").textContent.trim();
-    const oldIntroduction = document.getElementById("introductionDisplay").textContent.trim();
-    const oldSex = document.getElementById("sexDisplay").textContent.trim();
-    const oldEmail = document.getElementById("emailDisplay").textContent.trim();
-    const oldPhone = document.getElementById("phoneDisplay").textContent.trim();
+    // const oldName = document.getElementById("nameDisplay").textContent.trim();
+    // const oldUsername = document.getElementById("usernameDisplay").textContent.trim();
+    // const oldIntroduction = document.getElementById("introductionDisplay").textContent.trim();
+    // const oldSex = document.getElementById("sexDisplay").textContent.trim();
+    // const oldEmail = document.getElementById("emailDisplay").textContent.trim();
+    // const oldPhone = document.getElementById("phoneDisplay").textContent.trim();
 
 
     document.getElementById("avatarPreview").src = oldAvatar;
-    document.getElementById("editName").value = oldName;
-    document.getElementById("editUsername").value = oldUsername;
-    document.getElementById("editIntroduction").value = oldIntroduction;
-    document.getElementById("editEmail").value = oldEmail;
-    document.getElementById("editPhone").value = oldPhone;
+    // document.getElementById("editName").value = oldName;
+    // document.getElementById("editUsername").value = oldUsername;
+    // document.getElementById("editIntroduction").value = oldIntroduction;
+    // document.getElementById("editEmail").value = oldEmail;
+    // document.getElementById("editPhone").value = oldPhone;
 
     // disable username editing
     document.getElementById("editUsername").disabled = true;
@@ -96,8 +107,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
 
         // Set default value
-        if (oldSex) {
-            sexChoices.setChoiceByValue(oldSex);
+        if (userInfo && userInfo.sex) {
+            sexChoices.setChoiceByValue(userInfo.sex);
         }
     }
 
@@ -130,19 +141,21 @@ document.addEventListener("DOMContentLoaded", async () => {
  * 用于回退字段更改
  */
 function revertField(field) {
-    // 例如从DOM中获取旧值
     if (field === "name") {
-        const oldName = document.getElementById("nameDisplay").textContent.trim();
-        document.getElementById("editName").value = oldName;
+        document.getElementById("editName").value = userInfo.name || "";
     } else if (field === "sex") {
-        const oldSex = document.getElementById("sexDisplay").textContent;
-        document.getElementById("editSex").value = oldSex;
+        document.getElementById("editSex").value = userInfo.sex || "";
+        if (sexChoices) {
+            if (userInfo.sex) {
+                sexChoices.setChoiceByValue(userInfo.sex);
+            } else {
+                sexChoices.setChoiceByValue("");
+            }
+        }
     } else if (field === "email") {
-        const oldEmail = document.getElementById("emailDisplay").textContent;
-        document.getElementById("editEmail").value = oldEmail;
+        document.getElementById("editEmail").value = userInfo.email || "";
     } else if (field === "phone") {
-        const oldPhone = document.getElementById("phoneDisplay").textContent.trim();
-        document.getElementById("editPhone").value = oldPhone;
+        document.getElementById("editPhone").value = userInfo.phone || "";
     }
 }
 
@@ -260,7 +273,7 @@ function setupFormSubmitHandlers() {
             if (field === "name" || field === "sex" || field === "email") {
                 revertField(field);
             } else if (field === "introduction") {
-                document.getElementById("editIntroduction").value = document.getElementById("introductionDisplay").textContent.trim();
+                document.getElementById("editIntroduction").value = userInfo.introduction || "";
             } else if (field === "profile") {
                 revertField("name");
                 revertField("email");
@@ -284,8 +297,8 @@ function setupFormSubmitHandlers() {
                         allowHTML: true
                     });
                     
-                    if (oldSex) {
-                        sexChoices.setChoiceByValue(oldSex);
+                    if (userInfo.sex) {
+                        sexChoices.setChoiceByValue(userInfo.sex);
                     }
                 }
             } else if (field === "password") {
@@ -421,6 +434,11 @@ function savePassword() {
     
     if (newPassword !== confirmPassword) {
         showErrorMessage("password", "Passwords do not match");
+        return;
+    }
+
+    if (newPassword === oldPassword) {
+        showErrorMessage("password", "New password must be different from current password");
         return;
     }
     
