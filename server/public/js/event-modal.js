@@ -316,11 +316,6 @@ function initCreateEventMap() {
     }
 }
 
-
-document.querySelector(".upload-container").addEventListener("click", () => {
-    document.getElementById("imageUpload").click();
-});
-
 // Submit form
 if (submitCreateEventBtn) {
     submitCreateEventBtn.addEventListener("click", async () => {
@@ -499,6 +494,10 @@ if (submitCreateEventBtn) {
         }
     });
 }
+
+document.querySelector(".upload-container").addEventListener("click", () => {
+    document.getElementById("imageUpload").click();
+});
 
 const imageUpload = document.getElementById("imageUpload");
 if (imageUpload) {
