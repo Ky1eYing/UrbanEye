@@ -122,6 +122,7 @@ function makeCategoryDataMap(rawData) {
 }
 
 
+
 function drawLineChart(categoryDataMap) {
     var chartDom = document.getElementById('line');
     var myChart = echarts.init(chartDom);
@@ -139,10 +140,10 @@ function drawLineChart(categoryDataMap) {
         },
         legend: {
             top: '8%',
-            width: '80%',
+            width: '98%',
             left: 'center',
-            padding: 10,
-            itemGap: 20,
+            padding: 15,
+            itemGap: 18,
             selected: {
                 "all category": true,
                 "gun shot": false,
@@ -158,7 +159,7 @@ function drawLineChart(categoryDataMap) {
             }
         },
         grid: {
-            top: '25%'
+            top: '30%'
         },
         xAxis: {
             type: 'category',
@@ -188,6 +189,10 @@ function drawLineChart(categoryDataMap) {
         }))
     };
     option && myChart.setOption(option);
+
+    window.addEventListener('resize', function () {
+        myChart.resize();
+      });
 }
 
 
@@ -205,7 +210,7 @@ function drawPieChart(categoryDataMap) {
         },
         legend: {
             top: '8%',
-            width: '80%',
+            width: '100%',
             left: 'center',
             padding: 10,
             itemGap: 15,
@@ -216,7 +221,7 @@ function drawPieChart(categoryDataMap) {
                 name: 'Access From',
                 type: 'pie',
                 radius: ['40%', '70%'],
-                center: ['50%', '60%'],
+                center: ['50%', '63%'],
                 avoidLabelOverlap: false,
                 itemStyle: {
                     borderRadius: 10,
@@ -235,4 +240,8 @@ function drawPieChart(categoryDataMap) {
         ]
     };
     option && myChart.setOption(option);
+
+    window.addEventListener('resize', function () {
+        myChart.resize();
+      });
 }
