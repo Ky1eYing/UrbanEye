@@ -485,6 +485,68 @@ async function updateUserProfile(userId, profileData) {
   }
 }
 
+async function updateUserIntroduction(userId, profileData) {
+  try {
+    const response = await fetch(`/api/users/introduction/${userId}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(profileData),
+    });
+
+    const data = await response.json();
+
+    if (response.ok) {
+      console.log("Introduction updated successfully");
+    }
+
+    return {
+      success: response.ok,
+      message:
+        data.message ||
+        (response.ok
+          ? "Introduction updated successfully"
+          : "Failed to update introduction"),
+      data: data.data,
+    };
+  } catch (error) {
+    console.error("Error updating introduction:", error);
+    return { success: false, message: "Network error when updating introduction" };
+  }
+}
+
+async function updateUserAvatar(userId, profileData) {
+  try {
+    const response = await fetch(`/api/users/avatar/${userId}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(profileData),
+    });
+
+    const data = await response.json();
+
+    if (response.ok) {
+      console.log("Avatar updated successfully");
+    }
+
+    return {
+      success: response.ok,
+      message:
+        data.message ||
+        (response.ok
+          ? "Avatar updated successfully"
+          : "Failed to update avatar"),
+      data: data.data,
+    };
+  } catch (error) {
+    console.error("Error updating avatar:", error);
+    return { success: false, message: "Network error when updating avatar" };
+  }
+}
+
 /**
  * Update user password
  */

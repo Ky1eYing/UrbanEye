@@ -12,6 +12,7 @@
     --background-light: #f5f5f5;
     --border-color: #f5f5f5;
     --error-color: #e74c3c;
+    --success-color: #2ecc71;
     --shadow-color: rgba(0, 0, 0, 0.1);
 
     --spacing-xs: 0.25rem;
@@ -832,6 +833,14 @@ header .container {
     font-size: 14px;
 }
 
+.form-group .success-message {
+  display: flex;
+  align-items: center;
+  color: var(--success-color);
+  margin-top: 8px;
+  font-size: 14px;
+}
+
 .error-icon {
     margin-right: 8px;
     font-size: 10px;
@@ -1521,6 +1530,19 @@ section {
 .error-message i {
     margin-right: 5px;
     font-size: 0.75rem
+}
+
+.success-message {
+  color: var(--accent-green);
+  font-size: 0.9rem;
+  align-self: center;
+  display: flex;
+  align-items: center;
+}
+
+.success-message i {
+  margin-right: 5px;
+  font-size: 0.75rem
 }
 
 /* 提交按钮样式 */
