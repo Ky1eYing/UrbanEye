@@ -50,14 +50,14 @@ const getEventStatsByDay = async (startDate, endDate) => {
   const eventsCollection = await events();
   
   const pipeline = [
-    {
-      $match: {
-        created_at: { 
-          $gte: startDate, 
-          $lte: endDate 
-        }
-      }
-    },
+    // {
+    //   $match: {
+    //     created_at: { 
+    //       $gte: startDate, 
+    //       $lte: endDate 
+    //     }
+    //   }
+    // },
     {
       $group: {
         _id: {
@@ -65,7 +65,7 @@ const getEventStatsByDay = async (startDate, endDate) => {
           category: "$category"
         },
         count: { $sum: 1 },
-        titles: { $push: "$title" }
+        // titles: { $push: "$title" }
       }
     },
     {

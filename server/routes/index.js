@@ -46,6 +46,14 @@ const constructorMethod = (app) => {
     });
   });
 
+  app.get("/chart", attachUser, (req, res) => {
+    res.render("chart", {
+      title: "Chart",
+      isChart: true,
+      user: req.user,
+    });
+  });
+
   app.get("/about", attachUser, (req, res) => {
     res.render("about", {
       title: "About",
