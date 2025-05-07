@@ -327,13 +327,13 @@ router
       });
     }
 
-    let { name, introduction, sex, email, phone } = reqBody;
+    let { name, sex, email, phone } = reqBody;
 
     try {
       // userName = check.checkVaildString(userName, "UserName");
       name = check.checkVaildString(name, "Name");
       // password = check.checkVaildString(password, "Password");
-      introduction = check.validateIntroduction(introduction);
+      // introduction = check.validateIntroduction(introduction);
       sex = check.validateSex(sex);
       email = check.validateEmail(email);
       phone = check.validatePhone(phone);
@@ -345,7 +345,6 @@ router
       const user = await usersData.updateUser(
         userId,
         name,
-        introduction,
         sex,
         email,
         phone
@@ -359,6 +358,57 @@ router
       return res.status(404).json({ code: 404, message: e.message });
     }
   });
+
+router.route("/introduction/:userId").put(requireLogin, async (req, res) => {
+  let userId;
+  try {
+    userId = check.checkObjectId(req.params.userId);
+  } catch (e) {
+    return res.status(400).json({ code: 400, message: e.message });
+  }
+
+  if (ENABLE_AUTH_CHECK) {
+    if (req.session.userId !== userId) {
+      return res
+        .status(403)
+        .json({ code: 403, message: "Forbidden! You are not authorized" });
+    }
+  }
+
+  const reqBody = req.body;
+  if (!reqBody || Object.keys(reqBody).length === 0) {
+    return res.status(400).json({
+      code: 400,
+      message: "There are no fields in the request body",
+    });
+  }
+
+  let { introduction } = reqBody;
+
+  if (introduction === undefined) {
+    return res.status(400).json({
+      code: 400,
+      message: "There are no introduction in the request body",
+    });
+  }
+
+  try {
+    introduction = check.validateIntroduction(introduction);
+  } catch (e) {
+    return res.status(400).json({ code: 400, message: e.message });
+  }
+
+  try {
+    const user = await usersData.updateIntroduction(userId, introduction);
+    return res.status(200).json({
+      code: 200,
+      message: "success",
+      data: usersData.filterUser(user),
+    });
+  } catch (e) {
+    return res.status(404).json({ code: 404, message: e.message });
+  }
+});
 
 router.route("/avatar/:userId").put(requireLogin, async (req, res) => {
   let userId;
@@ -386,7 +436,7 @@ router.route("/avatar/:userId").put(requireLogin, async (req, res) => {
 
   let { avatar } = reqBody;
 
-  if (avatar===undefined) {
+  if (avatar === undefined) {
     return res.status(400).json({
       code: 400,
       message: "There are no avatar in the request body",

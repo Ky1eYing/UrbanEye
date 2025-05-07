@@ -281,10 +281,9 @@ const removeUser = async (userId) => {
 };
 
 // update user
-const updateUser = async (userId, name, introduction, sex, email, phone) => {
+const updateUser = async (userId, name, sex, email, phone) => {
   userId = check.checkObjectId(userId);
 
-  introduction = check.validateIntroduction(introduction);
   sex = check.validateSex(sex);
   email = check.validateEmail(email);
   phone = check.validatePhone(phone);
@@ -297,7 +296,6 @@ const updateUser = async (userId, name, introduction, sex, email, phone) => {
 
   let newUser = {
     name: null,
-    introduction: null,
     sex: null,
     email: null,
     phone: null,
@@ -307,10 +305,38 @@ const updateUser = async (userId, name, introduction, sex, email, phone) => {
   newUser.name = name;
   // newUser.password = password;
 
-  newUser.introduction = introduction;
   newUser.sex = sex;
   newUser.email = email ? email.toLowerCase() : null; //email is optional(fix .toLowerCase() error)
   newUser.phone = phone;
+
+  const usersCollection = await users();
+
+  let updateInfo = await usersCollection.findOneAndUpdate(
+    { _id: new ObjectId(userId) },
+    { $set: newUser },
+    { returnDocument: "after" }
+  );
+
+  if (!updateInfo) {
+    throw new Error(
+      `Error: Update failed, could not find an user with id of ${userId}`
+    );
+  }
+  updateInfo._id = updateInfo._id.toString();
+
+  return filterUserWithPassword(updateInfo);
+};
+
+const updateIntroduction = async (userId, introduction) => {
+  userId = check.checkObjectId(userId);
+
+  introduction = check.validateIntroduction(introduction);
+
+  let newUser = {
+    introduction: null,
+  };
+
+  newUser.introduction = introduction;
 
   const usersCollection = await users();
 
@@ -363,6 +389,7 @@ export default {
   getUsersByUserIds,
   removeUser,
   updateUser,
+  updateIntroduction,
   updateAvatar,
   filterUserSimple,
   filterUser,
