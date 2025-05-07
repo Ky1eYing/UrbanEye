@@ -93,13 +93,13 @@ function showCreateEventModal(eventId) {
                         lng: parseFloat(eventData.location.longitude)
                     };
                     selectedMarkerPosition = { ...geolocationCenter };
-                
+
                     setTimeout(() => {
                         if (createMap && selectedMarker) {
                             createMap.setCenter(geolocationCenter);
                             selectedMarker.setPosition(geolocationCenter);
                             selectedMarkerPosition = geolocationCenter;
-                
+
                             updateAddressDisplay(selectedMarkerPosition);
                         }
                     }, 300); // Delay to ensure map is initialized
@@ -343,27 +343,100 @@ if (submitCreateEventBtn) {
         console.log("photoUrl", document.getElementById("eventPhoto").src);
 
         // Validate form data
-        if (!selectedCategory) {
+        // check image url
+        if (!photoUrl) {
+            displayFormErrorMessage("PhotoUrl missing");
+            return;
+        }
+        const urlPattern = /^https?:\/\/[\w\-./]+$/;
+        if (!urlPattern.test(photoUrl)) {
+            displayFormErrorMessage("Invaild image URL");
+            return;
+        }
+
+        // check category
+        const checkedCategory = selectedCategory.trim().toLowerCase();
+        if (!checkedCategory) {
             displayFormErrorMessage("Please select a category");
             return;
         }
-        if (!title) {
+        const validCategories = [
+            "gun shot",
+            "fight",
+            "stealing",
+            "assaulting",
+            "traffic jam",
+            "road closed",
+            "accident",
+            "performance",
+            "food truck",
+            "parade"
+        ];
+        if (!validCategories.includes(checkedCategory)) {
+            displayFormErrorMessage("Invalid category selected");
+            return;
+        }
+
+        // check title
+        const checkedTitle = title.trim();
+        if (!checkedTitle) {
             displayFormErrorMessage("Please enter a title");
             return;
         }
-        if (!content) {
+        if (checkedTitle.length < 5 || checkedTitle.length > 50) {
+            displayFormErrorMessage("Title must be between 5 and 50 characters");
+            return;
+        }
+
+        // check content
+        const checkedcontent = content.trim();
+        if (!checkedcontent) {
             displayFormErrorMessage("Please enter a content");
             return;
         }
+        if (checkedcontent.length < 10 || checkedcontent.length > 500) {
+            displayFormErrorMessage("Content must be between 10 and 500 characters");
+            return;
+        }
+
+        // check location
         if (!selectedMarkerPosition) {
             displayFormErrorMessage("Please select a location on the map");
             return;
         }
+        console.log("pos", selectedMarkerPosition);
+        if (typeof selectedMarkerPosition !== "object" || selectedMarkerPosition === null) {
+            displayFormErrorMessage("Invalid location format");
+            return;
+        }
+        if (!("lat" in selectedMarkerPosition) || !("lng" in selectedMarkerPosition)) {
+            displayFormErrorMessage("Invalid location coordinates");
+            return;
+        }
+        const latitude = selectedMarkerPosition.lat;
+        const longitude = selectedMarkerPosition.lng;
+        if (typeof latitude !== "number" || isNaN(latitude)) {
+            displayFormErrorMessage("Invalid latitude value");
+            return;
+        }
+        if (typeof longitude !== "number" || isNaN(longitude)) {
+            displayFormErrorMessage("Invalid longitude value");
+            return;
+        }
+        if (latitude < -90 || latitude > 90) {
+            displayFormErrorMessage("Latitude must be between -90 and 90");
+            return;
+        }
+        if (longitude < -180 || longitude > 180) {
+            displayFormErrorMessage("Longitude must be between -180 and 180");
+            return;
+        }
 
-        // if (!imageFile && !submitCreateEventBtn.hasAttribute('data-edit-id')) {
-        //     displayFormErrorMessage("Please upload an image");
-        //     return;
-        // }
+        // check address
+        if (!address) {
+            displayFormErrorMessage("Address missing");
+            return;
+        }
 
         // Show loading state
         submitCreateEventBtn.disabled = true;
@@ -430,9 +503,21 @@ if (submitCreateEventBtn) {
 const imageUpload = document.getElementById("imageUpload");
 if (imageUpload) {
     imageUpload.addEventListener("change", async function (e) {
-        console.log("Image selected for upload:", this.files[0]?.name);
         const file = this.files[0];
-        if (file) {
+        // user cancel upload
+        if (!file) {
+            alertfunc("Upload file missing")
+        }
+        // check file type
+        if (!file.type.startsWith("image/")) {
+            alertfunc("You should upload an image type file");
+            this.value = "";  // clear wrong file
+            return;
+        }
+
+        console.log("Image selected for upload:", file.name);
+
+        try {
             let result = await uploadFile(file, "event");
             console.log("Upload result:", result);
             const uploadPlaceholder = document.querySelector(".upload-placeholder");
@@ -442,6 +527,8 @@ if (imageUpload) {
                 eventPhoto.style.display = "flex";
                 eventPhoto.src = result;
             }
+        } catch (e) {
+            alertfunc("Image upload failed")
         }
     });
 }
@@ -540,4 +627,8 @@ function clearFormErrorMessage() {
     if (successElement) {
         successElement.style.display = "none";
     }
-} 
+}
+
+function alertfunc(errorMsg) {
+    alert(errorMsg)
+}

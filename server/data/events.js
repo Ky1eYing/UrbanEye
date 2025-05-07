@@ -11,11 +11,11 @@ const createEvent = async (user_id, title, content, location, category, photoUrl
 
 	// check each input
 	const checked_userId = check.checkObjectId(user_id);
-	const checked_title = check.checkVaildString(title, "Title");
-	const checked_content = check.checkVaildString(content, "Content");
+	const checked_title = check.checkTitle(title);
+	const checked_content = check.checkContent(content);
 	const checked_location = check.checkLocation(location);
 	const checked_category = check.checkCategory(category);
-	const checked_photoUrl = check.checkVaildString(photoUrl, "PhotoUrl");
+	const checked_photoUrl = check.checkPhotoUrl(photoUrl);
 
 	// create empty element
 	const click_time = 0;
@@ -209,11 +209,11 @@ const updateEvent = async (event_id, title, content, location, category, photoUr
 
 	// check each input
 	const checked_eventId = check.checkObjectId(event_id);
-	const checked_title = check.checkVaildString(title, "Title");
-	const checked_content = check.checkVaildString(content, "Content");
+	const checked_title = check.checkTitle(title);
+	const checked_content = check.checkContent(content);
 	const checked_location = check.checkLocation(location);
 	const checked_category = check.checkCategory(category);
-	const checked_photoUrl = check.checkVaildString(photoUrl, "PhotoUrl");
+	const checked_photoUrl = check.checkPhotoUrl(photoUrl);
 
 	// get old event
 	const eventsCollection = await events();

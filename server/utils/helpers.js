@@ -47,6 +47,38 @@ export const checkObjectId = id => {
 	return check_id;
 };
 
+// check photo url
+export const checkPhotoUrl = photourl => {
+	const check_photourl = checkVaildString(photourl, "PhotoUrl");
+
+	const urlPattern = /^https?:\/\/[\w\-./]+$/;
+	if (!urlPattern.test(check_photourl)) {
+		throw new Error("Invaild image URL");
+	}
+
+	return check_photourl;
+}
+
+// check title
+export const checkTitle = title => {
+	const check_title = checkVaildString(title, "Title");
+	if (check_title.length < 5 || check_title.length > 50) {
+		throw new Error("Title length should be between 5 and 50 characters");
+	}
+
+	return check_title;
+}
+
+// check content
+export const checkContent = content => {
+	const check_content = checkVaildString(content, "Content");
+	if (check_content.length < 10 || check_content.length > 500) {
+		throw new Error("Content length should be between 10 and 500 characters");
+	}
+
+	return check_content;
+}
+
 // check location validation
 export const checkLocation = location => {
 	if (location === undefined) {
@@ -174,3 +206,12 @@ export const validatePhone = phone => {
 	return phone;
 };
 
+// check comment
+export const checkComment = comment => {
+	const check_comment = checkVaildString(comment, "Comment");
+	if (check_comment.length < 5 || check_comment.length > 100) {
+		throw new Error("Comment length should be between 5 and 100 characters");
+	}
+
+	return check_comment;
+}

@@ -6,7 +6,7 @@ import * as check from "../utils/helpers.js";
 const createComment = async (eventId, userId, content) => {
   eventId = check.checkObjectId(eventId);
   userId = check.checkObjectId(userId);
-  content = check.checkVaildString(content, "Content");
+  content = check.checkComment(content);
 
   const eventsCollection = await events();
   const event = await eventsCollection.findOne({ _id: new ObjectId(eventId) });
@@ -56,12 +56,12 @@ const getAllCommentsWithUserByEventId = async (eventId) => {
 
   // If no comments, return empty array instead of throwing error
   let commentList = event.comments || [];
-  
+
   // If there are no comments, return empty array early
   if (commentList.length === 0) {
     return [];
   }
-  
+
   let userIds = commentList.map(comment => comment.user_id.toString());
 
   userIds = [...new Set(userIds)];
@@ -149,7 +149,7 @@ const removeComment = async (commentId) => {
 
 const updateComment = async (commentId, content) => {
   commentId = check.checkObjectId(commentId);
-  content = check.checkVaildString(content, "Content");
+  content = check.checkComment(content);
 
   const eventsCollection = await events();
   const event = await eventsCollection.findOne({
