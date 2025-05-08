@@ -17,8 +17,8 @@ const usersToCreate = [
         sex: "Male",                                                                // Less than 20 characters
         email: "user1@gmail.com",                                                   // email format                        
         phone: "+16667778888",                                                      // only number & "+"
-        avatar: "USER1avatar.jpg",                                                  // filename.jpg, png,...
-
+        // avatar: "USER1avatar.jpg",                                                  // filename.jpg, png,...
+        avatar: null,
         //  Hidden
         password: "$2b$10$RSqbqHHU71EJzUBaghkyYO/J/wsXvIy4Uu0bzdCfAzNtkmwUpL/PW"    // "admin123", Bcrypt Rounds: 10, not null
     },
