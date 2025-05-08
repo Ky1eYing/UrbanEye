@@ -392,8 +392,17 @@ async function showEventList() {
                             </div>
                         </div>
                     </div>
+                   
                 </div>
             `;
+
+            /*TODO
+
+             <div class="event-actions">
+                        <span>Recommand</span>
+                    </div>
+
+            */
 
             eventList.insertAdjacentHTML('beforeend', eventItemHTML);
         });

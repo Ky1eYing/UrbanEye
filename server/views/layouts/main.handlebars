@@ -19,6 +19,15 @@
     <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
     {{!-- Aliyun OSS SDK --}}
     <script src="https://gosspublic.alicdn.com/aliyun-oss-sdk-6.20.0.min.js"></script>
+    <script>
+    const isLoggedIn = {{#if user}} true {{else}} false {{/if}};
+    console.log('isLoggedIn: ', isLoggedIn);
+
+    {{#if user}}
+    const userInfo = {{{json user}}};
+    console.log('userInfo: {_id: "", userName: "", name: ""}: ', userInfo);
+    {{/if}}
+</script>
 </head>
 
 <body>
@@ -87,15 +96,7 @@
 
     <!-- JS -->
 
-<script>
-    const isLoggedIn = {{#if user}} true {{else}} false {{/if}};
-    console.log('isLoggedIn: ', isLoggedIn);
 
-    {{#if user}}
-    const userInfo = {{{json user}}};
-    console.log('userInfo: {_id: "", userName: "", name: ""}: ', userInfo);
-    {{/if}}
-</script>
 
 <script src="/js/helps.js" defer></script>
 <script src="/js/aliyun.js" defer></script>

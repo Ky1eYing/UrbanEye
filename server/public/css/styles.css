@@ -355,6 +355,7 @@ header .container {
 
 
 .event-item {
+    position: relative;
     display: flex;
     /* min-height: 80px; */
     min-width: 100px;
@@ -433,6 +434,28 @@ header .container {
     line-height: 1.2;
     font-size: 12px;
 }
+
+.event-list .event-actions{
+    opacity: 1;
+    transform: translateY(4px);
+    border: var(--border-color) 0px solid;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-color) 2px 2px 3px;
+    padding: 2px 10px;
+    font-size: 0.7rem;
+    /* color: var(--gray-dark); */
+}
+
+.event-list .event-item:hover .event-actions {
+    transform: translateY(0);
+}
+
+.event-list .event-actions i,
+.event-list .event-actions span{
+    font-size: 0.7rem;
+    /* color: var(--gray-dark); */
+}
+
 
 /* Placeholder styles for empty event items */
 .event-item.placeholder .event-image {
