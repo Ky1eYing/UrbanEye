@@ -108,7 +108,6 @@ document.addEventListener("DOMContentLoaded", async () => {
       searchEnabled: false,
       itemSelectText: "",
       shouldSort: false,
-      allowHTML: true,
     });
 
     // Set default value
@@ -123,7 +122,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   });
 
   const avatarUpload = document.getElementById("avatarUpload");
-  
+
   if (avatarUpload) {
     avatarUpload.addEventListener("change", async function (e) {
       const file = this.files[0];
@@ -154,7 +153,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       updateUserAvatar(userInfo._id, { avatar })
         .then((result) => {
           if (result.success) {
-            
+
             document.getElementById("nameDisplay").src = avatar;
             document.getElementById("header-useravator").src = avatar;
             const avatarPreview = document.getElementById("avatarPreview");
@@ -579,7 +578,7 @@ function showSuccessMessage(field, message) {
       // After seconds, hide the message
       errorElement.style.display = "none";
       errorElement.classList.remove("success-message");
-  }, 2000);
+    }, 2000);
   }
 }
 

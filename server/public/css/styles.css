@@ -270,7 +270,7 @@ header .container {
     width: 100%;
 }
 
-.search-grid .search-bar{
+.search-grid .titleLike-filter{
     width: 100%;
     padding: var(--spacing-sm) var(--spacing-md);
     border: 1px solid var(--gray-light);
@@ -278,7 +278,7 @@ header .container {
     transition: border-color 0.3s, box-shadow 0.3s;
 }
 
-.search-grid .search-bar:focus {
+.search-grid .titleLike-filter:focus {
     outline: none;
     border-color: var(--primary-blue-light);
     box-shadow: 0 0 0 1px var(--primary-blue-light);
@@ -317,7 +317,7 @@ header .container {
     flex-direction: column;
     gap: 10px;
 
-    max-height: calc(100vh - 200px);
+    max-height: calc(100vh - 246px);
     overflow-y: auto;
     overscroll-behavior: contain;
     /* padding-right: 15px; */

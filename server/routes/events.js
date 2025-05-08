@@ -23,17 +23,23 @@ router
       category,
       timeRange,
       skip,
-      latitude,
-      longitude
+      latitude: lat,
+      longitude: lng
     } = req.query;
 
-    let userLocation = null;
-    if (latitude && longitude) {
+    // Default user location (New York City)
+    const nyPosition = { lat: 40.75171244845984, lng: -73.98179241229592 };
+    let userLocation = {
+      latitude: nyPosition.lat,
+      longitude: nyPosition.lng
+    };
+    if (lat && lng) {
       userLocation = {
-        latitude: latitude,
-        longitude: longitude
+        latitude: lat,
+        longitude: lng
       };
     }
+    console.log("userLocation", userLocation);
 
     try {
       const filterParams = {};

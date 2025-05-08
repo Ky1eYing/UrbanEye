@@ -1,3 +1,35 @@
+async function getFilterEvents(filters) {
+
+    filters = {...filters, latitude: window.preFetchedPosition.lat, longitude: window.preFetchedPosition.lng};
+    console.log('getFilterEvents filters for backend:', filters);
+
+    try {
+        
+        const queryString = new URLSearchParams(filters).toString();
+        const response = await fetch(`/api/events/filter?${queryString}`);
+        
+        if (!response.ok) {
+            console.error(`Error fetching events (${response.status}): ${response.statusText}`);
+            return null;
+        }
+        
+        const data = await response.json();
+        
+        if (data.code === 200 && data.data) {
+            console.log(`Successfully fetched ${data.data.length} events`);
+            return data.data;
+        } else {
+            console.error('Error in API response:', data.message || 'Unknown error');
+            return null;
+        }
+    } catch (error) {
+        console.error('Network error when fetching events:', error);
+        return null;
+    }
+}
+
+
+
 async function fetchEvents() {
     try {
         console.log('Fetching events from backend...');

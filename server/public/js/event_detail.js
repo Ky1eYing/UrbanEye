@@ -17,8 +17,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (history.state && history.state._id) {
             // Come from icon or event list page
             replaceToEventList(eventId);
-            // await showEventList();
-            applyFilters();
+            await showEventList();
             // setTimeout(() => location.reload(), 10);
         } else if (document.referrer && document.referrer !== location.href) {
             // Come from any page in this cite, Go back (such user profile page then event list page)
@@ -27,8 +26,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         } else {
             // user directly visit '/event?_id=123', default back to event list page
             replaceToEventList(eventId);
-            // await showEventList();
-            applyFilters();
+            await showEventList();
         }
     });
 
