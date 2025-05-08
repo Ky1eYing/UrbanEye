@@ -135,6 +135,10 @@ document.addEventListener("DOMContentLoaded", async () => {
                 alert("Please enter a comment");
                 return;
             }
+            if (commentText.length < 10 || commentText.length > 200) {
+              alert("Comment length should be between 10 and 200 characters");
+              return;
+            }
 
             if (!isLoggedIn) {
                 alert("Please log in to add comments");
