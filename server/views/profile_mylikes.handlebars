@@ -55,30 +55,11 @@
                         <span>Unknown time</span>
                     </div>
                 </div>
-
             </div>
         </div>
-
     </div>
-
-
-
 </div>
 
-
-
-
-
-
-<script>
-    const isLoggedIn = {{#if user}} true {{else}} false {{/if}};
-    console.log('isLoggedIn: ', isLoggedIn);
-
-    {{#if user}}
-    const userInfo = {{{json user}}};
-    console.log('userInfo: {_id: "", userName: "", name: ""}: ', userInfo);
-    {{/if}}
-</script>
 
 <script src="/js/profile_mylikes.js"></script>
 <script src="/js/profile_api.js"></script>

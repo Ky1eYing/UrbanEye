@@ -86,6 +86,17 @@
     </div>
 
     <!-- JS -->
+
+<script>
+    const isLoggedIn = {{#if user}} true {{else}} false {{/if}};
+    console.log('isLoggedIn: ', isLoggedIn);
+
+    {{#if user}}
+    const userInfo = {{{json user}}};
+    console.log('userInfo: {_id: "", userName: "", name: ""}: ', userInfo);
+    {{/if}}
+</script>
+
 <script src="/js/helps.js" defer></script>
 <script src="/js/aliyun.js" defer></script>
 <script src="/js/location_service.js"></script>
