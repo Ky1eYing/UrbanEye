@@ -92,7 +92,8 @@ const getAllEventsByFilter = async (params = {}) => {
 
   const query = {};
 
-  query.blocked = false;
+  // 0. blocked events 
+  query.blocked = { $ne: true }; // [IF NOT TRUE]
 
   // 0. title fuzzy matching
   if (titlelike) {
