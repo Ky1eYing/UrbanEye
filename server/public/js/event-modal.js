@@ -389,8 +389,8 @@ if (submitCreateEventBtn) {
             displayFormErrorMessage("Please enter a content");
             return;
         }
-        if (checkedcontent.length < 10 || checkedcontent.length > 500) {
-            displayFormErrorMessage("Content must be between 10 and 500 characters");
+        if (checkedcontent.length < 10 || checkedcontent.length > 200) {
+            displayFormErrorMessage("Content must be between 10 and 200 characters");
             return;
         }
 

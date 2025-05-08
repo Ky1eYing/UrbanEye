@@ -72,8 +72,8 @@ export const checkTitle = title => {
 // check content
 export const checkContent = content => {
 	const check_content = checkVaildString(content, "Content");
-	if (check_content.length < 10 || check_content.length > 500) {
-		throw new Error("Content length should be between 10 and 500 characters");
+	if (check_content.length < 10 || check_content.length > 200) {
+		throw new Error("Content length should be between 10 and 200 characters");
 	}
 
 	return check_content;
