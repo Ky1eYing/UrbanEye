@@ -330,6 +330,7 @@ function updateUserLocation(position, tag = "") {
       position,
       map,
       title: `Your Location ${tag}`,
+      zIndex: 1000,
       icon: {
         path: google.maps.SymbolPath.CIRCLE,
         scale: 10,
@@ -350,7 +351,8 @@ function updateUserLocation(position, tag = "") {
       fillOpacity: 0.15,
       strokeColor: "#4285F4",
       strokeOpacity: 0.3,
-      strokeWeight: 1
+      strokeWeight: 1,
+      zIndex: 999
     });
   }
   console.log(`user location ${tag} updated on map:`, position);
@@ -454,16 +456,16 @@ window.focusMapOnEvent = focusMapOnEvent;
 // custom icon for event type
 function getIconForEventType(type) {
   const iconConfig = {
-    size: new google.maps.Size(32, 32),
+    size: new google.maps.Size(50, 50),
     origin: new google.maps.Point(0, 0),
-    anchor: new google.maps.Point(16, 32),
-    scaledSize: new google.maps.Size(32, 32)
+    anchor: new google.maps.Point(25, 50),
+    scaledSize: new google.maps.Size(50, 50)
   };
 
   // select icon file based on event type
   switch (type) {
     case "gun shot":
-      iconConfig.url = "/images/gun.png";
+      iconConfig.url = "/images/gunshot.png";
       break;
     case "fight":
       iconConfig.url = "/images/fight.png";
