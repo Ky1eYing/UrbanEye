@@ -2,6 +2,7 @@ import eventsRoutes from "./events.js";
 import usersRoutes from "./users.js";
 import commentsRoutes from "./comments.js";
 import likesRoutes from "./likes.js";
+import reportsRoutes from "./reports.js";
 import chartRoutes from "./chart.js";
 import agentRoutes from "./agent.js";
 import {
@@ -28,6 +29,7 @@ const constructorMethod = (app) => {
   app.use("/api/users", usersRoutes);
   app.use("/api/comments", commentsRoutes);
   app.use("/api/likes", likesRoutes);
+  app.use("/api/reports", reportsRoutes);
   app.use("/api/chart", chartRoutes);
   app.use("/api/agent", agentRoutes);
 
