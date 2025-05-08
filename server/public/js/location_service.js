@@ -5,115 +5,44 @@ window.userLocationMarker = null;
 // Check if already have a saved position
 const savedPosition = localStorage.getItem('userPosition');
 const savedTimestamp = localStorage.getItem('userPositionTimestamp');
-const positionMaxAge = 15 * 60 * 1000;
-
-// distance change threshold
-const SIGNIFICANT_DISTANCE_CHANGE = 500; // 500 meters
+const positionMaxAge = 60 * 60 * 1000;
 
 // Initialize location service
 (function initLocationService() {
     console.log("Location service initializing...");
 
-    // Always check current position to compare with saved one
-    if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-            newPosition => {
-                const currentPos = {
-                    lat: newPosition.coords.latitude,
-                    lng: newPosition.coords.longitude
-                };
-
-                // Always update the global position for immediate use
-                setGlobalPosition(currentPos);
-
-                // If we have a saved position, check if it's different from the current position
-                if (savedPosition) {
-                    try {
-                        const savedPos = JSON.parse(savedPosition);
-                        // Check if location has changed
-                        if (hasMoved(savedPos, currentPos)) {
-                            console.log("Location has changed significantly, updating saved position");
-                            savePosition(currentPos);
-                        } else if ((Date.now() - parseInt(savedTimestamp)) > positionMaxAge) {
-                            // If position hasn't changed much but timestamp is old, update timestamp
-                            console.log("Refreshing position timestamp");
-                            savePosition(currentPos);
-                        } else {
-                            console.log("Using existing position, no significant change detected");
-                        }
-                    } catch (e) {
-                        console.error("Error parsing saved position, saving new one", e);
-                        savePosition(currentPos);
-                    }
-                } else {
-                    console.log("No saved position found, saving current position");
-                    savePosition(currentPos);
-                }
-            },
-            error => {
-                console.warn("Initial position check failed:", error.message);
-                checkCachedPosition();
-            },
-            {
-                enableHighAccuracy: false,
-                timeout: 5000,
-                maximumAge: 0
-            }
-        );
-    } else {
-        checkCachedPosition();
-    }
-})();
-
-// Check if cached position is valid or needs refresh
-function checkCachedPosition() {
-    // Check if need to get a new position
-    const needNewPosition = !savedPosition ||
-        !savedTimestamp ||
-        (Date.now() - parseInt(savedTimestamp)) > positionMaxAge;
-
-    if (needNewPosition) {
-        console.log("Getting fresh user location...");
-        // get low accuracy position first
-        getLowAccuracyLocation();
-
-        // get high accuracy in the background
-        setTimeout(() => {
-            getHighAccuracyLocation();
-        }, 2000);
-    } else {
+    // Check if position is still valid
+    if (savedPosition && savedTimestamp && (Date.now() - parseInt(savedTimestamp)) <= positionMaxAge) {
         // Use saved position
         try {
             const position = JSON.parse(savedPosition);
-            console.log("Using saved location from storage", position);
+            console.log("Using saved location from storage (< 1 hour old)", position);
             setGlobalPosition(position);
         } catch (e) {
             console.error("Error parsing saved position, fetching new one", e);
-            getLowAccuracyLocation();
+            getLocation();
         }
+    } else {
+        // Get new position
+        console.log("No valid saved position found or it's expired, getting new location");
+        getLocation();
     }
-}
+})();
 
-// Check if user has moved
-function hasMoved(pos1, pos2) {
-    //  Haversine formula
-    const toRad = x => x * Math.PI / 180;
-    const R = 6371e3;
+// Get user location
+function getLocation() {
+    if (!navigator.geolocation) {
+        console.warn("Browser does not support Geolocation");
+        return;
+    }
 
-    const lat1 = toRad(pos1.lat);
-    const lat2 = toRad(pos2.lat);
-    const deltaLat = toRad(pos2.lat - pos1.lat);
-    const deltaLng = toRad(pos2.lng - pos1.lng);
+    // Get low-accuracy position first
+    getLowAccuracyLocation();
 
-    const a = Math.sin(deltaLat / 2) * Math.sin(deltaLat / 2) +
-        Math.cos(lat1) * Math.cos(lat2) *
-        Math.sin(deltaLng / 2) * Math.sin(deltaLng / 2);
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    const distance = R * c;
-
-    console.log(`Distance between saved and current position: ${distance.toFixed(2)} meters`);
-
-    return distance > SIGNIFICANT_DISTANCE_CHANGE;
+    // Get high-accuracy position
+    setTimeout(() => {
+        getHighAccuracyLocation();
+    }, 2000);
 }
 
 // Low accuracy location
@@ -139,7 +68,7 @@ function getLowAccuracyLocation() {
         {
             enableHighAccuracy: false,
             timeout: 5000,
-            maximumAge: 300000 // 5 minutes
+            maximumAge: 300000
         }
     );
 }
