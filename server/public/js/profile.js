@@ -117,21 +117,70 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   }
 
-  // 监听所有 cancel/save 按钮
-  const cancelBtns = document.querySelectorAll(".cancel-btn");
-  const saveBtns = document.querySelectorAll(".save-btn");
-
   // 更新头像事件
+  document.querySelector("button.submit-button[data-field='avatar']").addEventListener("click", () => {
+    document.getElementById("avatarUpload").click();
+  });
+
   const avatarUpload = document.getElementById("avatarUpload");
+  
   if (avatarUpload) {
-    avatarUpload.addEventListener("change", async (e) => {
-      const file = e.target.files[0];
-      if (file) {
-        // TODO: 上传头像到服务器
-        console.log("Selected avatar file:", file);
-        // 预览可直接用 FileReader
-        previewAvatar(file);
+    avatarUpload.addEventListener("change", async function (e) {
+      const file = this.files[0];
+      // user cancel upload
+      if (!file) {
+        alertfunc("Upload file missing")
       }
+      // check file type
+      if (!file.type.startsWith("image/")) {
+        alertfunc("You should upload an image type file");
+        this.value = "";  // clear wrong file
+        return;
+      }
+
+      console.log("Image selected for upload:", file.name);
+
+      let avatar;
+
+      try {
+        avatar = await uploadFile(file, "user");
+        console.log("Upload result:", avatar);
+      } catch (e) {
+        alertfunc("Image upload failed")
+        return;
+      }
+
+      // update avatar to the server
+      updateUserAvatar(userInfo._id, { avatar })
+        .then((result) => {
+          if (result.success) {
+            
+            document.getElementById("nameDisplay").src = avatar;
+            document.getElementById("header-useravator").src = avatar;
+            const avatarPreview = document.getElementById("avatarPreview");
+            if (avatarPreview) {
+              avatarPreview.src = avatar;
+            }
+
+            showSuccessMessage("avatar", "Avatar updated successfully");
+          } else {
+            showErrorMessage(
+              "avatar",
+              result.message || "Failed to update avatar"
+            );
+          }
+        })
+        .catch((error) => {
+          console.error("Error updating avatar:", error);
+          showErrorMessage(
+            "avatar",
+            "An error occurred. Please try again later."
+          );
+        });
+
+
+
+
     });
   }
 
@@ -220,22 +269,8 @@ async function updatePassword(oldPwd, newPwd, confirmPwd) {
   }
 }
 
-/**
- * 预览头像
- */
-function previewAvatar(file) {
-  const reader = new FileReader();
-  reader.onload = (e) => {
-    const dataURL = e.target.result;
-    const avatarPreview = document.getElementById("avatarPreview");
-    avatarPreview.style.backgroundImage = `url('${dataURL}')`;
-    avatarPreview.style.backgroundSize = "cover";
-    avatarPreview.style.backgroundPosition = "center";
-  };
-  reader.readAsDataURL(file);
-}
-
 function setupFormSubmitHandlers() {
+
   // save buttons
   const introSaveBtn = document.querySelector(
     'button.submit-button[data-field="introduction"]:not(.cancel-btn)'
@@ -274,12 +309,7 @@ function setupFormSubmitHandlers() {
     btn.addEventListener("click", function () {
       const field = this.getAttribute("data-field");
 
-      const errorMsg = document.querySelector(
-        `[data-field="${field}"]#errorMessage`
-      );
-      if (errorMsg) {
-        errorMsg.style.display = "none";
-      }
+      clearErrorMessage(field);
 
       if (field === "name" || field === "sex" || field === "email") {
         revertField(field);
@@ -544,6 +574,12 @@ function showSuccessMessage(field, message) {
     errorElement.classList.add("success-message");
     errorElement.innerHTML = `<i class="fas fa-check-circle"></i> ${message}`;
     errorElement.style.display = "flex";
+
+    setTimeout(() => {
+      // After seconds, hide the message
+      errorElement.style.display = "none";
+      errorElement.classList.remove("success-message");
+  }, 2000);
   }
 }
 

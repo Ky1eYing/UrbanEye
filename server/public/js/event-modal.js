@@ -316,11 +316,6 @@ function initCreateEventMap() {
     }
 }
 
-
-document.querySelector(".upload-container").addEventListener("click", () => {
-    document.getElementById("imageUpload").click();
-});
-
 // Submit form
 if (submitCreateEventBtn) {
     submitCreateEventBtn.addEventListener("click", async () => {
@@ -394,8 +389,8 @@ if (submitCreateEventBtn) {
             displayFormErrorMessage("Please enter a content");
             return;
         }
-        if (checkedcontent.length < 10 || checkedcontent.length > 500) {
-            displayFormErrorMessage("Content must be between 10 and 500 characters");
+        if (checkedcontent.length < 10 || checkedcontent.length > 200) {
+            displayFormErrorMessage("Content must be between 10 and 200 characters");
             return;
         }
 
@@ -499,6 +494,10 @@ if (submitCreateEventBtn) {
         }
     });
 }
+
+document.querySelector(".upload-container").addEventListener("click", () => {
+    document.getElementById("imageUpload").click();
+});
 
 const imageUpload = document.getElementById("imageUpload");
 if (imageUpload) {

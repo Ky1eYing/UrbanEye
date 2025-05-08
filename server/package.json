@@ -29,7 +29,8 @@
     "express": "^4.21.2",
     "express-handlebars": "^8.0.1",
     "express-session": "^1.17.0",
-    "mongodb": "^6.15.0"
+    "mongodb": "^6.15.0",
+    "node-fetch": "^3.3.2"
   },
   "devDependencies": {
     "@eslint/js": "^9.25.0",

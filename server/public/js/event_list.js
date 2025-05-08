@@ -258,6 +258,22 @@ async function showEventList() {
             shouldSort: false,
         });
     }
+    const timeRangeFilterElement = document.querySelector('.timeRange-filter');
+    if (timeRangeFilterElement) {
+        new Choices(timeRangeFilterElement, {
+            searchEnabled: false,
+            itemSelectText: '',
+            shouldSort: false,
+        });
+    }
+    const distanceFilterElement = document.querySelector('.distance-filter');
+    if (distanceFilterElement) {
+        new Choices(distanceFilterElement, {
+            searchEnabled: false,
+            itemSelectText: '',
+            shouldSort: false,
+        });
+    }
 
     // Get event list container
     const eventList = document.querySelector('.event-list');

@@ -280,7 +280,7 @@ const updateEvent = async (
 };
 
 // add click time by event id
-export const addClickTime = async (eventId) => {
+const addClickTime = async eventId => {
   const checked_eventId = check.checkObjectId(eventId);
 
   const eventsCollection = await events();
@@ -299,6 +299,29 @@ export const addClickTime = async (eventId) => {
   return updateInfo;
 };
 
+const getAllEventsForAgent = async () => {
+	const eventsCollection = await events();
+	let eventsList = await eventsCollection.find({}).toArray();
+	if (!eventsList) {
+		throw "Could not get all events for agent";
+	}
+
+	eventsList = eventsList.map(element => {
+		return {
+			title: element.title,
+			content: element.content,
+			created_at: element.created_at,
+			address: element.location.address,
+			category: element.category,
+			click_time: element.click_time,
+			likes_count: element.likes.length,
+			comments_count: element.comments.length
+		};
+	});
+
+	return eventsList;
+}
+
 export default {
   createEvent,
   getAllEventsByFilter,
@@ -306,5 +329,6 @@ export default {
   getEventByUserId,
   updateEvent,
   removeEvent,
-  addClickTime,
+	addClickTime,
+	getAllEventsForAgent
 };
