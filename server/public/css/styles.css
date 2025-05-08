@@ -435,7 +435,7 @@ header .container {
     font-size: 12px;
 }
 
-.event-list .event-actions{
+.left-sidebar .event-actions{
     opacity: 1;
     transform: translateY(4px);
     border: var(--border-color) 0px solid;
@@ -446,12 +446,12 @@ header .container {
     /* color: var(--gray-dark); */
 }
 
-.event-list .event-item:hover .event-actions {
+.left-sidebar .event-item:hover .event-actions {
     transform: translateY(0);
 }
 
-.event-list .event-actions i,
-.event-list .event-actions span{
+.left-sidebar .event-actions i,
+.left-sidebar .event-actions span{
     font-size: 0.7rem;
     /* color: var(--gray-dark); */
 }
@@ -1994,11 +1994,20 @@ section {
     background-color: var(--accent-red-dark);
 } */
 
-
-.my .search-bar {
+.my .search-bar{
     width: 100%;
-    margin-right: 0;
+    padding: var(--spacing-sm) var(--spacing-md);
+    border: 1px solid var(--gray-light);
+    border-radius: var(--radius);
+    transition: border-color 0.3s, box-shadow 0.3s;
 }
+
+.my .search-bar:focus {
+    outline: none;
+    border-color: var(--primary-blue-light);
+    box-shadow: 0 0 0 1px var(--primary-blue-light);
+}
+
 
 .my .event-item {
     position: relative;
