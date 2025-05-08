@@ -3,6 +3,7 @@ import usersRoutes from "./users.js";
 import commentsRoutes from "./comments.js";
 import likesRoutes from "./likes.js";
 import chartRoutes from "./chart.js";
+import agentRoutes from "./agent.js";
 import {
   requireLogin,
   requireNotLogin,
@@ -28,6 +29,7 @@ const constructorMethod = (app) => {
   app.use("/api/comments", commentsRoutes);
   app.use("/api/likes", likesRoutes);
   app.use("/api/chart", chartRoutes);
+  app.use("/api/agent", agentRoutes);
 
   // 页面路由
   app.get("/", attachUser, (req, res) => {
