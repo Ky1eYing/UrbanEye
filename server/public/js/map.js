@@ -418,12 +418,8 @@ function addEventMarker(event) {
     focusMapOnMarker(marker);
 
     // navigate to event detail
-    if (typeof pushEventDetail === 'function' && typeof showEventDetail === 'function') {
-      history.replaceState(null, '', '?_id=' + event._id);
-      showEventDetail();
-    } else {
-      window.location.href = `/event?id=${event._id}`;
-    }
+    history.replaceState({ _id: event._id }, '', '?_id=' + event._id);
+    showEventDetail();
   });
 
   // Store the event id with the marker for later reference
