@@ -474,10 +474,10 @@ window.focusMapOnEvent = focusMapOnEvent;
 // custom icon for event type
 function getIconForEventType(type) {
   const iconConfig = {
-    size: new google.maps.Size(50, 50),
+    size: new google.maps.Size(32, 32),
     origin: new google.maps.Point(0, 0),
-    anchor: new google.maps.Point(25, 50),
-    scaledSize: new google.maps.Size(50, 50)
+    anchor: new google.maps.Point(16, 32),
+    scaledSize: new google.maps.Size(32, 32)
   };
 
   // select icon file based on event type
