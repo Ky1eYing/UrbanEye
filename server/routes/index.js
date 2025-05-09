@@ -80,7 +80,7 @@ const constructorMethod = (app) => {
     });
   });
 
-  app.get("/logout", ifNotLoggedRedirectHome, attachUser, (req, res) => {
+  app.get("/logout", redirectLogin, attachUser, (req, res) => {
     res.render("logout", {
       title: "Log Out",
       user: req.user,
