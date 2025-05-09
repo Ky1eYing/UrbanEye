@@ -393,8 +393,8 @@ if (submitCreateEventBtn) {
             displayFormErrorMessage("Please enter a title");
             return;
         }
-        if (checkedTitle.length < 5 || checkedTitle.length > 50) {
-            displayFormErrorMessage("Title must be between 5 and 50 characters");
+        if (checkedTitle.length > 50) {
+            displayFormErrorMessage("Title must be within 50 characters");
             return;
         }
 
@@ -404,8 +404,8 @@ if (submitCreateEventBtn) {
             displayFormErrorMessage("Please enter a content");
             return;
         }
-        if (checkedcontent.length < 10 || checkedcontent.length > 200) {
-            displayFormErrorMessage("Content must be between 10 and 200 characters");
+        if (checkedcontent.length > 200) {
+            displayFormErrorMessage("Content must be within 200 characters");
             return;
         }
 
@@ -557,7 +557,7 @@ function displayFormErrorMessage(message) {
         errorElement.style.display = "flex";
     }
 }
-  
+
 function displayFormSuccessMessage(message) {
     const errorElement = document.getElementById("errorMessage");
     if (errorElement) {
@@ -565,7 +565,7 @@ function displayFormSuccessMessage(message) {
         errorElement.classList.add("success-message");
         errorElement.innerHTML = `<i class="fas fa-check-circle"></i> ${message}`;
         errorElement.style.display = "flex";
-        
+
         setTimeout(() => {
             // After 2 seconds, hide the message
             errorElement.style.display = "none";

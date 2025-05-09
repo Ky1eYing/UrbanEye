@@ -59,8 +59,8 @@ export const checkPhotoUrl = (photourl) => {
 // check title
 export const checkTitle = (title) => {
   const check_title = checkVaildString(title, "Title");
-  if (check_title.length < 5 || check_title.length > 50) {
-    throw new Error("Title length should be between 5 and 50 characters");
+	if (check_title.length > 50) {
+		throw new Error("Title length should be within 50 characters");
   }
 
   return check_title;
@@ -69,8 +69,8 @@ export const checkTitle = (title) => {
 // check content
 export const checkContent = (content) => {
   const check_content = checkVaildString(content, "Content");
-  if (check_content.length < 10 || check_content.length > 200) {
-    throw new Error("Content length should be between 10 and 200 characters");
+	if (check_content.length > 200) {
+		throw new Error("Content length should be within 200 characters");
   }
 
   return check_content;

@@ -172,8 +172,8 @@ function showEditCommentModal(commentId) {
                 alert("Please enter a comment");
                 return;
             }
-            if (commentText.length < 10 || commentText.length > 200) {
-                alert("Comment length should be between 10 and 200 characters");
+            if (commentText.length > 200) {
+                alert("Comment length should be within 200 characters");
                 return;
             }
 
