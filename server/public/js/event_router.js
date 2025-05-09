@@ -28,8 +28,7 @@ window.addEventListener('popstate', async () => {
         if (eventId) {
             await showEventDetail();
         } else {
-            // await showEventList();
-            applyFilters();
+            await showEventList();
         }
     } else {
         // If history is not on the event page, we can just reload the page

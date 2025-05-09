@@ -88,20 +88,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             // get current url
             const currentUrl = window.location.href;
 
-            /*
-            // Original Share API
-            if (navigator.share) {
-                navigator.share({
-                    title: document.getElementById("detail-event-title").textContent,
-                    text: "Check out this event on UrbanEye!",
-                    url: currentUrl
-                })
-                .catch(err => {
-                    console.log("Error sharing:", err);
-                });
-            } else {
-            */
-
             // Copy link to clipboard
             navigator.clipboard.writeText(currentUrl)
                 .then(() => {
@@ -122,6 +108,76 @@ document.addEventListener("DOMContentLoaded", async () => {
                     console.log("Clipboard error:", err);
                 });
 
+        });
+
+        // ellipsis popup
+        const popupBtn = document.getElementById('popupBtn');
+        const popup = document.getElementById('popup');
+        let popperInstance = null;
+        function createPopper() {
+            if (popperInstance) {
+                popperInstance.destroy();
+            }
+            popperInstance = Popper.createPopper(popupBtn, popup, {
+                placement: 'top-start', // 'bottom-end' | 'top-start' | 'left' | 'right'
+                modifiers: [{name: 'offset', options: { offset: [-2, 2]},},],  // [x, y] offset
+            });
+        }
+        popupBtn.addEventListener('click', () => {
+            if (popup.style.display === 'block') {
+                popup.style.display = 'none';
+            } else {
+                popup.style.display = 'block';
+                createPopper();
+            }
+        });
+        document.addEventListener('click', (e) => {
+            if (!popup.contains(e.target) && e.target !== popupBtn) {
+                popup.style.display = 'none';
+            }
+        });
+    }
+
+    // Report Action
+    const reportEventBtn = document.getElementById("reportEventBtn");
+    if (reportEventBtn) {
+        reportEventBtn.addEventListener("click", async function () {
+            // Check if user is logged in
+            if (typeof isLoggedIn === 'undefined' || !isLoggedIn) {
+                alert("Please log in to report events");
+                return;
+            }
+
+            const eventId = getEventIdFromURL();
+
+            if (!eventId) {
+                console.error('Missing eventId on item');
+                return;
+            }
+
+            // Show confirmation modal
+            const confirmed = await showConfirmModal(
+                'Report?',
+                'Are you sure you want to report this event? <br>This means you think this event is inappropriate or violates. <br>This event maybe blocked.',
+                'Report',
+                'Cancel'
+            );
+            if (!confirmed) return;
+
+            try {
+                    // Like the event
+                    const success = await addReport(eventId);
+
+                    if (success === true) {
+                        alert("Event reported successfully");
+                        console.log("Event liked successfully");
+                    } else {
+                        alert(success);
+                    }
+                
+            } catch (error) {
+                console.error("Error processing report action:", error);
+            }
         });
     }
 

@@ -54,7 +54,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         window.location.href = "/event";
                     } else {
                         // Display error from server
-                        let message = data.message || "Invalid username or password";
+                        let message = data.error || "Invalid username or password";
                         console.error("Login error:", message);
                         showErrorMessage(message);
                     }

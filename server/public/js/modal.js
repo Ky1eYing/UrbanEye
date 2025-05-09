@@ -9,7 +9,7 @@ function showConfirmModal(title, text, yes, no, onConfirm) {
         if (title)
             confirmTitle.textContent = title;
         if (text)
-            confirmText.textContent = text;
+            confirmText.innerHTML = text;
         if (yes)
             btnYes.textContent = yes;
         if (no)

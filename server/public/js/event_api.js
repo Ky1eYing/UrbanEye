@@ -356,3 +356,43 @@ async function getLikeStatus(eventId) {
         return { liked: false };
     }
 }
+
+async function addReport(eventId) {
+    try {
+        // Check if user is logged in
+        if (!isLoggedIn || !userInfo || !userInfo._id) {
+            console.log('User not logged in');
+            alert('Please log in to like events');
+            return false;
+        }
+        
+        const userId = userInfo._id;
+        
+        console.log(`Adding report for event ${eventId} by user ${userId}`);
+        
+        const response = await fetch('/api/reports', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                user_id: userId,
+                event_id: eventId
+            })
+        });
+        
+        const data = await response.json();
+        
+        if (data.code === 200) {
+            console.log('report added successfully', data.data);
+            return true;
+        } else {
+            let message = data.error || 'Unknown error';
+            console.error('Error adding report:', message);
+            return message;
+        }
+    } catch (error) {
+        console.error('Network error when reporting like:', error);
+        return error;
+    }
+}

@@ -19,6 +19,9 @@
     <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
     {{!-- Aliyun OSS SDK --}}
     <script src="https://gosspublic.alicdn.com/aliyun-oss-sdk-6.20.0.min.js"></script>
+    {{!-- popup --}}
+    <script src="https://unpkg.com/@popperjs/core@2"></script>
+
     <script>
     const isLoggedIn = {{#if user}} true {{else}} false {{/if}};
     console.log('isLoggedIn: ', isLoggedIn);

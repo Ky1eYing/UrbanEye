@@ -19,7 +19,7 @@ const createReport = async (user_id, event_id) => {
     throw new Error("Event not found");
   }
 
-  const userAlreadyReported = event.reports.some(
+  const userAlreadyReported = event.reports?.some(
     (report) => report.user_id.toString() === checked_user_id
   );
   if (userAlreadyReported) {

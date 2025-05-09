@@ -80,7 +80,7 @@
             <div class="detail-header">
                 <button id="backToListBtn" class="back-button">
                     <i class="fas fa-angle-left"></i>
-                    
+
                 </button>
                 <h3 id="detail-title">Event</h3>
             </div>
@@ -117,7 +117,7 @@
                         <span id="detail-event-clicktime">543 views</span>
                     </div>
                 </div>
-                
+
                 {{!-- Related Events You May Like --}}
                 <div id="related-events-container" class="detail-section">
                     <h3 class="detail-section-title">Events you may like</h3>
@@ -138,8 +138,17 @@
                         <i class="far fa-share-square"></i>
                         <span>Share</span>
                     </button>
+                    <button class="action-btn ellipsis-btn" id="popupBtn">
+                        <i class="fa-solid fa-ellipsis-vertical"></i>
+                    </button>
+                    <div id="popup" class="popup">
+                        <button class="report-btn" id="reportEventBtn">
+                        <i class="fa-regular fa-flag"></i>
+                        <span>Report</span>
+                    </button>
+                    </div>
                 </div>
-                
+
 
                 {{!-- New Comment Post --}}
                 <div class="detail-event-post detail-section">
@@ -189,7 +198,7 @@
                     </div>
                 </div>
 
-                
+
             </div>
         </div>
     </div>
@@ -212,8 +221,8 @@
             <div class="form-group">
                 <label for="imageUpload">Image</label>
                 <div class="upload-container">
-                    <input type="file" id="imageUpload" accept="image/*" hidden/>
-                    <img id="eventPhoto" src="" alt="Preview" hidden/>
+                    <input type="file" id="imageUpload" accept="image/*" hidden />
+                    <img id="eventPhoto" src="" alt="Preview" hidden />
                     <div class="upload-placeholder">
                         <i class="fas fa-image"></i>
                         <span>Choose an image</span>

@@ -269,7 +269,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     } else {
         // await showEventList();
         // Init titleLike, category, timeRange, and distance filters
-        initFilters();
+        
         showEventList();
     }
 });
@@ -339,6 +339,7 @@ function initFilters() {
 }
 
 async function showEventList() {
+    initFilters();
 
     console.log('Applying filters:', filters);
 
