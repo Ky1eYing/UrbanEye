@@ -378,6 +378,8 @@ async function showEventList() {
         // Log the results for debugging
         console.log("Events fetched:", events);
 
+        events = [...adEvents, ...events];
+
         // Handle Api error
         if (!events) {
             console.error('Error fetching events:', error);
@@ -390,8 +392,6 @@ async function showEventList() {
             eventList.innerHTML = `<div class="no-events">No events right now. Try different filters.</div>`;
             return;
         }
-
-        events = [...adEvents, ...events];
 
         // Clear loading state
         eventList.innerHTML = '';
