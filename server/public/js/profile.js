@@ -503,14 +503,6 @@ function savePassword() {
     return;
   }
 
-  if (newPassword === oldPassword) {
-    showErrorMessage(
-      "password",
-      "New password must be different from current password"
-    );
-    return;
-  }
-
   if (userInfo && userInfo._id) {
     updateUserPassword(userInfo._id, oldPassword, newPassword)
       .then((result) => {
