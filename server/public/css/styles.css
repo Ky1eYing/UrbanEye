@@ -476,17 +476,22 @@ header .container {
     box-shadow: var(--shadow-color) 2px 2px 3px;
     padding: 2px 10px;
     font-size: 0.7rem;
-    /* color: var(--gray-dark); */
+    color: var(--gray-dark);
+    gap: 6px;
 }
 
 .left-sidebar .event-item:hover .event-actions {
     transform: translateY(0);
 }
 
-.left-sidebar .event-actions i,
+.left-sidebar .event-actions i {
+    font-size: 0.6rem;
+    color: var(--gray-dark);
+}
+
 .left-sidebar .event-actions span {
     font-size: 0.7rem;
-    /* color: var(--gray-dark); */
+    color: var(--gray-dark);
 }
 
 

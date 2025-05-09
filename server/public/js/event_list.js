@@ -391,10 +391,21 @@ async function showEventList() {
             return;
         }
 
+        events = [...adEvents, ...events];
+
         // Clear loading state
         eventList.innerHTML = '';
         // Bind events list - simple version for testing
-        events.forEach(event => {
+        events.forEach((event, i) => {
+            let adSign =``;
+            if(adEvents && adEvents.length > i){
+                adSign =  `
+                    <div class="event-actions">
+                        <i class="far fa-star"></i>
+                        <span>Recommend</span>
+                    </div>
+                `
+            }
             const eventItemHTML = `
                 <div class="event-item" data-event-id="${event._id}">
                     <div class="event-image">
@@ -413,17 +424,9 @@ async function showEventList() {
                             </div>
                         </div>
                     </div>
-                   
+                   ${adSign}
                 </div>
             `;
-
-            /*TODO
-
-             <div class="event-actions">
-                        <span>Recommand</span>
-                    </div>
-
-            */
 
             eventList.insertAdjacentHTML('beforeend', eventItemHTML);
         });
