@@ -111,11 +111,11 @@ router
       checked_photoUrl;
     try {
       checked_user_id = check.checkObjectId(user_id);
-      checked_title = check.checkVaildString(title, "Title");
-      checked_content = check.checkVaildString(content, "Content");
+      checked_title = check.checkTitle(title);
+      checked_content = check.checkContent(content);
       checked_location = check.checkLocation(location);
       checked_category = check.checkCategory(category);
-      checked_photoUrl = check.checkVaildString(photoUrl, "PhotoUrl");
+      checked_photoUrl = check.checkPhotoUrl(photoUrl);
     } catch (e) {
       return res.status(400).json({ error: e.message });
     }
@@ -271,11 +271,11 @@ router
       checked_category,
       checked_photoUrl;
     try {
-      checked_title = check.checkVaildString(title, "Title");
-      checked_content = check.checkVaildString(content, "Content");
+      checked_title = check.checkTitle(title);
+      checked_content = check.checkContent(content);
       checked_location = check.checkLocation(location);
       checked_category = check.checkCategory(category);
-      checked_photoUrl = check.checkVaildString(photoUrl, "PhotoUrl");
+      checked_photoUrl = check.checkPhotoUrl(photoUrl);
     } catch (e) {
       return res.status(400).json({ error: e.message });
     }

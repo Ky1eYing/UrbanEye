@@ -51,7 +51,7 @@ router
     try {
       event_id = check.checkObjectId(event_id);
       user_id = check.checkObjectId(user_id);
-      content = check.checkVaildString(content, "Content");
+      content = check.checkComment(content);
     } catch (e) {
       return res.status(400).json({ error: e.message });
     }
@@ -184,7 +184,7 @@ router
 
     try {
       comment_id = check.checkObjectId(comment_id);
-      content = check.checkVaildString(content, "Content");
+      content = check.checkComment(content);
     } catch (e) {
       return res.status(400).json({ error: e.message });
     }
