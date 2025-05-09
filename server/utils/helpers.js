@@ -272,7 +272,7 @@ export const validatePhone = (phone) => {
 // check comment
 export const checkComment = (comment) => {
   const check_comment = checkVaildString(comment, "Comment");
-  if (check_comment.length < 5 || check_comment.length > 100) {
+  if (check_comment.length > 100) {
     throw new Error("Comment length should be between 5 and 100 characters");
   }
 
