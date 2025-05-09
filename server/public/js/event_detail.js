@@ -87,21 +87,23 @@ document.addEventListener("DOMContentLoaded", async () => {
         shareEventBtn.addEventListener("click", function () {
             // get current url
             const currentUrl = window.location.href;
+            const shareText = this.querySelector("span");
+            const shareIcon = this.querySelector("i");
+            const originalText = shareText.textContent;
 
             // Copy link to clipboard
             navigator.clipboard.writeText(currentUrl)
                 .then(() => {
                     // show prompt
-                    const shareText = this.querySelector("span");
-                    const originalText = shareText.textContent;
+                    this.disabled = true;
                     shareText.textContent = "Link copied!";
-                    // TODO: create a css to make it green. 
-                    // shareText.style.color = "var(--accent-green)";
-                    // shareText.style.fontWeight = "bold";
+                    this.style.color = "var(--accent-green)";
 
                     setTimeout(() => {
                         // After seconds, reset text to original
                         shareText.textContent = originalText;
+                        this.style.color = "var(--gray-dark)";
+                        shareEventBtn.disabled = false;
                     }, 2000);
                 })
                 .catch(err => {
@@ -109,34 +111,34 @@ document.addEventListener("DOMContentLoaded", async () => {
                 });
 
         });
+    }
 
-        // ellipsis popup
-        const popupBtn = document.getElementById('popupBtn');
-        const popup = document.getElementById('popup');
-        let popperInstance = null;
-        function createPopper() {
-            if (popperInstance) {
-                popperInstance.destroy();
-            }
-            popperInstance = Popper.createPopper(popupBtn, popup, {
-                placement: 'top-start', // 'bottom-end' | 'top-start' | 'left' | 'right'
-                modifiers: [{name: 'offset', options: { offset: [-2, 2]},},],  // [x, y] offset
-            });
+    // ellipsis popup
+    const popupBtn = document.getElementById('popupBtn');
+    const popup = document.getElementById('popup');
+    let popperInstance = null;
+    function createPopper() {
+        if (popperInstance) {
+            popperInstance.destroy();
         }
-        popupBtn.addEventListener('click', () => {
-            if (popup.style.display === 'block') {
-                popup.style.display = 'none';
-            } else {
-                popup.style.display = 'block';
-                createPopper();
-            }
-        });
-        document.addEventListener('click', (e) => {
-            if (!popup.contains(e.target) && e.target !== popupBtn) {
-                popup.style.display = 'none';
-            }
+        popperInstance = Popper.createPopper(popupBtn, popup, {
+            placement: 'top-start', // 'bottom-end' | 'top-start' | 'left' | 'right'
+            modifiers: [{ name: 'offset', options: { offset: [-2, 2] }, },],  // [x, y] offset
         });
     }
+    popupBtn.addEventListener('click', () => {
+        if (popup.style.display === 'block') {
+            popup.style.display = 'none';
+        } else {
+            popup.style.display = 'block';
+            createPopper();
+        }
+    });
+    document.addEventListener('click', (e) => {
+        if (!popup.contains(e.target) && e.target !== popupBtn) {
+            popup.style.display = 'none';
+        }
+    });
 
     // Report Action
     const reportEventBtn = document.getElementById("reportEventBtn");
@@ -165,16 +167,16 @@ document.addEventListener("DOMContentLoaded", async () => {
             if (!confirmed) return;
 
             try {
-                    // Like the event
-                    const success = await addReport(eventId);
+                // Like the event
+                const success = await addReport(eventId);
 
-                    if (success === true) {
-                        alert("Event reported successfully");
-                        console.log("Event liked successfully");
-                    } else {
-                        alert(success);
-                    }
-                
+                if (success === true) {
+                    alert("Event reported successfully");
+                    console.log("Event liked successfully");
+                } else {
+                    alert(success);
+                }
+
             } catch (error) {
                 console.error("Error processing report action:", error);
             }
@@ -192,8 +194,8 @@ document.addEventListener("DOMContentLoaded", async () => {
                 return;
             }
             if (commentText.length < 10 || commentText.length > 200) {
-              alert("Comment length should be between 10 and 200 characters");
-              return;
+                alert("Comment length should be between 10 and 200 characters");
+                return;
             }
 
             if (!isLoggedIn) {
