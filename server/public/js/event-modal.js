@@ -39,15 +39,17 @@ createEventModal.addEventListener("click", event => {
 
 // Show create event modal
 function showCreateEventModal(eventId) {
-
-    //  eventId = '680bc0d81cb1ed54b36c0152';
-
     // Show the modal
     document.body.style.overflow = 'hidden';
     createEventModal.style.display = "flex";
 
     // Clear any existing error or success messages
     clearFormErrorMessage();
+    const errorElement = document.getElementById("errorMessage");
+    if (errorElement) {
+        errorElement.style.display = "none";
+        errorElement.innerHTML = "";
+    }
 
     if (eventId) {
         // Edit mode - load existing event data
@@ -534,83 +536,29 @@ if (imageUpload) {
 
 // Display error message function
 function displayFormErrorMessage(message) {
-    // Get or create the error message element
-    let errorElement = document.getElementById("formErrorMessage");
-
-    if (!errorElement) {
-        errorElement = document.createElement("div");
-        errorElement.id = "formErrorMessage";
-        errorElement.style.color = "#ff3333";
-        errorElement.style.padding = "8px 0";
-        errorElement.style.marginTop = "10px";
-        errorElement.style.marginBottom = "10px";
-        errorElement.style.fontSize = "14px";
+    const errorElement = document.getElementById("errorMessage");
+    if (errorElement) {
+        errorElement.classList.remove("success-message");
+        errorElement.classList.add("error-message");
+        errorElement.innerHTML = `<i class="fas fa-triangle-exclamation"></i> ${message}`;
         errorElement.style.display = "flex";
-        errorElement.style.alignItems = "center";
-
-        // Add warning icon
-        const icon = document.createElement("i");
-        icon.className = "fas fa-exclamation-triangle";
-        icon.style.marginRight = "8px";
-        errorElement.appendChild(icon);
-
-        const textSpan = document.createElement("span");
-        errorElement.appendChild(textSpan);
-
-        const submitBtn = document.getElementById("submitCreateEvent");
-        if (submitBtn && submitBtn.parentNode) {
-            submitBtn.parentNode.insertBefore(errorElement, submitBtn);
-        }
     }
-
-    const textSpan = errorElement.querySelector("span");
-    if (textSpan) {
-        textSpan.textContent = message;
-    }
-
-    // Show the error message
-    errorElement.style.display = "flex";
 }
-
-// Display success message function
+  
 function displayFormSuccessMessage(message) {
-    let successElement = document.getElementById("formSuccessMessage");
-
-    if (!successElement) {
-        // Create success message element if it doesn't exist
-        successElement = document.createElement("div");
-        successElement.id = "formSuccessMessage";
-        successElement.style.color = "#33aa33";
-        successElement.style.padding = "8px 0";
-        successElement.style.marginTop = "10px";
-        successElement.style.marginBottom = "10px";
-        successElement.style.fontSize = "14px";
-        successElement.style.display = "flex";
-        successElement.style.alignItems = "center";
-
-        // Add success icon
-        const icon = document.createElement("i");
-        icon.className = "fas fa-check-circle";
-        icon.style.marginRight = "8px";
-        successElement.appendChild(icon);
-
-        const textSpan = document.createElement("span");
-        successElement.appendChild(textSpan);
-
-        const submitBtn = document.getElementById("submitCreateEvent");
-        if (submitBtn && submitBtn.parentNode) {
-            submitBtn.parentNode.insertBefore(successElement, submitBtn);
-        }
+    const errorElement = document.getElementById("errorMessage");
+    if (errorElement) {
+        errorElement.classList.remove("error-message");
+        errorElement.classList.add("success-message");
+        errorElement.innerHTML = `<i class="fas fa-check-circle"></i> ${message}`;
+        errorElement.style.display = "flex";
+        
+        setTimeout(() => {
+            // After 2 seconds, hide the message
+            errorElement.style.display = "none";
+            errorElement.classList.remove("success-message");
+        }, 2000);
     }
-
-    const textSpan = successElement.querySelector("span");
-    if (textSpan) {
-        textSpan.textContent = message;
-    }
-
-    clearFormErrorMessage();
-
-    successElement.style.display = "flex";
 }
 
 // Clear error message function
@@ -619,6 +567,7 @@ function clearFormErrorMessage() {
     const errorElement = document.getElementById("formErrorMessage");
     if (errorElement) {
         errorElement.style.display = "none";
+        errorElement.innerHTML = "";
     }
 
     // Hide success message if it exists
