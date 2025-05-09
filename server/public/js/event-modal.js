@@ -51,6 +51,19 @@ function showCreateEventModal(eventId) {
         errorElement.innerHTML = "";
     }
 
+    const imageUpload = document.getElementById("imageUpload");
+    if (imageUpload) {
+        imageUpload.value = '';
+    }
+    const uploadPlaceholder = document.querySelector(".upload-placeholder");
+    const eventPhoto = document.getElementById("eventPhoto");
+    if (uploadPlaceholder && eventPhoto) {
+        uploadPlaceholder.style.display = "flex";
+        eventPhoto.style.display = "none";
+        eventPhoto.src = '';
+    }
+
+
     if (eventId) {
         // Edit mode - load existing event data
         getEventByEventId(eventId).then(eventData => {
