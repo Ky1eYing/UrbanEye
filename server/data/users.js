@@ -44,7 +44,7 @@ const userCheckWithPwduserId = async (userId, plainPassword) => {
 
 const userCheckWithPwdUserName = async (userName, plainPassword) => {
   try {
-    userName = check.checkVaildString(userName, "UserName");
+    userName = check.validateUserName(userName);
     userName = userName.toLowerCase();
     plainPassword = check.checkVaildString(plainPassword, "Password");
   } catch (e) {
@@ -67,7 +67,7 @@ const userCheckWithPwdUserName = async (userName, plainPassword) => {
 
 const updateUserName = async (userId, userName) => {
   userId = check.checkObjectId(userId);
-  userName = check.checkVaildString(userName, "UserName");
+  userName = check.validateUserName(userName);
   userName = userName.toLowerCase();
 
   const usersCollection = await users();
@@ -97,7 +97,7 @@ const updateUserName = async (userId, userName) => {
 
 const updatePassword = async (userId, password) => {
   userId = check.checkObjectId(userId);
-  password = check.checkVaildString(password, "Password");
+  password = check.validatePassword(password);
 
   password = await makeHashedPassword(password);
 
@@ -175,9 +175,9 @@ const createUser = async (
   email = check.validateEmail(email);
   phone = check.validatePhone(phone);
 
-  userName = check.checkVaildString(userName, "UserName");
-  name = check.checkVaildString(name, "Name");
-  password = check.checkVaildString(password, "Password");
+  userName = check.validateUserName(userName);
+  name = check.validateName(name);
+  password = check.validatePassword(password);
 
   password = await makeHashedPassword(password);
 
@@ -288,9 +288,9 @@ const updateUser = async (userId, name, sex, email, phone) => {
   email = check.validateEmail(email);
   phone = check.validatePhone(phone);
 
-  // userName = check.checkVaildString(userName, "UserName");
-  name = check.checkVaildString(name, "Name");
-  // password = check.checkVaildString(password, "Password");
+  // userName = check.validateUserName(userName);
+  name = check.validateName(name);
+  // password = check.validatePassword(password);
 
   // password = await makeHashedPassword(password);
 

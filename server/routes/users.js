@@ -29,9 +29,9 @@ router
     let { userName, name, password, introduction, sex, email, phone } = reqBody;
 
     try {
-      userName = check.checkVaildString(userName, "UserName");
-      name = check.checkVaildString(name, "Name");
-      password = check.checkVaildString(password, "Password");
+      userName = check.validateUserName(userName);
+      name = check.validateName(name);
+      password = check.validatePassword(password);
       introduction = check.validateIntroduction(introduction);
       sex = check.validateSex(sex);
       email = check.validateEmail(email);
@@ -75,8 +75,8 @@ router
     let { userName, password } = reqBody;
 
     try {
-      userName = check.checkVaildString(userName, "UserName");
-      password = check.checkVaildString(password, "Password");
+      userName = check.validateUserName(userName);
+      password = check.validatePassword(password);
     } catch (e) {
       return res.status(400).json({ code: 400, message: e.message });
     }
@@ -168,7 +168,7 @@ router
     let { password } = reqBody;
 
     try {
-      password = check.checkVaildString(password, "Password");
+      password = check.validatePassword(password);
     } catch (e) {
       return res.status(400).json({ code: 400, message: e.message });
     }
@@ -229,28 +229,33 @@ router
 
     let { userName, password, originalPassword } = reqBody;
 
+    userName = null;
+
     try {
-      userName = check.checkStringAllowNull(userName, "UserName");
-      password = check.checkStringAllowNull(password, "Password");
-      originalPassword = check.checkVaildString(
-        originalPassword,
-        "Original Password"
-      );
+      // userName = check.checkStringAllowNull(userName, "UserName");
+      password = check.validatePassword(password);
+      originalPassword = check.validatePassword(originalPassword);
     } catch (e) {
       return res.status(400).json({ code: 400, message: e.message });
     }
 
-    if (userName !== null && password !== null) {
-      return res.status(400).json({
-        code: 400,
-        message: "Cannot update two fields at the same time",
-      });
-    }
+    // if (userName === null && password === null) {
+    //   return res
+    //     .status(400)
+    //     .json({ code: 400, message: "There are no fields to update" });
+    // }
 
-    if (userName === null && password === null) {
+    // if (userName !== null && password !== null) {
+    //   return res.status(400).json({
+    //     code: 400,
+    //     message: "Cannot update two fields at the same time",
+    //   });
+    // }
+
+    if (password === null) {
       return res
         .status(400)
-        .json({ code: 400, message: "There are no fields to update" });
+        .json({ code: 400, message: "There are no password to update" });
     }
 
     try {
@@ -330,9 +335,9 @@ router
     let { name, sex, email, phone } = reqBody;
 
     try {
-      // userName = check.checkVaildString(userName, "UserName");
-      name = check.checkVaildString(name, "Name");
-      // password = check.checkVaildString(password, "Password");
+      // userName = check.validateUserName(userName);
+      name = check.validateName(name);
+      // password = check.validatePassword(password);
       // introduction = check.validateIntroduction(introduction);
       sex = check.validateSex(sex);
       email = check.validateEmail(email);
@@ -342,13 +347,7 @@ router
     }
 
     try {
-      const user = await usersData.updateUser(
-        userId,
-        name,
-        sex,
-        email,
-        phone
-      );
+      const user = await usersData.updateUser(userId, name, sex, email, phone);
       return res.status(200).json({
         code: 200,
         message: "success",
