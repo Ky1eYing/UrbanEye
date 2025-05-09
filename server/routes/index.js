@@ -9,6 +9,8 @@ import {
   requireLogin,
   requireNotLogin,
   redirectLogin,
+  ifLoggedRedirectHome,
+  ifNotLoggedRedirectHome,
   attachUser,
 } from "../middleware/auth.js";
 
@@ -66,19 +68,19 @@ const constructorMethod = (app) => {
     });
   });
 
-  app.get("/login", (req, res) => {
+  app.get("/login", ifLoggedRedirectHome, (req, res) => {
     res.render("login", {
       title: "Login",
     });
   });
 
-  app.get("/signup", (req, res) => {
+  app.get("/signup", ifLoggedRedirectHome, (req, res) => {
     res.render("signup", {
       title: "Sign Up",
     });
   });
 
-  app.get("/logout", (req, res) => {
+  app.get("/logout", ifNotLoggedRedirectHome, attachUser, (req, res) => {
     res.render("logout", {
       title: "Log Out",
       user: req.user,

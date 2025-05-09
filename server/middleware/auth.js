@@ -41,6 +41,30 @@ const redirectLogin = (req, res, next) => {
   next();
 };
 
+const ifLoggedRedirectHome = (req, res, next) => {
+  if (!ENABLE_AUTH_CHECK) {
+    return next();
+  }
+
+  if (req.session && req.session.userId) {
+    return res.redirect("/");
+  }
+
+  next();
+};
+
+const ifNotLoggedRedirectHome = (req, res, next) => {
+  if (!ENABLE_AUTH_CHECK) {
+    return next();
+  }
+
+  if (!req.session?.userId) {
+    return res.redirect("/");
+  }
+
+  next();
+};
+
 const attachUser = async (req, res, next) => {
   if (req.session && req.session.userId) {
     try {
@@ -50,7 +74,7 @@ const attachUser = async (req, res, next) => {
           _id: user._id,
           userName: user.userName,
           name: user.name,
-          avatar: user.avatar
+          avatar: user.avatar,
         };
       }
     } catch (error) {
@@ -61,4 +85,11 @@ const attachUser = async (req, res, next) => {
   next();
 };
 
-export { requireLogin, requireNotLogin, redirectLogin, attachUser };
+export {
+  requireLogin,
+  requireNotLogin,
+  redirectLogin,
+  ifLoggedRedirectHome,
+  ifNotLoggedRedirectHome,
+  attachUser,
+};
