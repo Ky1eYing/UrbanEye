@@ -446,11 +446,11 @@ function addEventMarker(event) {
 // Focus map on a specific marker
 function focusMapOnMarker(marker) {
   map.panTo(marker.getPosition());
-  if (map.getZoom() !== 15) {
-    setTimeout(() => {
-      map.setZoom(15);
-    }, 500);
-  }
+  // if (map.getZoom() !== 15) {
+  //   setTimeout(() => {
+  //     map.setZoom(15);
+  //   }, 500);
+  // }
 
   marker.setAnimation(google.maps.Animation.BOUNCE);
   setTimeout(() => {
