@@ -125,7 +125,7 @@ function makeCategoryDataMap(rawData) {
 
 function drawLineChart(categoryDataMap) {
     var chartDom = document.getElementById('line');
-    var myChart = echarts.init(chartDom, isDarkMode() ? 'dark' : 'light');
+    var myChart = echarts.init(chartDom, isDarkMode() ? 'dark' : '');
     var option;
     option = {
         tooltip: {
@@ -200,7 +200,7 @@ function drawLineChart(categoryDataMap) {
 
 function drawPieChart(categoryDataMap) {
     var chartDom = document.getElementById('pie');
-    var myChart = echarts.init(chartDom, isDarkMode() ? 'dark' : 'light');
+    var myChart = echarts.init(chartDom, isDarkMode() ? 'dark' : '');
     var option;
     option = {
         tooltip: {
