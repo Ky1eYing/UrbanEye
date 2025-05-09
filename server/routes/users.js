@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { usersData } from "../data/index.js";
+import { usersData, adCategoryData } from "../data/index.js";
 import * as check from "../utils/helpers.js";
 import { ObjectId } from "mongodb";
 import { SESSION_COOKIE_NAME } from "../config/env.js";
@@ -458,6 +458,36 @@ router.route("/avatar/:userId").put(requireLogin, async (req, res) => {
     });
   } catch (e) {
     return res.status(404).json({ code: 404, message: e.message });
+  }
+});
+
+// GET user top category
+router.route("/:userId/top-category").get(async (req, res) => {
+  let checked_userId;
+  try {
+    checked_userId = check.checkObjectId(req.params.userId);
+  } catch (e) {
+    return res.status(400).json({ code: 400, message: e.message });
+  }
+
+  if (ENABLE_AUTH_CHECK) {
+    if (req.session.userId !== checked_userId) {
+      return res
+        .status(403)
+        .json({ code: 403, message: "Forbidden! You are not authorized" });
+    }
+  }
+
+  try {
+    const topCategory = await adCategoryData.getTopCategories(checked_userId);
+
+    return res.status(200).json({
+      code: 200,
+      message: "success",
+      data: topCategory
+    });
+  } catch (e) {
+    return res.status(500).json({ code: 500, message: e.message });
   }
 });
 

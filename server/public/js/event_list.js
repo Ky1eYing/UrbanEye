@@ -269,7 +269,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     } else {
         // await showEventList();
         // Init titleLike, category, timeRange, and distance filters
-        
+
         showEventList();
     }
 });
@@ -352,8 +352,28 @@ async function showEventList() {
 
         // Fetch events from backend using our new function
         let events;
+        let adEvents = [];
 
+        // only get recommended events when user is logged in and not searching for a specific title or category
+        if (typeof isLoggedIn !== 'undefined' && isLoggedIn && userInfo && userInfo._id &&
+            !filters.titleLike && !filters.category) {
+            // get the user's most visited category
+            const topCategory = await getUserTopCategory();
+            if (topCategory) {
+                console.log("User's top category:", topCategory);
 
+                // get the recommended events
+                const adFilters = {
+                    category: topCategory,
+                    skip: 3
+                };
+
+                adEvents = await getFilterEvents(adFilters);
+                console.log("Recommended events based on user preference:", adEvents);
+            }
+        }
+
+        // get the regular events
         events = await getFilterEvents(filters);
         // Log the results for debugging
         console.log("Events fetched:", events);
@@ -366,7 +386,7 @@ async function showEventList() {
         }
 
         // Handle no events scenario
-        if (!events || events.length === 0) {
+        if ((!events || events.length === 0)) {
             eventList.innerHTML = `<div class="no-events">No events right now. Try different filters.</div>`;
             return;
         }

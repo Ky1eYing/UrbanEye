@@ -1,5 +1,5 @@
 import express from "express";
-import { eventsData } from "../data/index.js";
+import { eventsData, adCategoryData } from "../data/index.js";
 import * as check from "../utils/helpers.js";
 import { ObjectId } from "mongodb";
 import {
@@ -166,6 +166,22 @@ router
 
       try {
         await eventsData.addClickTime(checked_eventId);
+
+        // check if the user is logged in
+        if (ENABLE_AUTH_CHECK) {
+          // if the user is logged in, then update the user's ad category record
+          if (req.session && req.session.userId) {
+            try {
+              await adCategoryData.addAdCategory(req.session.userId, checked_eventId);
+              console.log("Successfully updated ad category for user:", req.session.userId);
+            } catch (adCategoryErr) {
+              // just show the error
+              console.error(`Failed to update ad category: ${adCategoryErr.message}`);
+            }
+          } else {
+            console.log("User not logged in, skipping ad category update");
+          }
+        }
       } catch (err) {
         return res.status(500).json({
           error: `Failed to increment click count: ${err.message}`

@@ -396,3 +396,34 @@ async function addReport(eventId) {
         return error;
     }
 }
+
+async function getUserTopCategory() {
+    try {
+        // check if user is logged in
+        if (typeof isLoggedIn === 'undefined' || !isLoggedIn || !userInfo || !userInfo._id) {
+            console.log('User not logged in, cannot get top category');
+            return null;
+        }
+
+        const userId = userInfo._id;
+        const response = await fetch(`/api/users/${userId}/top-category`);
+
+        if (!response.ok) {
+            console.error(`Error fetching top category (${response.status}): ${response.statusText}`);
+            return null;
+        }
+
+        const data = await response.json();
+
+        if (data.code === 200) {
+            console.log('Successfully fetched top category:', data.data);
+            return data.data; // return the user's most visited category
+        } else {
+            console.error('Error in API response:', data.message || 'Unknown error');
+            return null;
+        }
+    } catch (error) {
+        console.error('Network error when fetching top category:', error);
+        return null;
+    }
+}
