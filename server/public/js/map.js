@@ -149,7 +149,8 @@ function initMap() {
     fullscreenControl: false,
     gestureHandling: 'greedy',
     keyboardShortcuts: false,
-    reportError: false
+    reportError: false,
+    noClear: true,
   });
 
   // listen dark mode change
@@ -218,12 +219,20 @@ function addMyLocationButton(map) {
     // check if user location marker exists
     if (userLocationMarker) {
       const pos = userLocationMarker.getPosition();
-      map.setCenter(pos);
-      map.setZoom(12.8);
+      map.panTo(pos);
+      if (map.getZoom() !== 12.8) {
+        setTimeout(() => {
+          map.setZoom(12.8);
+        }, 500);
+      }
     }
     else if (window.preFetchedPosition) {
-      map.setCenter(window.preFetchedPosition);
-      map.setZoom(12.8);
+      map.panTo(window.preFetchedPosition);
+      if (map.getZoom() !== 12.8) {
+        setTimeout(() => {
+          map.setZoom(12.8);
+        }, 500);
+      }
 
       if (!userLocationMarker) {
         updateUserLocation(window.preFetchedPosition, "(from service)");
@@ -239,8 +248,12 @@ function addMyLocationButton(map) {
             lng: position.coords.longitude
           };
 
-          map.setCenter(pos);
-          map.setZoom(12.8);
+          map.panTo(pos);
+          if (map.getZoom() !== 12.8) {
+            setTimeout(() => {
+              map.setZoom(12.8);
+            }, 500);
+          }
           updateUserLocation(pos, "(new)");
 
           locationButton.innerHTML = '<i class="fas fa-location-arrow"></i>';
@@ -321,7 +334,7 @@ function getHighAccuracyLocation() {
 
 // update user location on map
 function updateUserLocation(position, tag = "") {
-  map.setCenter(position);
+  map.panTo(position);
   if (userLocationMarker) {
     userLocationMarker.setPosition(position);
     userLocationMarker.setTitle(`Your Location ${tag}`);
@@ -432,8 +445,13 @@ function addEventMarker(event) {
 
 // Focus map on a specific marker
 function focusMapOnMarker(marker) {
-  map.setCenter(marker.getPosition());
-  map.setZoom(12.8);
+  map.panTo(marker.getPosition());
+  if (map.getZoom() !== 15) {
+    setTimeout(() => {
+      map.setZoom(15);
+    }, 500);
+  }
+
   marker.setAnimation(google.maps.Animation.BOUNCE);
   setTimeout(() => {
     marker.setAnimation(null);
