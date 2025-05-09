@@ -517,4 +517,7 @@ function getIconForEventType(type) {
   }
 
   return iconConfig;
-} 
+}
+
+// set loadEventMarkers as a global function
+window.loadEventMarkers = loadEventMarkers; 

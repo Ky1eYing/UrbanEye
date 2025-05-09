@@ -482,6 +482,9 @@ if (submitCreateEventBtn) {
             if (eventId) {
                 if (editEventId) {
                     displayFormSuccessMessage("Event edited successfully!");
+                    // refresh event markers
+                    loadEventMarkers();
+
                     setTimeout(() => {
                         createEventModal.style.display = "none";
                         location.reload();
@@ -489,6 +492,9 @@ if (submitCreateEventBtn) {
 
                 } else {
                     displayFormSuccessMessage("Event created successfully!");
+                    // refresh event markers
+                    loadEventMarkers();
+
                     setTimeout(() => {
                         createEventModal.style.display = "none";
 
