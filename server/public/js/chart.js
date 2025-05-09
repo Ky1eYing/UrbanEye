@@ -125,14 +125,16 @@ function makeCategoryDataMap(rawData) {
 
 function drawLineChart(categoryDataMap) {
     var chartDom = document.getElementById('line');
-    var myChart = echarts.init(chartDom);
+    var myChart = echarts.init(chartDom, isDarkMode() ? 'dark' : 'light');
     var option;
     option = {
         tooltip: {
             trigger: 'axis',
             position: function (pt) {
                 return [pt[0], '10%'];
-            }
+            },
+            backgroundColor: isDarkMode()? '#222' : '#fff',
+    textStyle: { color: isDarkMode() ? '#fff' : '' }
         },
         title: {
             left: 'center',
@@ -198,11 +200,13 @@ function drawLineChart(categoryDataMap) {
 
 function drawPieChart(categoryDataMap) {
     var chartDom = document.getElementById('pie');
-    var myChart = echarts.init(chartDom);
+    var myChart = echarts.init(chartDom, isDarkMode() ? 'dark' : 'light');
     var option;
     option = {
         tooltip: {
-            trigger: 'item'
+            trigger: 'item',
+            backgroundColor: isDarkMode()? '#222' : '#fff',
+    textStyle: { color: isDarkMode() ? '#fff' : '' }
         },
         title: {
             left: 'center',
@@ -225,7 +229,7 @@ function drawPieChart(categoryDataMap) {
                 avoidLabelOverlap: false,
                 itemStyle: {
                     borderRadius: 10,
-                    borderColor: '#fff',
+                    borderColor: isDarkMode() ? '#000' : '#fff',
                     borderWidth: 2
                 },
                 data: Object.entries(categoryDataMap)
@@ -245,3 +249,9 @@ function drawPieChart(categoryDataMap) {
         myChart.resize();
       });
 }
+
+
+// check if dark mode
+function isDarkMode() {
+    return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+  }
