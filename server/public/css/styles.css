@@ -27,12 +27,12 @@
 
 #gradient-canvas {
     position: fixed;
-  top: 0;
-  left: 0;
-  z-index: -1;
-  width: 100vw;
-  height: 100vh;
-  pointer-events: none;
+    top: 0;
+    left: 0;
+    z-index: -1;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
     --gradient-color-1: #3F5EFB;
     --gradient-color-2: #7158D5;
     --gradient-color-3: #C94D92;
@@ -103,12 +103,12 @@ header {
 }
 
 .header {
-    background: rgba(0,0, 0, 0);
+    background: rgba(255, 255, 255, 0);
     border-bottom: none;
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
 }
-  
+
 
 header .container {
     height: 70px;
@@ -638,7 +638,7 @@ header .container {
 }
 
 .primary-button {
-background: linear-gradient(45deg, rgba(63, 94, 251, 1) 0%, rgba(252, 70, 107, 1) 100%);
+    background: linear-gradient(45deg, rgba(63, 94, 251, 1) 0%, rgba(252, 70, 107, 1) 100%);
     color: var(--white);
     /* border: 2px solid rgba(0, 0, 0, 0.6); */
     backdrop-filter: blur(5px);
@@ -673,7 +673,7 @@ background: linear-gradient(45deg, rgba(63, 94, 251, 1) 0%, rgba(252, 70, 107, 1
     left: 100%;
 }
 
-/* Main Idea Section */     
+/* Main Idea Section */
 .mainidea-section {
     background-color: #ffffff60;
     color: black;
@@ -787,7 +787,7 @@ background: linear-gradient(45deg, rgba(63, 94, 251, 1) 0%, rgba(252, 70, 107, 1
 .feature-text {
     display: flex;
     flex-direction: column;
-    padding: 10px 5px;
+    padding: 0px 5px;
 }
 
 .feature-title {
@@ -807,6 +807,7 @@ background: linear-gradient(45deg, rgba(63, 94, 251, 1) 0%, rgba(252, 70, 107, 1
         opacity: 0;
         transform: translateY(30px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);

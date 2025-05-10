@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const observerOptions = {
         root: null, // use the viewport as the root
         rootMargin: '0px', // no margin
-        threshold: 0.1 // when the element is 10% in the viewport
+        threshold: 0.3 // when the element is 10% in the viewport
     };
 
     const observer = new IntersectionObserver((entries) => {
