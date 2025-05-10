@@ -1,27 +1,149 @@
 <div class="landing-content">
 
 
+
     <section class="hero-section">
-        <div class="hero-top">
 
-            <h1 class="page-title">Welcome to Urban Eye</h1>
+        <h1 class="page-title">Welcome to Urban Eye</h1>
 
-            <div class="landing-description">
-                <p> From traffic incidents to public gatherings, stay updated with what's happening around you.</p>
+        <div class="landing-description">
+            <p> From traffic incidents to public gatherings, stay updated with what's happening around you.</p>
 
-                <div class="landing-buttons">
-                    <a href="/event" class="primary-button">Browse Events</a>
-                    <a href="/signup" class="secondary-button">Create Account</a>
-                </div>
+            <div class="landing-buttons">
+                <a href="/event" class="primary-button">Browse Events</a>
+                {{#unless user}}
+                <a href="/signup" class="secondary-button">Create Account</a>
+                {{/unless}}
             </div>
-            <img class="landing-img" src="images/homepage.jpg"/>
-
         </div>
-        <canvas id="gradient-canvas" data-js-darken-top data-transition-in />
-
+        <img class="landing-img" src="images/features/Event listing page.png" />
 
     </section>
+
+    <section class="mainidea-section">
+        
+        <div class="mainidea-text">
+            <h1>MAIN IDEA</h1>
+            <p>
+                UrbanEye is a web-based platform that empowers users to report and track events near their location,
+                helping communities stay informed about local events (including crime, traffic, street entertainment).
+                The platform allows users to share real-time reports, browse reported events, and engage in discussions.
+            </p>
+        </div>
+        <img class="mainidea-img" src="https://images.unsplash.com/photo-1503179008861-d1e2b41f8bec" />
+    </section>
+
+
+    <section class="feature-section">
+
+        <h1>FEATURES</h1>
+        <div class="grid">
+            <div class="grid-item">
+                <img class="feature-img" src="images/features/Landing page.png" />
+                <div class="feature-text">
+                    <span class="feature-title">Landing Page - </span>
+                    <span class="feature-description">Explains the purpose and functionality of the website.</span>
+                </div>
+            </div>
+            <div class="grid-item">
+                <img class="feature-img" src="images/features/About page.png" />
+                <div class="feature-text">
+                    <span class="feature-title">About page - </span>
+                    <span class="feature-description">Show our idea and Introduce our team.</span>
+                </div>
+            </div>
+            <div class="grid-item">
+                <img class="feature-img" src="images/features/Create event.png" />
+                <div class="feature-text">
+                    <span class="feature-title">Create event - </span>
+                    <span class="feature-description">User can report event by upload title, content, photo, location,
+                        etc.</span>
+                </div>
+            </div>
+            <div class="grid-item">
+                <img class="feature-img" src="images/features/Event listing page.png" />
+                <span class="feature-title">Event listing page - </span>
+                <span class="feature-description">Show all events on a map, show how distance near user, by using Google
+                    Map Api. List all events with title, location and time. Filters/Search allow for the list of events
+                    to be specified</span>
+            </div>
+            <div class="grid-item">
+                <img class="feature-img" src="images/features/Event details page.png" />
+                <div class="feature-text">
+                    <span class="feature-title">Event details page - </span>
+                    <span class="feature-description">Show the detail of one specific event with title, content, photo,
+                        etc.</span>
+                </div>
+            </div>
+            <div class="grid-item">
+                <img class="feature-img" src="images/features/Like and Comment event.png" />
+                <div class="feature-text">
+                    <span class="feature-title">Like and Comment event - </span>
+                    <span class="feature-description">Show likes and comments in event details page. User can make comment
+                        and like.</span>
+                </div>
+            </div>
+            <div class="grid-item">
+                <img class="feature-img" src="images/features/Events Recommendation.png" />
+                <div class="feature-text">
+                    <span class="feature-title">Events Recommendation - </span>
+                    <span class="feature-description">Show other popular (base on event click time) events near this event
+                        under event details page.</span>
+                </div>
+            </div>
+            <div class="grid-item">
+                <img class="feature-img" src="images/features/Trends page.png" />
+                <div class="feature-text">
+                    <span class="feature-title">Trends page </span>
+                    <span class="feature-description">A chart showing the number of events per day.</span>
+                </div>
+            </div>
+            <div class="grid-item">
+                <img class="feature-img" src="images/features/User Profile.png" />
+                <div class="feature-text">
+                    <span class="feature-title">User Profile - </span>
+                    <span class="feature-description">User can log-in and sign-in. Displays their username, profile picture,
+                        etc. Retains a list of all events reported by the user that can be edited and deleted. Users without
+                        account can only check event</span>
+                </div>
+            </div>
+            <div class="grid-item">
+                <img class="feature-img" src="images/features/Report.png" />
+                <div class="feature-text">
+                    <span class="feature-title">Report - </span>
+                    <span class="feature-description">Allow users to report events that they think are not true</span>
+                </div>
+            </div>
+            <div class="grid-item">
+                <img class="feature-img" src="images/features/Events Recommendation -2.png" />
+                <div class="feature-text">
+                    <span class="feature-title">Events Recommendation - </span>
+                    <span class="feature-description">Show events that user most interest on first page (analyst by past
+                        click record)</span>
+                </div>
+            </div>
+            <div class="grid-item">
+                <img class="feature-img" src="images/features/AI assistant.png" />
+                <div class="feature-text">
+                    <span class="feature-title">AI assistant - </span>
+                    <span class="feature-description">Summarize event, ask for specific event, Source real-time event data
+                        to Summarize past event trends and predict future event numbers</span>
+                </div>
+            </div>
+
+
+        </div>
+    </section>
+
+
+
+
+    <canvas id="gradient-canvas" data-js-darken-top data-transition-in />
 
 </div>
 
 <script src="/js/gradient.js" defer></script>
+<script src="/js/home.js"></script>
+</body>
+
+</html>
