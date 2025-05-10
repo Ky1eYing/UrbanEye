@@ -14,19 +14,14 @@ const router = express.Router();
 
 // Create a report
 router.route("/").post(requireLogin, async (req, res) => {
-  const reportInfo = req.body;
-  if (!reportInfo || Object.keys(reportInfo).length === 0) {
+  let user_id = xss(req.body.user_id);
+  let event_id = xss(req.body.event_id);
+  if (!user_id || !event_id) {
     return res
       .status(400)
       .json({ error: "There are no fields in the request body" });
   }
 
-  const { user_id, event_id } = reportInfo;
-  if (!user_id || !event_id) {
-    return res
-      .status(400)
-      .json({ error: "All fields need to have valid values" });
-  }
 
   let checked_user_id, checked_event_id;
   try {

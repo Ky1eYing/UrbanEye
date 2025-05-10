@@ -7,7 +7,7 @@ const router = express.Router();
 // Get event counts by day
 router.route("/daily").get(async (req, res) => {
   try {
-    let { startDate, endDate } = req.query;
+    let { startDate, endDate } = xss(req.query);
     
     if (startDate) {
       try {
@@ -78,7 +78,7 @@ router.route("/daily").get(async (req, res) => {
 // Get detailed event statistics by day and category
 router.route("/stats").get(async (req, res) => {
   try {
-    let { startDate, endDate } = req.query;
+    let { startDate, endDate } = xss(req.query);
     
     if (startDate) {
       try {

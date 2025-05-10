@@ -16,7 +16,7 @@ router
   .route("/event/:eventId")
   // getAllCommentsByEventId
   .get(async (req, res) => {
-    let event_id = req.params.eventId;
+    let event_id = xss(req.params.eventId);
     try {
       event_id = check.checkObjectId(event_id);
     } catch (e) {
@@ -37,16 +37,15 @@ router
 
   // createComment
   .post(requireLogin, async (req, res) => {
-    let event_id = req.params.eventId;
-    const commentInfo = req.body;
+    let event_id = xss(req.params.eventId);
+    let user_id = xss(req.body.user_id);
+    let content = xss(req.body.content);
 
-    if (!commentInfo || Object.keys(commentInfo).length === 0) {
+    if (!user_id || !content) {
       return res
         .status(400)
         .json({ error: "There are no fields in the request body" });
     }
-
-    let { user_id, content } = commentInfo;
 
     try {
       event_id = check.checkObjectId(event_id);
@@ -84,7 +83,7 @@ router
   .route("/user/:userId")
   // getAllCommentsByUserId
   .get(requireLogin, async (req, res) => {
-    let user_id = req.params.userId;
+    let user_id = xss(req.params.userId);
     try {
       user_id = check.checkObjectId(user_id);
     } catch (e) {
@@ -115,7 +114,7 @@ router
   .route("/:commentId")
   //getCommentById
   .get(async (req, res) => {
-    let comment_id = req.params.commentId;
+    let comment_id = xss(req.params.commentId);
     try {
       comment_id = check.checkObjectId(comment_id);
     } catch (e) {
@@ -135,7 +134,7 @@ router
   })
   // removeComment
   .delete(requireLogin, async (req, res) => {
-    let comment_id = req.params.commentId;
+    let comment_id = xss(req.params.commentId);
     try {
       comment_id = check.checkObjectId(comment_id);
     } catch (e) {
@@ -171,16 +170,15 @@ router
   })
   // updateComment
   .put(requireLogin, async (req, res) => {
-    let comment_id = req.params.commentId;
-    const commentInfo = req.body;
+    let comment_id = xss(req.params.commentId);
+    let user_id = xss(req.body.user_id);
+    let content = xss(req.body.content);
 
-    if (!commentInfo || Object.keys(commentInfo).length === 0) {
+    if (!user_id || !content) {
       return res
         .status(400)
         .json({ error: "There are no fields in the request body" });
     }
-
-    let { content } = commentInfo;
 
     try {
       comment_id = check.checkObjectId(comment_id);

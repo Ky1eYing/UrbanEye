@@ -21,7 +21,7 @@ router.get("/events", async (req, res) => {
 router.post("/chat", async (req, res) => {
     try {
         // get messages
-        const { messages } = req.body;
+        let messages = xss(req.body.messages);
 
         if (!messages || !Array.isArray(messages)) {
             return res.status(400).json({ error: "Invalid messages format" });

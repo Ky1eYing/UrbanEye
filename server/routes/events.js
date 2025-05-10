@@ -16,16 +16,14 @@ router
   .route("/filter")
   // getFilterEvents
   .get(async (req, res) => {
-    const {
-      titleLike,
-      distance,
-      sortBy,
-      category,
-      timeRange,
-      skip,
-      latitude: lat,
-      longitude: lng
-    } = req.query;
+    let titleLike = xss(req.query.titleLike);
+    let distance = xss(req.query.distance);
+    let sortBy = xss(req.query.sortBy);
+    let category = xss(req.query.category);
+    let timeRange = xss(req.query.timeRange);
+    let skip = xss(req.query.skip);
+    let lat = xss(req.query.latitude);
+    let lng = xss(req.query.longitude);
 
     // Default user location (New York City)
     const nyPosition = { lat: 40.75171244845984, lng: -73.98179241229592 };
@@ -85,14 +83,18 @@ router
   })
   // createEvent
   .post(requireLogin, async (req, res) => {
-    const eventInfo = req.body;
-    if (!eventInfo || Object.keys(eventInfo).length === 0) {
+    let user_id = xss(req.body.user_id);
+    let title = xss(req.body.title);
+    let content = xss(req.body.content);
+    let location = xss(req.body.location);
+    let category = xss(req.body.category);
+    let photoUrl = xss(req.body.photoUrl);
+    if (!user_id || !title || !content || !location || !category || !photoUrl) {
       return res
         .status(400)
         .json({ error: "There are no fields in the request body" });
     }
 
-    const { user_id, title, content, location, category, photoUrl } = eventInfo;
     if (
       [user_id, title, content, location, category, photoUrl].some(
         (arg) => arg === undefined
@@ -153,7 +155,7 @@ router
   .get(async (req, res) => {
     let checked_eventId;
     try {
-      checked_eventId = check.checkVaildString(req.params.eventId, "eventId");
+      checked_eventId = check.checkVaildString(xss(req.params.eventId), "eventId");
       if (!ObjectId.isValid(checked_eventId)) {
         throw new Error("ID is not a valid ObjectId");
       }
@@ -201,7 +203,7 @@ router
   .delete(requireLogin, async (req, res) => {
     let checked_eventId;
     try {
-      checked_eventId = check.checkVaildString(req.params.eventId, "eventId");
+      checked_eventId = check.checkVaildString(xss(req.params.eventId), "eventId");
       if (!ObjectId.isValid(checked_eventId)) {
         throw new Error("ID is not a valid ObjectId");
       }
@@ -239,7 +241,7 @@ router
   .put(requireLogin, async (req, res) => {
     let checked_eventId;
     try {
-      checked_eventId = check.checkVaildString(req.params.eventId, "eventId");
+      checked_eventId = check.checkVaildString(xss(req.params.eventId), "eventId");
       if (!ObjectId.isValid(checked_eventId)) {
         throw new Error("ID is not a valid ObjectId");
       }
@@ -247,14 +249,18 @@ router
       return res.status(400).json({ error: e.message });
     }
 
-    const eventInfo = req.body;
-    if (!eventInfo || Object.keys(eventInfo).length === 0) {
+    let user_id = xss(req.body.user_id);
+    let title = xss(req.body.title);
+    let content = xss(req.body.content);
+    let location = xss(req.body.location);
+    let category = xss(req.body.category);
+    let photoUrl = xss(req.body.photoUrl);
+    if (!user_id || !title || !content || !location || !category || !photoUrl) {
       return res
         .status(400)
         .json({ error: "There are no fields in the request body" });
     }
 
-    const { title, content, location, category, photoUrl } = eventInfo;
     if (
       [title, content, location, category, photoUrl].some(
         (arg) => arg === undefined
@@ -319,7 +325,7 @@ router
 router.route("/user/:userId").get(requireLogin, async (req, res) => {
   let checked_userId;
   try {
-    checked_userId = check.checkVaildString(req.params.userId, "userId");
+    checked_userId = check.checkVaildString(xss(req.params.userId), "userId");
     if (!ObjectId.isValid(checked_userId)) {
       throw new Error("ID is not a valid ObjectId");
     }

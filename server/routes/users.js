@@ -18,15 +18,19 @@ router
 
   // createUser
   .post(async (req, res) => {
-    const reqBody = req.body;
-    if (!reqBody || Object.keys(reqBody).length === 0) {
+    let userName = xss(req.body.userName);
+    let name = xss(req.body.name);
+    let password = xss(req.body.password);
+    let introduction = xss(req.body.introduction);
+    let sex = xss(req.body.sex);
+    let email = xss(req.body.email);
+    let phone = xss(req.body.phone);
+    if (!userName || !name || !password || !introduction || !sex || !email || !phone) {
       return res.status(400).json({
         code: 400,
         message: "There are no fields in the request body",
       });
     }
-
-    let { userName, name, password, introduction, sex, email, phone } = reqBody;
 
     try {
       userName = check.validateUserName(userName);
@@ -64,15 +68,14 @@ router
   .route("/login")
 
   .post(requireNotLogin, async (req, res) => {
-    const reqBody = req.body;
-    if (!reqBody || Object.keys(reqBody).length === 0) {
+    let userName = xss(req.body.userName);
+    let password = xss(req.body.password);
+    if (!userName || !password) {
       return res.status(400).json({
         code: 400,
         message: "There are no fields in the request body",
       });
     }
-
-    let { userName, password } = reqBody;
 
     try {
       userName = check.validateUserName(userName);
@@ -124,7 +127,7 @@ router
   .get(async (req, res) => {
     let userId;
     try {
-      userId = check.checkObjectId(req.params.userId);
+      userId = check.checkObjectId(xss(req.params.userId));
     } catch (e) {
       return res.status(400).json({ code: 400, message: e.message });
     }
@@ -144,7 +147,7 @@ router
   .delete(requireLogin, async (req, res) => {
     let userId;
     try {
-      userId = check.checkObjectId(req.params.userId);
+      userId = check.checkObjectId(xss(req.params.userId));
     } catch (e) {
       return res.status(400).json({ code: 400, message: e.message });
     }
@@ -157,15 +160,13 @@ router
       }
     }
 
-    const reqBody = req.body;
-    if (!reqBody || Object.keys(reqBody).length === 0) {
+    let password = xss(req.body.password); 
+    if (!password) {
       return res.status(400).json({
         code: 400,
         message: "There are no fields in the request body",
       });
     }
-
-    let { password } = reqBody;
 
     try {
       password = check.validatePassword(password);
@@ -206,7 +207,7 @@ router
   .post(requireLogin, async (req, res) => {
     let userId;
     try {
-      userId = check.checkObjectId(req.params.userId);
+      userId = check.checkObjectId(xss(req.params.userId));
     } catch (e) {
       return res.status(400).json({ code: 400, message: e.message });
     }
@@ -219,15 +220,15 @@ router
       }
     }
 
-    const reqBody = req.body;
-    if (!reqBody || Object.keys(reqBody).length === 0) {
+    let userName = xss(req.body.userName);
+    let password = xss(req.body.password);
+    let originalPassword = xss(req.body.originalPassword);
+    if (!userName || !password || !originalPassword) {
       return res.status(400).json({
         code: 400,
         message: "There are no fields in the request body",
       });
     }
-
-    let { userName, password, originalPassword } = reqBody;
 
     userName = null;
 
@@ -311,7 +312,7 @@ router
   .put(requireLogin, async (req, res) => {
     let userId;
     try {
-      userId = check.checkObjectId(req.params.userId);
+      userId = check.checkObjectId(xss(req.params.userId));
     } catch (e) {
       return res.status(400).json({ code: 400, message: e.message });
     }
@@ -324,15 +325,16 @@ router
       }
     }
 
-    const reqBody = req.body;
-    if (!reqBody || Object.keys(reqBody).length === 0) {
+    let name = xss(req.body.name);
+    let sex = xss(req.body.sex);
+    let email = xss(req.body.email);
+    let phone = xss(req.body.phone);
+    if (!name || !sex || !email || !phone) {
       return res.status(400).json({
         code: 400,
         message: "There are no fields in the request body",
       });
     }
-
-    let { name, sex, email, phone } = reqBody;
 
     try {
       // userName = check.validateUserName(userName);
@@ -361,7 +363,7 @@ router
 router.route("/introduction/:userId").put(requireLogin, async (req, res) => {
   let userId;
   try {
-    userId = check.checkObjectId(req.params.userId);
+    userId = check.checkObjectId(xss(req.params.userId));
   } catch (e) {
     return res.status(400).json({ code: 400, message: e.message });
   }
@@ -374,15 +376,13 @@ router.route("/introduction/:userId").put(requireLogin, async (req, res) => {
     }
   }
 
-  const reqBody = req.body;
-  if (!reqBody || Object.keys(reqBody).length === 0) {
+  let introduction = xss(req.body.introduction);
+  if (!introduction) {
     return res.status(400).json({
       code: 400,
       message: "There are no fields in the request body",
     });
   }
-
-  let { introduction } = reqBody;
 
   if (introduction === undefined) {
     return res.status(400).json({
@@ -412,7 +412,7 @@ router.route("/introduction/:userId").put(requireLogin, async (req, res) => {
 router.route("/avatar/:userId").put(requireLogin, async (req, res) => {
   let userId;
   try {
-    userId = check.checkObjectId(req.params.userId);
+    userId = check.checkObjectId(xss(req.params.userId));
   } catch (e) {
     return res.status(400).json({ code: 400, message: e.message });
   }
@@ -425,15 +425,13 @@ router.route("/avatar/:userId").put(requireLogin, async (req, res) => {
     }
   }
 
-  const reqBody = req.body;
-  if (!reqBody || Object.keys(reqBody).length === 0) {
+  let avatar = xss(req.body.avatar);
+  if (!avatar) {
     return res.status(400).json({
       code: 400,
       message: "There are no fields in the request body",
     });
   }
-
-  let { avatar } = reqBody;
 
   if (avatar === undefined) {
     return res.status(400).json({
@@ -464,7 +462,7 @@ router.route("/avatar/:userId").put(requireLogin, async (req, res) => {
 router.route("/:userId/top-category").get(async (req, res) => {
   let checked_userId;
   try {
-    checked_userId = check.checkObjectId(req.params.userId);
+    checked_userId = check.checkObjectId(xss(req.params.userId));
   } catch (e) {
     return res.status(400).json({ code: 400, message: e.message });
   }
