@@ -412,6 +412,10 @@ function saveProfileInfo() {
     showErrorMessage("profile", "Name is required");
     return;
   }
+  if (name.length > 40) {
+    showErrorMessage("profile", "Name must be a string with at most 40 characters.");
+    return;
+  }
 
   if (email && !isValidEmail(email)) {
     showErrorMessage("profile", "Invalid email format");
@@ -428,6 +432,26 @@ function saveProfileInfo() {
 
   if (sex && sex.length > 20) {
     showErrorMessage("profile", "Sex must be less than 20 characters");
+    return;
+  }
+  const genderLabels = [
+    "Male",
+    "Female",
+    "Transgender Male",
+    "Transgender Female",
+    "Non-binary",
+    "Genderqueer",
+    "Genderfluid",
+    "Intersex",
+    "Agender",
+    "Bigender",
+    "Two-Spirit",
+    "I don't know",
+    "Prefer not to say",
+  ];
+
+  if (!genderLabels.includes(sex)) {
+    showErrorMessage("profile", "Invalid sex");
     return;
   }
 
@@ -498,6 +522,16 @@ function savePassword() {
     return;
   }
 
+  if (newPassword.length < 4 || newPassword.length > 30) {
+    showErrorMessage("password", "New password must be a string with at least 4 characters and at most 30 characters.");
+    return;
+  }
+
+  if (!/^[a-zA-Z0-9!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?`~]+$/.test(newPassword)) {
+    showErrorMessage("password", "New password can only contain letters, numbers, and symbols.");
+    return;
+  }
+
   if (newPassword !== confirmPassword) {
     showErrorMessage("password", "Passwords do not match");
     return;
@@ -535,7 +569,7 @@ function savePassword() {
 
 // Helper functions for validation
 function isValidEmail(email) {
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const emailRegex = /^(?:[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+)*|"[^"\\]*(?:\\.[^"\\]*)*")@(?:(?:[a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}|(?:\[(?:[0-9]{1,3}\.){3}[0-9]{1,3}\]))$/;
   return emailRegex.test(email);
 }
 
@@ -581,4 +615,8 @@ function clearErrorMessage(field) {
   if (errorElement) {
     errorElement.style.display = "none";
   }
+}
+
+function alertfunc(errorMsg) {
+  alert(errorMsg)
 }
