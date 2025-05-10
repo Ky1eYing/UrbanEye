@@ -2,6 +2,7 @@ import express from "express";
 import { eventsData } from "../data/index.js";
 import dotenv from "dotenv";
 import fetch from "node-fetch";
+import xss from "xss";
 
 dotenv.config();
 
@@ -21,11 +22,17 @@ router.get("/events", async (req, res) => {
 router.post("/chat", async (req, res) => {
     try {
         // get messages
-        let messages = xss(req.body.messages);
+        let messages = req.body.messages;
 
         if (!messages || !Array.isArray(messages)) {
             return res.status(400).json({ error: "Invalid messages format" });
         }
+
+        // 对每个消息的内容进行XSS处理
+        messages = messages.map(message => ({
+            ...message,
+            content: xss(message.content)
+        }));
 
         // connect with OpenAI API
         const apiKey = process.env.OPENAI_API_KEY;

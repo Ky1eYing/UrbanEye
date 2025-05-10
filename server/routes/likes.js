@@ -9,6 +9,7 @@ import {
   attachUser,
 } from "../middleware/auth.js";
 import { ENABLE_AUTH_CHECK } from "../config/env.js";
+import xss from "xss";
 
 const router = express.Router();
 

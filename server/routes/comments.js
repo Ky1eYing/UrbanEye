@@ -9,6 +9,7 @@ import {
   attachUser,
 } from "../middleware/auth.js";
 import { ENABLE_AUTH_CHECK } from "../config/env.js";
+import xss from "xss";
 
 const router = express.Router();
 
@@ -171,13 +172,12 @@ router
   // updateComment
   .put(requireLogin, async (req, res) => {
     let comment_id = xss(req.params.commentId);
-    let user_id = xss(req.body.user_id);
     let content = xss(req.body.content);
 
-    if (!user_id || !content) {
+    if (!content) {
       return res
         .status(400)
-        .json({ error: "There are no fields in the request body" });
+        .json({ error: "Comment content is required" });
     }
 
     try {

@@ -10,6 +10,7 @@ import {
   attachUser,
 } from "../middleware/auth.js";
 import { ENABLE_AUTH_CHECK } from "../config/env.js";
+import xss from "xss";
 
 const router = Router();
 
@@ -25,7 +26,7 @@ router
     let sex = xss(req.body.sex);
     let email = xss(req.body.email);
     let phone = xss(req.body.phone);
-    if (!userName || !name || !password || !introduction || !sex || !email || !phone) {
+    if (!userName || !password) {
       return res.status(400).json({
         code: 400,
         message: "There are no fields in the request body",
@@ -160,7 +161,7 @@ router
       }
     }
 
-    let password = xss(req.body.password); 
+    let password = xss(req.body.password);
     if (!password) {
       return res.status(400).json({
         code: 400,
@@ -223,7 +224,7 @@ router
     let userName = xss(req.body.userName);
     let password = xss(req.body.password);
     let originalPassword = xss(req.body.originalPassword);
-    if (!userName || !password || !originalPassword) {
+    if (!password || !originalPassword) {
       return res.status(400).json({
         code: 400,
         message: "There are no fields in the request body",

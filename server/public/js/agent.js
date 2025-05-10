@@ -26,20 +26,27 @@ document.addEventListener("DOMContentLoaded", async () => {
 	};
 
 	// initialize chat history
-	const chatHistory = [
+	const systemMessages = [
 		{
 			role: "system",
 			content:
 				`You are the AI recommendation assistant for UrbanEye. ` +
 				`You may only answer questions based on the provided event data from the UrbanEye platform and must not use any other information.\n\n` +
-				`**Your capabilities:**\n` +
+				`**Your capabilities and rules:**\n` +
 				`1. Summarize all events (e.g. by category, by time period)\n` +
 				`2. Provide specific details for a given event (title, content, address, likes, comments, etc.)\n` +
 				`3. Summarize past trends (e.g. the number of events by category and time period)\n` +
 				`4. Predict future event numbers based on the trend of existing data (briefly give a reasoning process)\n\n` +
-				`**Filtering rule:** when user asks "New York" event, all events with address containing "NY" are considered New York.\n\n` +
-				`If the data does not contain relevant information, reply exactly:\n` +
-				`"Sorry, I can only answer your questions based on the provided UrbanEye event data, and there is currently no information on this matter."`
+				`**Important rules:**\n` +
+				`1. When user asks "New York" event, all events with address containing "NY" are considered New York.\n` +
+				`2. You must maintain consistency in your responses. If you've already answered a question, stick to that answer unless new information is provided.\n` +
+				`3. If you've made a prediction based on the data, continue to use that prediction unless explicitly asked to reconsider.\n` +
+				`4. If the data does not contain relevant information, reply exactly:\n` +
+				`"Sorry, I can only answer your questions based on the provided UrbanEye event data, and there is currently no information on this matter."\n\n` +
+				`**Response consistency:**\n` +
+				`- If you've already analyzed the data and provided a prediction, maintain that prediction in subsequent responses\n` +
+				`- Do not switch between "can predict" and "cannot predict" for the same question\n` +
+				`- If you've determined there's enough data for a prediction, continue to use that data in future responses`
 		},
 		{
 			role: "system",
@@ -50,6 +57,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 			content: `Current time information:\n` + JSON.stringify(currentTimeInfo, null, 2)
 		}
 	];
+
+	const chatHistory = [...systemMessages];
 
 	// create agent UI
 	createAgentUI();
@@ -82,11 +91,15 @@ document.addEventListener("DOMContentLoaded", async () => {
 	// send message to OpenAI
 	async function sendToOpenAI(messages) {
 		try {
+			// save the last 20 messages
+			const recentMessages = messages.slice(-20);
+			const messagesToSend = [...systemMessages, ...recentMessages];
+
 			const resp = await fetch("/api/agent/chat", {
 				method: "POST",
 				headers: { "Content-Type": "application/json" },
 				body: JSON.stringify({
-					messages: messages
+					messages: messagesToSend
 				})
 			});
 			if (!resp.ok) throw new Error("OpenAI service error");

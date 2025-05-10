@@ -1,6 +1,7 @@
 import express from "express";
 import { chartData } from "../data/index.js";
 import * as check from "../utils/helpers.js";
+import xss from "xss";
 
 const router = express.Router();
 

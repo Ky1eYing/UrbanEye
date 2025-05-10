@@ -9,6 +9,7 @@ import {
   attachUser,
 } from "../middleware/auth.js";
 import { ENABLE_AUTH_CHECK } from "../config/env.js";
+import xss from "xss";
 
 const router = express.Router();
 
@@ -86,13 +87,20 @@ router
     let user_id = xss(req.body.user_id);
     let title = xss(req.body.title);
     let content = xss(req.body.content);
-    let location = xss(req.body.location);
+    let location = req.body.location;
     let category = xss(req.body.category);
     let photoUrl = xss(req.body.photoUrl);
     if (!user_id || !title || !content || !location || !category || !photoUrl) {
       return res
         .status(400)
-        .json({ error: "There are no fields in the request body" });
+        .json({ error: "All required fields must be provided" });
+    }
+
+    // add xss processing to location object
+    if (typeof location === 'object') {
+      if (location.address) location.address = xss(location.address);
+      if (location.name) location.name = xss(location.name);
+      if (location.description) location.description = xss(location.description);
     }
 
     if (
@@ -252,13 +260,20 @@ router
     let user_id = xss(req.body.user_id);
     let title = xss(req.body.title);
     let content = xss(req.body.content);
-    let location = xss(req.body.location);
+    let location = req.body.location;
     let category = xss(req.body.category);
     let photoUrl = xss(req.body.photoUrl);
-    if (!user_id || !title || !content || !location || !category || !photoUrl) {
+    if (!title || !content || !location || !category || !photoUrl) {
       return res
         .status(400)
-        .json({ error: "There are no fields in the request body" });
+        .json({ error: "All required fields must be provided" });
+    }
+
+    // add xss processing to location object
+    if (typeof location === 'object') {
+      if (location.address) location.address = xss(location.address);
+      if (location.name) location.name = xss(location.name);
+      if (location.description) location.description = xss(location.description);
     }
 
     if (
