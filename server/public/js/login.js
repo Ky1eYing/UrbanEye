@@ -20,7 +20,6 @@ document.addEventListener("DOMContentLoaded", () => {
             const username = usernameInput.value.trim();
             const password = passwordInput.value.trim();
 
-            // TODO: Form validation
             let isValid = true;
 
             if (!username) {
@@ -28,9 +27,29 @@ document.addEventListener("DOMContentLoaded", () => {
                 return showErrorMessage("Username is required");
             }
 
+            if (username.length > 20) {
+                isValid = false;
+                return showErrorMessage("Username must be a string with at most 20 characters.");
+            }
+
+            if (!/^[a-zA-Z0-9]+$/.test(username)) {
+                isValid = false;
+                return showErrorMessage("Username can only contain letters and numbers.");
+            }
+
             if (!password) {
                 isValid = false;
                 return showErrorMessage("Password is required");
+            }
+
+            if (password.length > 30 || password.length < 4) {
+                isValid = false;
+                return showErrorMessage("Password must be a string with at most 30 characters and at least 4 characters.");
+            }
+
+            if (!/^[a-zA-Z0-9!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?`~]+$/.test(password)) {
+                isValid = false;
+                return showErrorMessage("Password can only contain letters, numbers, and symbols.");
             }
 
             // Submit form if valid
@@ -69,13 +88,13 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 function showErrorMessage(msg) {
-	const errorMessage = document.getElementById('errorMessage');
-	errorMessage.innerHTML = `<i class="fas fa-triangle-exclamation"></i> ${msg}`;
-	errorMessage.style.display = 'flex';
+    const errorMessage = document.getElementById('errorMessage');
+    errorMessage.innerHTML = `<i class="fas fa-triangle-exclamation"></i> ${msg}`;
+    errorMessage.style.display = 'flex';
 }
 
 function hideErrorMessage() {
-	const errorMessage = document.getElementById('errorMessage');
-	errorMessage.style.display = 'flex';
-	errorMessage.innerHTML = '';
+    const errorMessage = document.getElementById('errorMessage');
+    errorMessage.style.display = 'flex';
+    errorMessage.innerHTML = '';
 }

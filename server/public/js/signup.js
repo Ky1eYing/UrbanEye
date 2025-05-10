@@ -1,12 +1,12 @@
 document.addEventListener("DOMContentLoaded", () => {
     const signupForm = document.querySelector(".login-form");
-     
+
     if (signupForm) {
         const usernameInput = document.querySelector(".username-input");
         const passwordInput = document.querySelector(".password-input");
         const confirmPasswordInput = document.querySelector(".confirm-password-input");
         const signupButton = document.querySelector(".signup-submit-btn");
-        
+
         hideErrorMessage();
 
         signupButton.addEventListener("click", async (e) => {
@@ -20,27 +20,43 @@ document.addEventListener("DOMContentLoaded", () => {
             const password = passwordInput.value.trim();
             const confirmPassword = confirmPasswordInput.value.trim();
 
-            // TODO: Form validation
             let isValid = true;
 
             // Username validation
             if (!username) {
                 isValid = false;
-                
                 return showErrorMessage("Username is required");
+            }
+
+            if (username.length > 20) {
+                isValid = false;
+                return showErrorMessage("Username must be a string with at most 20 characters.");
+            }
+
+            if (!/^[a-zA-Z0-9]+$/.test(username)) {
+                isValid = false;
+                return showErrorMessage("Username can only contain letters and numbers.");
             }
 
             // Password validation
             if (!password) {
                 isValid = false;
-                // passwordInput.nextElementSibling.textContent = "Password is required";
                 return showErrorMessage("Password is required");
+            }
+
+            if (password.length > 30 || password.length < 4) {
+                isValid = false;
+                return showErrorMessage("Password must be a string with at most 30 characters and at least 4 characters.");
+            }
+
+            if (!/^[a-zA-Z0-9!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?`~]+$/.test(password)) {
+                isValid = false;
+                return showErrorMessage("Password can only contain letters, numbers, and symbols.");
             }
 
             // Confirm password validation
             if (password !== confirmPassword) {
                 isValid = false;
-                // confirmPasswordInput.nextElementSibling.textContent = "Passwords do not match";
                 return showErrorMessage("Passwords do not match");
             }
 
@@ -87,13 +103,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 function showErrorMessage(msg) {
-	const errorMessage = document.getElementById('errorMessage');
-	errorMessage.innerHTML = `<i class="fas fa-triangle-exclamation"></i> ${msg}`;
-	errorMessage.style.display = 'flex';
+    const errorMessage = document.getElementById('errorMessage');
+    errorMessage.innerHTML = `<i class="fas fa-triangle-exclamation"></i> ${msg}`;
+    errorMessage.style.display = 'flex';
 }
 
 function hideErrorMessage() {
-	const errorMessage = document.getElementById('errorMessage');
-	errorMessage.style.display = 'flex';
-	errorMessage.innerHTML = '';
+    const errorMessage = document.getElementById('errorMessage');
+    errorMessage.style.display = 'flex';
+    errorMessage.innerHTML = '';
 }
