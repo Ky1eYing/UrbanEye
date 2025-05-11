@@ -358,7 +358,7 @@ if (submitCreateEventBtn) {
             displayFormErrorMessage("PhotoUrl missing");
             return;
         }
-        const urlPattern = /^https?:\/\/[\w\-./]+$/;
+        const urlPattern = /^https?:\/\/[\w\-._~:/?#[\]@!$&'()*+,;=]+$/;
         if (!urlPattern.test(photoUrl)) {
             displayFormErrorMessage("Invaild image URL");
             return;
