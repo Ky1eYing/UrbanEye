@@ -1,10 +1,14 @@
 async function getFilterEvents(filters) {
 
-    filters = {...filters, latitude: window.preFetchedPosition.lat, longitude: window.preFetchedPosition.lng};
-    console.log('getFilterEvents filters for backend:', filters);
+    
 
     try {
-        
+        // add the user's location to the filters
+        if (window.preFetchedPosition) {
+            filters = {...filters, latitude: window.preFetchedPosition.lat, longitude: window.preFetchedPosition.lng};
+        }
+        console.log('getFilterEvents filters for backend:', filters);
+
         const queryString = new URLSearchParams(filters).toString();
         const response = await fetch(`/api/events/filter?${queryString}`);
         

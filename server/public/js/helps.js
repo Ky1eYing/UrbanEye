@@ -23,18 +23,24 @@ function formatTimeAgo(date) {
 
 // Format `__ miles away`
 function formatDistanceAway(latitude, longitude) {
-	if (!latitude || !longitude || !window.preFetchedPosition) {
+	if (!latitude || !longitude ) {
 		return "Unknown distance";
+	}
+	let myPosition = window.preFetchedPosition;
+	// default to nyc
+	const nyPosition = { lat: 40.75171244845984, lng: -73.98179241229592 };
+	if (!myPosition) {
+		myPosition = nyPosition;
 	}
 
 	// use haversine
 	const toRad = x => x * Math.PI / 180;
 	const R = 6371;
 
-	const lat1 = toRad(window.preFetchedPosition.lat);
+	const lat1 = toRad(myPosition.lat);
 	const lat2 = toRad(parseFloat(latitude));
-	const deltaLat = toRad(parseFloat(latitude) - window.preFetchedPosition.lat);
-	const deltaLng = toRad(parseFloat(longitude) - window.preFetchedPosition.lng);
+	const deltaLat = toRad(parseFloat(latitude) - myPosition.lat);
+	const deltaLng = toRad(parseFloat(longitude) - myPosition.lng);
 
 	const a = Math.sin(deltaLat / 2) * Math.sin(deltaLat / 2) +
 		Math.cos(lat1) * Math.cos(lat2) *
