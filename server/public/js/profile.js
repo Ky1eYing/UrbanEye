@@ -49,7 +49,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   // Hide all error messages on page load
-  const errorMessages = document.querySelectorAll('[id="errorMessage"]');
+  const errorMessages = document.querySelectorAll('.error-message[data-field]');
   errorMessages.forEach((element) => {
     element.style.display = "none";
   });
@@ -580,7 +580,7 @@ function isValidPhone(phone) {
 
 function showErrorMessage(field, message) {
   const errorElement = document.querySelector(
-    `[data-field="${field}"]#errorMessage`
+    `.error-message[data-field="${field}"]`
   );
   if (errorElement) {
     errorElement.classList.remove("success-message");
@@ -592,7 +592,7 @@ function showErrorMessage(field, message) {
 
 function showSuccessMessage(field, message) {
   const errorElement = document.querySelector(
-    `[data-field="${field}"]#errorMessage`
+    `.error-message[data-field="${field}"]`
   );
   if (errorElement) {
     errorElement.classList.remove("error-message");
@@ -610,7 +610,7 @@ function showSuccessMessage(field, message) {
 
 function clearErrorMessage(field) {
   const errorElement = document.querySelector(
-    `[data-field="${field}"]#errorMessage`
+    `.error-message[data-field="${field}"]`
   );
   if (errorElement) {
     errorElement.style.display = "none";

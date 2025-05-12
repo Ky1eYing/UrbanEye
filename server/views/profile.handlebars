@@ -7,8 +7,10 @@
                         alt="user background">
                 </div>
                 <div class="comment-useravator user-avatar">
-                    <img id="avatarDisplay" src="{{user.avatar}}" alt="User Avatar"
-                        onerror="this.onerror=null; this.src='https://urban-eye.oss-us-east-1.aliyuncs.com/users-pic/morentouxiang.png';" />
+                    <img id="avatarDisplay"
+                        src="{{#if user.avatar}}{{user.avatar}}{{else}}https://urban-eye.oss-us-east-1.aliyuncs.com/users-pic/morentouxiang.png{{/if}}"
+                        alt="User Avatar"
+                        onerror="this.onerror=null; this.src='https://urban-eye.oss-us-east-1.aliyuncs.com/users-pic/morentouxiang.png';">
                 </div>
             </div>
 
@@ -87,10 +89,10 @@
         </div>
         <div class="profile-section dashboard-card">
             <div class="avatar-edit-section">
-                <img class="comment-useravator user-avatar-edit" id="avatarPreview" src="" alt="User Avatar">
+                <img class="comment-useravator user-avatar-edit" id="avatarPreview" src="#" alt="User Avatar">
                 <label for="avatarUpload" hidden>Avatar</label>
                 <input type="file" id="avatarUpload" accept="image/*" hidden>
-                <button for="avatarUpload" class="submit-button" data-field="avatar">Upload</button>
+                <button class="submit-button" data-field="avatar">Upload</button>
                 <span class="error-message" id="errorMessage" data-field="avatar">
                     <i class="fas fa-triangle-exclamation"></i>
                     Demo Error Message!
@@ -106,7 +108,7 @@
                         placeholder="Introduce yourself ..."></textarea>
                 </div>
                 <div class="field-actions">
-                    <span class="error-message" id="errorMessage" data-field="introduction">
+                    <span class="error-message" data-field="introduction">
                         <i class="fas fa-triangle-exclamation"></i>
                         Demo Error Message!
                     </span>
@@ -155,7 +157,7 @@
                     <input type="text" id="editPhone" class="form-input" placeholder="Phone ...">
                 </div>
                 <div class="field-actions">
-                    <span class="error-message" id="errorMessage" data-field="profile">
+                    <span class="error-message" data-field="profile">
                         <i class="fas fa-triangle-exclamation"></i>
                         Demo Error Message!
                     </span>
@@ -181,7 +183,7 @@
                     <input type="password" id="confirmPassword" class="form-input" placeholder="Confirm password ...">
                 </div>
                 <div class="field-actions">
-                    <span class="error-message" id="errorMessage" data-field="password">
+                    <span class="error-message" data-field="password">
                         <i class="fas fa-triangle-exclamation"></i>
                         Demo Error Message!
                     </span>

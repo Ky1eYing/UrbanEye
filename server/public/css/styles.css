@@ -187,7 +187,7 @@ header .container {
 /* 右侧菜单区域 */
 
 
-.login-button button {
+.login-button-link {
     background-color: var(--primary-blue-light);
     color: var(--white);
     padding: var(--spacing-sm) var(--spacing-lg);
@@ -199,11 +199,11 @@ header .container {
     cursor: pointer;
 }
 
-.login-button button:hover {
+.login-button-link:hover {
     background-color: var(--primary-blue-dark);
 }
 
-.login-button a {
+.login-button-link a {
     text-decoration: none;
 }
 
@@ -2670,4 +2670,13 @@ section {
     object-fit: cover;
     border-radius: 50%;
     /* border: 1px solid white; */
+}
+
+#tsparticles {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    z-index: -1;
 }
