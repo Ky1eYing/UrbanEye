@@ -338,7 +338,12 @@ async function showEventDetail() {
         }) || "";
     }
 
-    if (detailEventClickTime) detailEventClickTime.innerText = eventData.click_time + " Views" || "";
+    if (detailEventClickTime) {
+        const category = eventData.category ? eventData.category : "Uncategorized";
+        const categoryText = category.charAt(0).toUpperCase() + category.slice(1);
+        const viewsText = eventData.click_time + " Views" || "0 Views";
+        detailEventClickTime.innerHTML = `${viewsText}<span>&nbsp;&nbsp;·&nbsp; &nbsp;</span>${categoryText}`;
+    }
 
     // Update likes count and state
     const likeEventBtn = document.getElementById("likeEventBtn");
