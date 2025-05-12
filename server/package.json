@@ -17,7 +17,7 @@
   "scripts": {
     "start": "node app.js",
     "dev": "concurrently \"npm:watch-server\" \"npm:watch-browser\"",
-    "seed": "node ./scripts/seeds_events.js && node ./scripts/seeds_users.js && node ./scripts/seeds_likes.js && node ./scripts/seeds_comments.js",
+    "seed": "node ./scripts/seed_all.js",
     "watch-server": "nodemon --watch data --watch routes --watch config --watch middleware --watch utils --delay 1000ms app.js",
     "watch-browser": "browser-sync start --proxy \"localhost:3000\" --port 3001 --ui-port 3002 --files \"public/css/**/*.css\" \"public/js/**/*.js\" \"views/**/*.handlebars\" --inject-changes",
     "nodemon": "nodemon app.js"
