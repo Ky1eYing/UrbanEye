@@ -345,12 +345,12 @@ if (submitCreateEventBtn) {
         }
 
         // Get form data
-        const photoUrl = document.getElementById("eventPhoto").src || '';
+        const photoUrl = document.getElementById("eventPhoto").getAttribute('src') || '';
+        console.log("photoUrl", photoUrl);
         const selectedCategory = document.querySelector("input[name='category']:checked")?.value;
         const title = document.getElementById("eventTitle").value.trim();
         const content = document.getElementById("eventContent").value.trim();
         const address = formattedAddress || document.getElementById("addressOfMap").textContent;
-        console.log("photoUrl", document.getElementById("eventPhoto").src);
 
         // Validate form data
         // check image url
@@ -358,7 +358,7 @@ if (submitCreateEventBtn) {
             displayFormErrorMessage("PhotoUrl missing");
             return;
         }
-        const urlPattern = /^https?:\/\/[\w\-._~:/?#[\]@!$&'()*+,;=]+$/;
+        const urlPattern = /^https?:\/\/.+$/;
         if (!urlPattern.test(photoUrl)) {
             displayFormErrorMessage("Invaild image URL");
             return;
@@ -526,7 +526,8 @@ if (imageUpload) {
         const file = this.files[0];
         // user cancel upload
         if (!file) {
-            alertfunc("Upload file missing")
+            alertfunc("Upload file missing");
+            return;
         }
         // check file type
         if (!file.type.startsWith("image/")) {

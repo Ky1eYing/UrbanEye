@@ -48,7 +48,7 @@ export const checkObjectId = (id) => {
 export const checkPhotoUrl = (photourl) => {
   const check_photourl = checkVaildString(photourl, "PhotoUrl");
 
-  const urlPattern = /^https?:\/\/[\w\-._~:/?#[\]@!$&'()*+,;=]+$/;
+  const urlPattern = /^https?:\/\/.+$/;
   if (!urlPattern.test(check_photourl)) {
     throw new Error("Invaild image URL");
   }
