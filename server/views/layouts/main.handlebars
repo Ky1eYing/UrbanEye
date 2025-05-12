@@ -2,8 +2,8 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>UrbanEye - {{title}}</title>
     <link rel="stylesheet" href="/css/styles.css">
     {{!-- icons --}}
@@ -13,9 +13,10 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap"
         rel="stylesheet">
     {{!-- font-erode --}}
-    <link href="https://api.fontshare.com/v2/css?f[]=erode@300,301,400,500,501,600,700&display=swap" rel="stylesheet">
+    <link href="https://api.fontshare.com/v2/css?f%5B%5D=erode@300,301,400,500,501,600,700&display=swap"
+        rel="stylesheet">
     <!-- choices element -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css">
     <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
     {{!-- Aliyun OSS SDK --}}
     <script src="https://gosspublic.alicdn.com/aliyun-oss-sdk-6.20.0.min.js"></script>
@@ -58,7 +59,7 @@
                     <a href="/profile">
                         <div class="comment-useravator">
                             <img id="header-useravator" src="{{user.avatar}}" alt="User Avatar"
-                                onerror="this.onerror=null; this.src='https://urban-eye.oss-us-east-1.aliyuncs.com/users-pic/morentouxiang.png';" />
+                                onerror="this.onerror=null; this.src='https://urban-eye.oss-us-east-1.aliyuncs.com/users-pic/morentouxiang.png';">
                         </div>
                     </a>
                 </div>
@@ -89,7 +90,7 @@
 
     <div id="confirmModal" class="alert-modal modal-overlay">
         <div class="modal-content">
-            <h2 id="confirmTitle">Alert</h3>
+            <h2 id="confirmTitle">Alert</h2>
             <h4 id="confirmText">Are you sure?</h4>
             <div class="modal-actions">
                 <button id="confirmNo" class="submit-button cancel-btn">Cancel</button>
@@ -99,17 +100,12 @@
     </div>
 
     <!-- JS -->
-
-
-
-<script src="/js/helps.js" defer></script>
-<script src="/js/aliyun.js" defer></script>
-<script src="/js/location_service.js"></script>
-<script src="/js/modal.js"></script>
-<script src="/js/map.js"></script>
+    <script src="/js/helps.js" defer></script>
+    <script src="/js/aliyun.js" defer></script>
+    <script src="/js/location_service.js"></script>
+    <script src="/js/modal.js"></script>
+    <script src="/js/map.js"></script>
 
 </body>
-
-
 
 </html>
