@@ -380,33 +380,33 @@ async function showEventList() {
 
         events = [...adEvents, ...events];
 
-        // Handle Api error
-        if (!events) {
-            console.error('Error fetching events:', error);
-            eventList.innerHTML = '<div class="error-events">Error fetching events. Please try again later.</div>';
-            return;
-        }
+        // // Handle Api error
+        // if (!events) {
+        //     console.error('Error fetching events:', error);
+        //     eventList.innerHTML = '<div class="error-events">Error fetching events. Please try again later.</div>';
+        //     return;
+        // }
 
         // Handle no events scenario
         if ((!events || events.length === 0)) {
             eventList.innerHTML = `<div class="no-events">No events right now. Try different filters.</div>`;
-            return;
-        }
+        } else {
 
-        // Clear loading state
-        eventList.innerHTML = '';
-        // Bind events list - simple version for testing
-        events.forEach((event, i) => {
-            let adSign =``;
-            if(adEvents && adEvents.length > i){
-                adSign =  `
+
+            // Clear loading state
+            eventList.innerHTML = '';
+            // Bind events list - simple version for testing
+            events.forEach((event, i) => {
+                let adSign = ``;
+                if (adEvents && adEvents.length > i) {
+                    adSign = `
                     <div class="event-actions">
                         <i class="far fa-star"></i>
                         <span>Recommend</span>
                     </div>
                 `
-            }
-            const eventItemHTML = `
+                }
+                const eventItemHTML = `
                 <div class="event-item" data-event-id="${event._id}">
                     <div class="event-image">
                         <img src="${event.photoUrl || 'https://images.unsplash.com/photo-1503179008861-d1e2b41f8bec?q=80&w=3869&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'}" 
@@ -428,26 +428,27 @@ async function showEventList() {
                 </div>
             `;
 
-            eventList.insertAdjacentHTML('beforeend', eventItemHTML);
-        });
-
-        // Bind click event to jump to event detail page
-        const eventItems = eventList.querySelectorAll(".event-item");
-        eventItems.forEach(item => {
-            item.addEventListener('click', async (event) => {
-                const eventId = item.getAttribute('data-event-id');
-                console.log(`Event item clicked: ${eventId}`);
-
-                // focus map on this event marker
-                if (typeof window.focusMapOnEvent === 'function') {
-                    window.focusMapOnEvent(eventId);
-                }
-
-                // jump to event detail page
-                pushEventDetail(eventId);
-                await showEventDetail();
+                eventList.insertAdjacentHTML('beforeend', eventItemHTML);
             });
-        });
+
+            // Bind click event to jump to event detail page
+            const eventItems = eventList.querySelectorAll(".event-item");
+            eventItems.forEach(item => {
+                item.addEventListener('click', async (event) => {
+                    const eventId = item.getAttribute('data-event-id');
+                    console.log(`Event item clicked: ${eventId}`);
+
+                    // focus map on this event marker
+                    if (typeof window.focusMapOnEvent === 'function') {
+                        window.focusMapOnEvent(eventId);
+                    }
+
+                    // jump to event detail page
+                    pushEventDetail(eventId);
+                    await showEventDetail();
+                });
+            });
+        }
     }
 
     // Hide and Change View
