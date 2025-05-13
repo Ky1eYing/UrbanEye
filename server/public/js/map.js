@@ -168,7 +168,7 @@ function initMap() {
   loadEventMarkers();
   
   // First set default position to nyPosition
-  // updateUserLocation(nyPosition, "(default)");
+  updateUserLocation(nyPosition, "(default)");
   
   // Then try to get user's actual position
   if (window.preFetchedPosition) {

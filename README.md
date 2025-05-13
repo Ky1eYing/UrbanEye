@@ -118,16 +118,17 @@ npm start
   - Images of the event
   - Exact location on Google Map
   - Event post time
-  - Distance from current location
+  - Event Address
   - Event category and view times
-- Recommendation options to nearby events
-- Share button for social media and messaging platforms
-- Report inappropriate content option
+- Recommendation options to nearby hot events
+- Share button for copy URL
+- Report inappropriate content
 
 ### 6. Like and Comment System
 - **Comment system**:
   - Add comments (up to 100 characters)
-  - View all comments with usernamem, comment and timestamp
+  - View total comment count
+  - View all comments with name, content and time
   - Edit or delete your own comments
 - **Like system**:
   - Like/unlike toggle for events
@@ -147,19 +148,19 @@ npm start
 - **Authentication**:
   - User registration with:
     - Username (maximum 20 characters, alphanumeric only)
-    - Password (4-30 characters, letters, numbers, and symbols)
+    - Password (4-30 characters, letters/numbers/symbols)
   - User can login with username and password
 - **Profile Management**:
-  - Name (maximum 40 characters, default)
+  - Name (maximum 40 characters, default as same as userName)
   - Introduction (optional, maximum 200 characters)
   - Gender selection (optional, from predefined list)
   - Email (optional, must be valid format)
   - Phone (optional, 7-15 digits with optional '+' prefix)
+  - Clicking cancel will revert to previously saved information
   - **Password Change**:
     - Requires current password verification
-    - New password must be 4-30 characters with letters, numbers, and symbols
-    - User is automatically logged out after password change
-    - Clicking cancel will revert to previously saved information
+    - New password must be 4-30 characters with letters, numbers, or symbols
+    - User will automatically log out after password change
 - **User Content**:
   - List of all events, commments and likes reported by the user
   - Option to edit or delete user's own events, commments and likes
@@ -178,12 +179,12 @@ npm start
   - Events are automatically blocked if **reports ≥ 5**
   - **AND** reports > (click count / 10)
   - **AND** reports > like count
-- Blocked events are hidden from general view but remain in the database
+- Blocked events are hidden from list view but remain in the detail page
 
 ### 2. Personalized Event Recommendations
 - Shows three events that align with users' interests on the event list
-- Recommendation engine analyzes based on past click history and viewing patterns
-- Recommended events are continuously displayed if user does not perform search or filter by category
+- Recommendation engine analyzes based on past click history
+- Recommended events are continuously displayed if user does not perform title search or filter by category
 - Non-logged in users do not see personalized recommendations
 - Login is required to access the personalized recommendation feature
 
@@ -253,7 +254,7 @@ This project was developed by:
 - Junhe Jiao
 - Kaiyuan Ying
 - Ruikang Li
-    
+  
 ## 📄 License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
