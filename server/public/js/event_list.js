@@ -258,6 +258,16 @@ let filters = {
     distance: '3miles',
 };
 
+// debounce function
+function debounce(func, wait) {
+    let timeout;
+    return function (...args) {
+        const context = this;
+        clearTimeout(timeout);
+        timeout = setTimeout(() => func.apply(context, args), wait);
+    };
+}
+
 document.addEventListener('DOMContentLoaded', async function () {
     // Base on url (if has event id) to decide
     const eventId = getEventIdFromURL();
@@ -281,7 +291,7 @@ function initFilters() {
 
     const titleLikeFilter = document.querySelector('.titleLike-filter');
     if (titleLikeFilter) {
-        titleLikeFilter.addEventListener('input', function (event) {
+        const debouncedSearch = debounce(function (event) {
             // Check if the input is empty
             const titleLike = this.value.trim() || '';
 
@@ -290,7 +300,9 @@ function initFilters() {
 
             // Apply all active filters
             showEventList();
-        });
+        }, 800);
+
+        titleLikeFilter.addEventListener('input', debouncedSearch);
     }
 
     const categoryFilter = document.querySelector('.category-filter');
