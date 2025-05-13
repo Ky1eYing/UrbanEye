@@ -117,7 +117,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   }
 
-  // 更新头像事件
+  // updata avatar
   document.querySelector("button.submit-button[data-field='avatar']").addEventListener("click", () => {
     document.getElementById("avatarUpload").click();
   });
@@ -188,9 +188,6 @@ document.addEventListener("DOMContentLoaded", async () => {
   setupFormSubmitHandlers();
 });
 
-/**
- * 用于回退字段更改
- */
 function revertField(field) {
   if (field === "name") {
     document.getElementById("editName").value = userInfo.name || "";
@@ -210,9 +207,6 @@ function revertField(field) {
   }
 }
 
-/**
- * 演示用：发送AJAX更新信息
- */
 async function updateProfileField(fieldKey, newValue) {
   try {
     const resp = await fetch("/profile/update", {
@@ -374,8 +368,7 @@ function saveIntroduction() {
     })
       .then((result) => {
         if (result.success) {
-          document.getElementById("introductionDisplay").textContent =
-            introduction;
+          document.getElementById("introductionDisplay").textContent = introduction || "No introduction provided";
 
           userInfo.introduction = introduction;
 
