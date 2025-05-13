@@ -31,9 +31,10 @@ document.addEventListener("DOMContentLoaded", async () => {
             userInfo.phone || "No phone provided";
 
           // Update the form fields for editing
+          document.getElementById("editIntroduction").value = userInfo.introduction || "";
+
+          document.getElementById("editUsername").value = userInfo.userName || "";
           document.getElementById("editName").value = userInfo.name || "";
-          document.getElementById("editIntroduction").value =
-            userInfo.introduction || "";
           document.getElementById("editEmail").value = userInfo.email || "";
           document.getElementById("editPhone").value = userInfo.phone || "";
 
