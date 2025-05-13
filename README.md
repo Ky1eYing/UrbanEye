@@ -86,7 +86,6 @@ npm start
 
 ### 2. About Page
 - Introduce our team members
-- Showcase the project's mission and vision, Explain the motivation behind UrbanEye
 
 ### 3. Create Event
 - Users can report events by uploading:
@@ -102,7 +101,6 @@ npm start
 ### 4. Event Listing Page
 - **Map View**:
   - Shows all events on an interactive Google Map
-  - Displays distance from user's current location
   - Different markers based on event category
 - **List View**:
   - Displays events with title, location, and time posted
@@ -110,15 +108,15 @@ npm start
   - Includes thumbnail preview of event images
 - **Filtering & Search**:
   - Filter by event category
-  - Filter by distance (0.5km, 1km, 5km, 10km, 25km)
-  - Filter by time range (last hour, today, this week, this month)
-  - Search by keywords in title and description
+  - Filter by distance (1 mile, 3 miles, 5 miles, 10 miles, all)
+  - Filter by time range (1 day, 1 week, 1 month, 1 year, all)
+  - Search by keywords in title
 
 ### 5. Event Details Page
 - Displays comprehensive event information:
   - Full title and content
-  - High-resolution images of the event
-  - Exact location on embedded Google Map
+  - Images of the event
+  - Exact location on Google Map
   - Event post time
   - Distance from current location
   - Event category and view times
