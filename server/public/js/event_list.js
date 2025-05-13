@@ -269,6 +269,9 @@ function debounce(func, wait) {
 }
 
 document.addEventListener('DOMContentLoaded', async function () {
+    // Initialize filters only once when page loads
+    initFilters();
+    
     // Base on url (if has event id) to decide
     const eventId = getEventIdFromURL();
     console.log("Event ID from URL:", eventId);
@@ -277,21 +280,20 @@ document.addEventListener('DOMContentLoaded', async function () {
     if (eventId) {
         await showEventDetail();
     } else {
-        // await showEventList();
-        // Init titleLike, category, timeRange, and distance filters
-
-        showEventList();
+        await showEventList();
     }
 });
 
 function initFilters() {
-    // Initialize filters
+// Initialize filters
     // init Choices.js for category, timeRange, and distance filters
     // and add event listeners for changes
-
+    // Create a single debounced function for all filter changes
+    
+    // Initialize title filter
     const titleLikeFilter = document.querySelector('.titleLike-filter');
     if (titleLikeFilter) {
-        const debouncedSearch = debounce(function (event) {
+        titleLikeFilter.addEventListener('input', function() {
             // Check if the input is empty
             const titleLike = this.value.trim() || '';
 
@@ -300,11 +302,10 @@ function initFilters() {
 
             // Apply all active filters
             showEventList();
-        }, 800);
-
-        titleLikeFilter.addEventListener('input', debouncedSearch);
+        });
     }
 
+    // Initialize category filter
     const categoryFilter = document.querySelector('.category-filter');
     if (categoryFilter) {
         new Choices(categoryFilter, {
@@ -321,6 +322,7 @@ function initFilters() {
         });
     }
 
+    // Initialize time range filter
     const timeRangeFilter = document.querySelector('.timeRange-filter');
     if (timeRangeFilter) {
         new Choices(timeRangeFilter, {
@@ -328,6 +330,7 @@ function initFilters() {
             itemSelectText: '',
             shouldSort: false,
         });
+        
         timeRangeFilter.addEventListener('change', function () {
             const timeRange = this.value || '';
             filters.timeRange = timeRange;
@@ -335,6 +338,7 @@ function initFilters() {
         });
     }
 
+    // Initialize distance filter
     const distanceFilter = document.querySelector('.distance-filter');
     if (distanceFilter) {
         new Choices(distanceFilter, {
@@ -342,6 +346,7 @@ function initFilters() {
             itemSelectText: '',
             shouldSort: false,
         });
+        
         distanceFilter.addEventListener('change', function () {
             const distance = this.value || '';
             filters.distance = distance;
@@ -351,8 +356,6 @@ function initFilters() {
 }
 
 async function showEventList() {
-    initFilters();
-
     console.log('Applying filters:', filters);
 
     // Get event list container
