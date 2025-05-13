@@ -154,7 +154,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         .then((result) => {
           if (result.success) {
 
-            document.getElementById("nameDisplay").src = avatar;
+            document.getElementById("avatarDisplay").src = avatar;
             document.getElementById("header-useravator").src = avatar;
             const avatarPreview = document.getElementById("avatarPreview");
             if (avatarPreview) {

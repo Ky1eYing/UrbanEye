@@ -166,8 +166,11 @@ function initMap() {
 
   // load and show event markers
   loadEventMarkers();
-
-  // Check if already have the position from the location service
+  
+  // First set default position to nyPosition
+  // updateUserLocation(nyPosition, "(default)");
+  
+  // Then try to get user's actual position
   if (window.preFetchedPosition) {
     console.log("using position from location service", window.preFetchedPosition);
     updateUserLocation(window.preFetchedPosition, "(from service)");
