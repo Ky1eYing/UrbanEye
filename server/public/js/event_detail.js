@@ -265,40 +265,38 @@ async function showEventDetail() {
     if (!eventData || !eventData._id) {
         console.error("Failed to load event data");
         // Show error message
-        const detailContainer = document.getElementById("event-detail-container");
-        if (detailContainer) {
-            detailContainer.innerHTML = `
+        const detailBody = document.querySelector(".detail-body");
+        if (detailBody) {
+            detailBody.innerHTML = `
                 <div class="error-container">
                     <h2>Error Loading Event</h2>
-                    <p>Sorry, we couldn't load the event details. Please try again later.</p>
-                    <button id="backToListBtnError" class="btn">Back to Events</button>
+                    <p>Sorry, the event does not exsit.</p>
                 </div>
             `;
 
-            // Add event listener for the error back button
-            const backToListBtnError = document.getElementById("backToListBtnError");
-            if (backToListBtnError) {
-                backToListBtnError.addEventListener("click", () => {
-                    window.location.href = "/event";
-                });
-            }
+            // Hide and Change View
+            const eventListContainer = document.getElementById("event-list-container");
+            const eventDetailContainer = document.getElementById("event-detail-container");
+            if (eventListContainer) eventListContainer.style.display = "none";
+            if (eventDetailContainer) eventDetailContainer.style.display = "block";
+
 
             return;
         }
 
-        // Fall back to mock data if available and we're in development
-        if (typeof mockEvents !== 'undefined') {
-            console.log("Falling back to mock data");
-            const mockGetEventById = mockEvents.find(event => event._id === eventId);
-            if (mockGetEventById) {
-                eventData = mockGetEventById;
-                console.log("Using mock data for event:", eventId);
-            } else {
-                return; // No mock data available
-            }
-        } else {
-            return; // No mock data available
-        }
+        // // Fall back to mock data if available and we're in development
+        // if (typeof mockEvents !== 'undefined') {
+        //     console.log("Falling back to mock data");
+        //     const mockGetEventById = mockEvents.find(event => event._id === eventId);
+        //     if (mockGetEventById) {
+        //         eventData = mockGetEventById;
+        //         console.log("Using mock data for event:", eventId);
+        //     } else {
+        //         return; // No mock data available
+        //     }
+        // } else {
+        //     return; // No mock data available
+        // }
     }
 
     // Just update the basic event details for our test
