@@ -451,7 +451,7 @@ function saveProfileInfo() {
     "Prefer not to say",
   ];
 
-  if (!genderLabels.includes(sex)) {
+  if (sex && !genderLabels.includes(sex)) {
     showErrorMessage("profile", "Invalid sex");
     return;
   }

@@ -330,10 +330,12 @@ router
     let sex = xss(req.body.sex);
     let email = xss(req.body.email);
     let phone = xss(req.body.phone);
-    if (!name || !sex || !email || !phone) {
+
+    // only name is required
+    if (!name) {
       return res.status(400).json({
         code: 400,
-        message: "There are no fields in the request body",
+        message: "Name is required",
       });
     }
 
@@ -378,13 +380,8 @@ router.route("/introduction/:userId").put(requireLogin, async (req, res) => {
   }
 
   let introduction = xss(req.body.introduction);
-  if (!introduction) {
-    return res.status(400).json({
-      code: 400,
-      message: "There are no fields in the request body",
-    });
-  }
 
+  // allow introduction to be empty
   if (introduction === undefined) {
     return res.status(400).json({
       code: 400,
