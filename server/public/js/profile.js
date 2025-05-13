@@ -604,7 +604,9 @@ function showSuccessMessage(field, message) {
     setTimeout(() => {
       // After seconds, hide the message
       errorElement.style.display = "none";
-      errorElement.classList.remove("success-message");
+      errorElement.classList.add("error-message");
+    errorElement.classList.remove("success-message");
+    errorElement.innerHTML = ``;
     }, 2000);
   }
 }
