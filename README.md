@@ -254,6 +254,8 @@ This project was developed by:
 - Junhe Jiao
 - Kaiyuan Ying
 - Ruikang Li
+
+---
   
 ## 📄 License
 
