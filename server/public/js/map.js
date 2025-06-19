@@ -122,7 +122,7 @@ function loadGoogleMapsAPI() {
   if (typeof google === 'undefined' || typeof google.maps === 'undefined') {
     console.log("loading Google Maps API...");
     const script = document.createElement("script");
-    script.src = "https://maps.googleapis.com/maps/api/js?key=AIzaSyBZ1cnugGu4jiIWn3PipPsmG1Vli9hTEmo&libraries=geometry&callback=initMap&language=en&region=US";
+    script.src = "https://maps.googleapis.com/maps/api/js?key=Your_API_KEY&libraries=geometry&callback=initMap&language=en&region=US";
     script.async = true;
     script.onerror = () => {
       console.error("Google Maps API loading failed");
